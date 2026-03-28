@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TU SUERTE PE – Sorteos de Artículos Usados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bangers&family=Righteous&family=Lilita+One&family=Paytone+One&family=Permanent+Marker&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --negro: #0a0a0a;
+      --neon-rosa: #ff0080;
+      --neon-verde: #39ff14;
+      --neon-amarillo: #ffe600;
+      --neon-naranja: #ff6a00;
+      --neon-celeste: #00e5ff;
+      --neon-violeta: #cc00ff;
+      --blanco: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--negro);
+      color: var(--blanco);
+      font-family: 'Paytone One', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── FONDO PSICODÉLICO ANIMADO ── */
+    .bg-pattern {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      background: repeating-linear-gradient(
+        45deg,
+        #0a0a0a 0px, #0a0a0a 20px,
+        #111 20px, #111 40px
+      );
+    }
+    .bg-pattern::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(255,0,128,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(57,255,20,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 50% 80%, rgba(204,0,255,0.06) 0%, transparent 60%);
+      animation: bgpulse 6s ease-in-out infinite alternate;
+    }
+    @keyframes bgpulse {
+      0%   { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      text-align: center;
+      padding: 30px 20px 20px;
+      border-bottom: 4px solid var(--neon-rosa);
+      background: linear-gradient(180deg, #1a0010 0%, #0a0a0a 100%);
+      overflow: hidden;
+    }
+    .header-decoracion {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .estrella {
+      font-size: 1.4rem;
+      animation: girar 4s linear infinite;
+    }
+    .estrella:nth-child(even) { animation-direction: reverse; }
+    @keyframes girar {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .logo-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .logo-principal {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      letter-spacing: 4px;
+      line-height: 1;
+      color: var(--neon-amarillo);
+      text-shadow:
+        0 0 10px var(--neon-amarillo),
+        0 0 30px var(--neon-naranja),
+        0 0 60px var(--neon-rosa),
+        4px 4px 0 #7a0040,
+        8px 8px 0 #3d0020;
+      animation: logopulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes logopulse {
+      0%   { text-shadow: 0 0 10px var(--neon-amarillo), 0 0 30px var(--neon-naranja), 0 0 60px var(--neon-rosa), 4px 4px 0 #7a0040, 8px 8px 0 #3d0020; }
+      100% { text-shadow: 0 0 20px var(--neon-amarillo), 0 0 60px var(--neon-naranja), 0 0 100px var(--neon-rosa), 4px 4px 0 #7a0040, 8px 8px 0 #3d0020; }
+    }
+    .logo-sub {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(0.9rem, 3vw, 1.5rem);
+      letter-spacing: 6px;
+      color: var(--neon-verde);
+      text-shadow: 0 0 10px var(--neon-verde), 0 0 20px var(--neon-verde);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-family: 'Permanent Marker', cursive;
+      font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      color: var(--neon-celeste);
+      margin-top: 12px;
+      text-shadow: 0 0 12px var(--neon-celeste), 2px 2px 0 #003a45;
+      letter-spacing: 1px;
+      transform: rotate(-1.5deg);
+      display: inline-block;
+    }
+    .cinta-gratis {
+      display: inline-block;
+      background: var(--neon-verde);
+      color: #000;
+      font-family: 'Bangers', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      padding: 4px 20px;
+      margin-top: 14px;
+      transform: rotate(-2deg);
+      box-shadow: 0 0 20px var(--neon-verde);
+      border: 3px solid #000;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: #0d0d0d;
+      border-bottom: 3px solid var(--neon-amarillo);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    nav a {
+      font-family: 'Bangers', cursive;
+      color: var(--neon-amarillo);
+      text-decoration: none;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      padding: 14px 24px;
+      transition: background .2s, color .2s;
+      border-right: 2px solid #1a1a1a;
+    }
+    nav a:hover {
+      background: var(--neon-amarillo);
+      color: #000;
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      background: var(--neon-rosa);
+      padding: 10px 0;
+      overflow: hidden;
+      border-bottom: 3px solid #7a0040;
+    }
+    .ticker {
+      display: flex;
+      width: max-content;
+      animation: ticker 25s linear infinite;
+    }
+    .ticker span {
+      font-family: 'Bangers', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: #000;
+      white-space: nowrap;
+      padding: 0 40px;
+    }
+    .ticker span em { color: #fff; font-style: normal; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SECCIÓN BASE ── */
+    section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+
+    .seccion-titulo {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      letter-spacing: 3px;
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .seccion-titulo span {
+      position: relative;
+      z-index: 1;
+    }
+    .seccion-titulo::after {
+      content: '';
+      display: block;
+      height: 4px;
+      width: 120px;
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── CÓMO FUNCIONA ── */
+    #como {
+      background: linear-gradient(135deg, #0d001a 0%, #0a0a0a 100%);
+      max-width: 100%;
+      border-top: 4px solid var(--neon-violeta);
+      border-bottom: 4px solid var(--neon-violeta);
+    }
+    #como .inner { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+    #como .seccion-titulo { color: var(--neon-violeta); text-shadow: 0 0 20px var(--neon-violeta); }
+    #como .seccion-titulo::after { background: var(--neon-violeta); }
+
+    .pasos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+    .paso {
+      background: #111;
+      border: 3px solid var(--neon-violeta);
+      border-radius: 4px;
+      padding: 28px 20px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 20px rgba(204,0,255,0.3);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .paso:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 40px rgba(204,0,255,0.6);
+    }
+    .paso-num {
+      font-family: 'Bangers', cursive;
+      font-size: 3.5rem;
+      color: var(--neon-violeta);
+      text-shadow: 0 0 10px var(--neon-violeta);
+      line-height: 1;
+    }
+    .paso-icono { font-size: 2.5rem; margin: 10px 0; }
+    .paso h3 {
+      font-family: 'Bangers', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--neon-amarillo);
+      margin-bottom: 8px;
+    }
+    .paso p { font-size: 0.9rem; color: #ccc; line-height: 1.5; }
+
+    /* ── SORTEOS ACTIVOS ── */
+    #sorteos .seccion-titulo { color: var(--neon-rosa); text-shadow: 0 0 20px var(--neon-rosa); }
+    #sorteos .seccion-titulo::after { background: var(--neon-rosa); }
+
+    .grid-sorteos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .card-sorteo {
+      background: #111;
+      border: 3px solid var(--neon-rosa);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(255,0,128,0.25);
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+    }
+    .card-sorteo:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 50px rgba(255,0,128,0.5);
+    }
+    .card-sorteo .badge-gratis {
+      position: absolute;
+      top: 12px; right: -8px;
+      background: var(--neon-verde);
+      color: #000;
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      padding: 4px 18px 4px 14px;
+      box-shadow: 0 0 12px var(--neon-verde);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 6% 50%);
+    }
+    .card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      background: #1a1a1a;
+      border-bottom: 3px solid var(--neon-rosa);
+    }
+    .card-body { padding: 18px; }
+    .card-categoria {
+      font-family: 'Righteous', cursive;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      color: var(--neon-celeste);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .card-titulo {
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--neon-amarillo);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .card-desc { font-size: 0.85rem; color: #bbb; line-height: 1.5; margin-bottom: 14px; }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .card-participantes {
+      font-family: 'Righteous', cursive;
+      font-size: 0.8rem;
+      color: var(--neon-verde);
+    }
+    .card-fecha {
+      font-family: 'Righteous', cursive;
+      font-size: 0.8rem;
+      color: var(--neon-naranja);
+    }
+    .barra-wrap { background: #222; border-radius: 2px; height: 8px; margin-bottom: 16px; }
+    .barra-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--neon-verde), var(--neon-amarillo));
+      box-shadow: 0 0 8px var(--neon-verde);
+      transition: width 1s ease;
+    }
+    .btn-participar {
+      display: block;
+      width: 100%;
+      background: var(--neon-rosa);
+      color: #000;
+      border: none;
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 3px;
+      padding: 12px;
+      cursor: pointer;
+      border-bottom: 4px solid #7a0040;
+      transition: transform .15s, box-shadow .15s;
+      text-transform: uppercase;
+    }
+    .btn-participar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--neon-rosa);
+    }
+    .btn-participar:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    /* ── REGISTRO ── */
+    #registro {
+      max-width: 100%;
+      background: linear-gradient(135deg, #001a0d 0%, #0a0a0a 100%);
+      border-top: 4px solid var(--neon-verde);
+      border-bottom: 4px solid var(--neon-verde);
+    }
+    #registro .inner { max-width: 650px; margin: 0 auto; padding: 60px 20px; }
+    #registro .seccion-titulo { color: var(--neon-verde); text-shadow: 0 0 20px var(--neon-verde); }
+    #registro .seccion-titulo::after { background: var(--neon-verde); }
+
+    .form-chicha {
+      background: #0f0f0f;
+      border: 3px solid var(--neon-verde);
+      border-radius: 4px;
+      padding: 36px 32px;
+      box-shadow: 0 0 40px rgba(57,255,20,0.2);
+    }
+    .form-grupo { margin-bottom: 22px; }
+    .form-grupo label {
+      display: block;
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: var(--neon-amarillo);
+      margin-bottom: 8px;
+    }
+    .form-grupo input,
+    .form-grupo select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 2px solid #444;
+      border-radius: 2px;
+      color: #fff;
+      font-family: 'Paytone One', sans-serif;
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-grupo input:focus,
+    .form-grupo select:focus {
+      border-color: var(--neon-verde);
+      box-shadow: 0 0 10px rgba(57,255,20,0.4);
+    }
+    .form-grupo select option { background: #1a1a1a; }
+    .form-doble {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .btn-registro {
+      display: block;
+      width: 100%;
+      background: var(--neon-verde);
+      color: #000;
+      border: none;
+      font-family: 'Bangers', cursive;
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      padding: 16px;
+      cursor: pointer;
+      border-bottom: 5px solid #1a7a0a;
+      margin-top: 10px;
+      text-transform: uppercase;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-registro:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px var(--neon-verde);
+    }
+    .btn-registro:active { transform: translateY(3px); border-bottom-width: 2px; }
+    .form-nota {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #666;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── MODAL DE CONFIRMACIÓN ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.activo { display: flex; }
+    .modal-box {
+      background: #0f0f0f;
+      border: 4px solid var(--neon-verde);
+      border-radius: 4px;
+      padding: 40px 32px;
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 0 60px rgba(57,255,20,0.4);
+      animation: popin .3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popin {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .modal-icono { font-size: 4rem; margin-bottom: 16px; }
+    .modal-titulo {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5rem;
+      color: var(--neon-verde);
+      text-shadow: 0 0 20px var(--neon-verde);
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .modal-texto { color: #ccc; font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+    .modal-codigo {
+      background: #1a1a1a;
+      border: 2px dashed var(--neon-verde);
+      border-radius: 2px;
+      font-family: 'Bangers', cursive;
+      font-size: 2rem;
+      letter-spacing: 8px;
+      color: var(--neon-amarillo);
+      text-shadow: 0 0 10px var(--neon-amarillo);
+      padding: 14px;
+      margin-bottom: 20px;
+    }
+    .btn-cerrar {
+      background: var(--neon-verde);
+      color: #000;
+      border: none;
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      padding: 12px 32px;
+      cursor: pointer;
+      border-bottom: 4px solid #1a7a0a;
+    }
+
+    /* ── MODAL SORTEO ── */
+    .modal-sorteo-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-sorteo-overlay.activo { display: flex; }
+    .modal-sorteo-box {
+      background: #0f0f0f;
+      border: 4px solid var(--neon-rosa);
+      border-radius: 4px;
+      padding: 40px 32px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 0 60px rgba(255,0,128,0.4);
+      animation: popin .3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-sorteo-emoji { font-size: 4rem; margin-bottom: 12px; }
+    .modal-sorteo-titulo {
+      font-family: 'Bangers', cursive;
+      font-size: 2rem;
+      color: var(--neon-rosa);
+      text-shadow: 0 0 20px var(--neon-rosa);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+    .modal-sorteo-nombre {
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      color: var(--neon-amarillo);
+      margin-bottom: 12px;
+    }
+    .modal-sorteo-texto { color: #ccc; font-size: 0.85rem; line-height: 1.6; margin-bottom: 20px; }
+    .modal-sorteo-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-ir-registro {
+      background: var(--neon-rosa);
+      color: #000;
+      border: none;
+      font-family: 'Bangers', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-bottom: 4px solid #7a0040;
+      flex: 1; min-width: 140px;
+    }
+    .btn-cerrar-sorteo {
+      background: #333;
+      color: #fff;
+      border: 2px solid #555;
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      padding: 12px 20px;
+      cursor: pointer;
+    }
+
+    /* ── GANADORES ── */
+    #ganadores .seccion-titulo { color: var(--neon-naranja); text-shadow: 0 0 20px var(--neon-naranja); }
+    #ganadores .seccion-titulo::after { background: var(--neon-naranja); }
+
+    .tabla-wrap { overflow-x: auto; }
+    .tabla-ganadores {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .tabla-ganadores th {
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: #000;
+      background: var(--neon-naranja);
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .tabla-ganadores td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #222;
+      color: #ccc;
+    }
+    .tabla-ganadores tr:hover td { background: #1a1a1a; }
+    .tabla-ganadores .nombre { color: var(--neon-amarillo); font-family: 'Righteous', cursive; }
+    .tabla-ganadores .premio { color: var(--neon-verde); }
+    .tabla-ganadores .dni { color: #888; font-size: 0.8rem; }
+    .trofeo { font-size: 1.2rem; }
+
+    /* ── FAQ ── */
+    #faq {
+      max-width: 100%;
+      background: linear-gradient(135deg, #1a0800 0%, #0a0a0a 100%);
+      border-top: 4px solid var(--neon-naranja);
+    }
+    #faq .inner { max-width: 800px; margin: 0 auto; padding: 60px 20px; }
+    #faq .seccion-titulo { color: var(--neon-naranja); text-shadow: 0 0 20px var(--neon-naranja); }
+    #faq .seccion-titulo::after { background: var(--neon-naranja); }
+
+    .faq-item {
+      border: 2px solid #2a2a2a;
+      border-radius: 2px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .faq-item.activo { border-color: var(--neon-naranja); }
+    .faq-preg {
+      width: 100%;
+      background: #111;
+      border: none;
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Righteous', cursive;
+      font-size: 0.95rem;
+      color: var(--neon-amarillo);
+      transition: background .2s;
+    }
+    .faq-preg:hover { background: #1a1a1a; }
+    .faq-icon { color: var(--neon-naranja); font-size: 1.2rem; transition: transform .3s; }
+    .faq-item.activo .faq-icon { transform: rotate(45deg); }
+    .faq-resp {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease, padding .3s;
+      background: #0d0d0d;
+      color: #bbb;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .faq-item.activo .faq-resp { max-height: 200px; padding: 16px 20px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #050505;
+      border-top: 4px solid var(--neon-rosa);
+      padding: 40px 20px 24px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5rem;
+      letter-spacing: 4px;
+      color: var(--neon-amarillo);
+      text-shadow: 0 0 20px var(--neon-amarillo);
+      margin-bottom: 16px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .footer-links a {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--neon-rosa); }
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #111;
+      border: 2px solid #333;
+      border-radius: 2px;
+      color: #fff;
+      font-family: 'Righteous', cursive;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .social-btn:hover { border-color: var(--neon-rosa); color: var(--neon-rosa); }
+    .footer-copy { color: #444; font-size: 0.78rem; line-height: 1.6; }
+    .footer-copy strong { color: #666; }
+
+    /* ── WHATSAPP FLOTANTE ── */
+    .wsp-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 500;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 62px;
+      height: 62px;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(37,211,102,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      animation: wsppulse 2s ease-in-out infinite;
+    }
+    @keyframes wsppulse {
+      0%,100% { box-shadow: 0 0 20px rgba(37,211,102,0.6); }
+      50% { box-shadow: 0 0 40px rgba(37,211,102,0.9); }
+    }
+
+    /* ── CONTEO REGRESIVO ── */
+    .contador-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .contador-bloque {
+      background: #111;
+      border: 2px solid var(--neon-rosa);
+      border-radius: 4px;
+      padding: 14px 22px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .contador-num {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5rem;
+      color: var(--neon-amarillo);
+      text-shadow: 0 0 10px var(--neon-amarillo);
+      line-height: 1;
+    }
+    .contador-lbl {
+      font-family: 'Righteous', cursive;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #888;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .prox-sorteo-label {
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 3px;
+      color: var(--neon-celeste);
+      text-shadow: 0 0 10px var(--neon-celeste);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    /* ── HERO BANNER ── */
+    .hero-banner {
+      background: linear-gradient(135deg, #110022 0%, #000 50%, #001100 100%);
+      border-bottom: 4px solid var(--neon-amarillo);
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto 30px;
+    }
+    @media (max-width: 600px) { .hero-grid { grid-template-columns: 1fr; } }
+    .hero-stat {
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 4px;
+    }
+    .hero-stat-num {
+      font-family: 'Bangers', cursive;
+      font-size: 2.8rem;
+      line-height: 1;
+    }
+    .hero-stat-lbl { font-family: 'Righteous', cursive; font-size: 0.8rem; letter-spacing: 2px; color: #888; }
+
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+      .form-doble { grid-template-columns: 1fr; }
+      nav a { font-size: 1rem; padding: 12px 14px; }
+      .form-chicha { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-decoracion">
+      <span class="estrella">★</span><span class="estrella">✦</span>
+      <span class="estrella">★</span><span class="estrella">✦</span>
+      <span class="estrella">★</span><span class="estrella">✦</span>
+      <span class="estrella">★</span>
+    </div>
+    <div class="logo-wrap">
+      <div class="logo-principal">TU SUERTE PE</div>
+    </div>
+    <div class="logo-sub">✦ Sorteos Para El Pueblo ✦</div>
+    <div class="tagline">Prueba tu suerte pe... 🎰</div>
+    <div class="cinta-gratis">✓ 100% GRATIS — ¡NO SE PAGA NADA PE!</div>
+    <div class="header-decoracion" style="margin-top:16px;">
+      <span class="estrella">♦</span><span class="estrella">★</span>
+      <span class="estrella">♦</span><span class="estrella">★</span>
+      <span class="estrella">♦</span><span class="estrella">★</span>
+      <span class="estrella">♦</span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#sorteos">🎰 SORTEOS</a>
+    <a href="#como">📋 CÓMO FUNCIONA</a>
+    <a href="#registro">✍️ REGÍSTRATE</a>
+    <a href="#ganadores">🏆 GANADORES</a>
+    <a href="#faq">❓ PREGUNTAS</a>
+  </nav>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>🎉 ¡SORTEO GRATIS! Regístrate ya pe ★ </span>
+      <span>📺 TV 32" Samsung usada ★ </span>
+      <span>🏍️ Moto lineal usada ★ </span>
+      <span>❄️ Refrigeradora usada ★ </span>
+      <span>📱 iPhone 12 usado ★ </span>
+      <span>💻 Laptop usada ★ </span>
+      <span>🎉 ¡SORTEO GRATIS! Regístrate ya pe ★ </span>
+      <span>📺 TV 32" Samsung usada ★ </span>
+      <span>🏍️ Moto lineal usada ★ </span>
+      <span>❄️ Refrigeradora usada ★ </span>
+      <span>📱 iPhone 12 usado ★ </span>
+      <span>💻 Laptop usada ★ </span>
+    </div>
+  </div>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="hero-grid">
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--neon-rosa)">12,480</div>
+        <div class="hero-stat-lbl">Participantes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--neon-verde)">38</div>
+        <div class="hero-stat-lbl">Ganadores</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--neon-amarillo)">S/. 0</div>
+        <div class="hero-stat-lbl">Costo de participar</div>
+      </div>
+    </div>
+    <div class="prox-sorteo-label">⏳ PRÓXIMO SORTEO EN:</div>
+    <div class="contador-wrap">
+      <div class="contador-bloque">
+        <div class="contador-num" id="dias">00</div>
+        <div class="contador-lbl">Días</div>
+      </div>
+      <div class="contador-bloque">
+        <div class="contador-num" id="horas">00</div>
+        <div class="contador-lbl">Horas</div>
+      </div>
+      <div class="contador-bloque">
+        <div class="contador-num" id="minutos">00</div>
+        <div class="contador-lbl">Min</div>
+      </div>
+      <div class="contador-bloque">
+        <div class="contador-num" id="segundos">00</div>
+        <div class="contador-lbl">Seg</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SORTEOS ACTIVOS -->
+  <section id="sorteos">
+    <h2 class="seccion-titulo">
+      <span style="color:var(--neon-rosa);">🎰 SORTEOS ACTIVOS 🎰</span>
+    </h2>
+    <div class="grid-sorteos" id="grid-sorteos">
+
+      <div class="card-sorteo">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">📺</div>
+        <div class="card-body">
+          <div class="card-categoria">Electrónico • Usado</div>
+          <div class="card-titulo">TV 32" SAMSUNG</div>
+          <div class="card-desc">Smart TV, pantalla completa, un pequeño rayón en el marco pero funciona perfecto pe. Lo usé 2 años nomás.</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 3,241 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 05 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:72%"></div></div>
+          <button class="btn-participar" onclick="abrirModalSorteo('TV 32\" Samsung', '📺')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-verde)">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">🏍️</div>
+        <div class="card-body">
+          <div class="card-categoria">Vehículo • Usado</div>
+          <div class="card-titulo">MOTO LINEAL 150cc</div>
+          <div class="card-desc">Honda Wave 2019, trompo en buen estado, SOAT vigente. Anda bien pero hay que afilarle el carburador un poquito.</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 5,890 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 10 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:88%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
+          <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirModalSorteo('Moto Lineal 150cc', '🏍️')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-celeste)">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">❄️</div>
+        <div class="card-body">
+          <div class="card-categoria">Hogar • Usado</div>
+          <div class="card-titulo">REFRIGERADORA BOSCH</div>
+          <div class="card-desc">Frigider de dos puertas, 320L, funciona al 100. Tiene un golpecito en la parte de atrás pero no se nota. ¡Muy bien cuidada!</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 2,103 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 15 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:48%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
+          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirModalSorteo('Refrigeradora Bosch', '❄️')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-violeta)">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">📱</div>
+        <div class="card-body">
+          <div class="card-categoria">Celular • Usado</div>
+          <div class="card-titulo">iPHONE 12 64GB</div>
+          <div class="card-desc">IPhone 12 color negro, batería al 87%, pantalla sin rajadura. Viene sin cargador pero la cámara tira de lujo todavía.</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 7,634 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 20 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:95%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
+          <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirModalSorteo('iPhone 12 64GB', '📱')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-naranja)">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">💻</div>
+        <div class="card-body">
+          <div class="card-categoria">Tecnología • Usado</div>
+          <div class="card-titulo">LAPTOP HP 15"</div>
+          <div class="card-desc">HP 15-bs, Intel Core i5, 8GB RAM, 1TB disco. Sirve para todo lo básico: YouTube, Word, estudiar en Zoom. Un teclado tiene la F5 jalada.</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 4,210 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 25 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:61%;background:linear-gradient(90deg,var(--neon-naranja),var(--neon-amarillo))"></div></div>
+          <button class="btn-participar" style="background:var(--neon-naranja);border-bottom-color:#7a3300" onclick="abrirModalSorteo('Laptop HP 15\"', '💻')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-amarillo)">
+        <div class="badge-gratis">GRATIS</div>
+        <div class="card-img">🚲</div>
+        <div class="card-body">
+          <div class="card-categoria">Vehículo • Usado</div>
+          <div class="card-titulo">BICICLETA MOUNTAIN</div>
+          <div class="card-desc">Bici montañera talla M, 21 velocidades, frenos de disco. Le faltan los grips de los manubrios pero anda como avión pe.</div>
+          <div class="card-meta">
+            <span class="card-participantes">👥 1,543 inscritos</span>
+            <span class="card-fecha">📅 Sorteo: 30 Abr</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" style="width:34%;background:linear-gradient(90deg,var(--neon-amarillo),var(--neon-verde))"></div></div>
+          <button class="btn-participar" style="background:var(--neon-amarillo);border-bottom-color:#7a6e00" onclick="abrirModalSorteo('Bicicleta Mountain', '🚲')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <div id="como">
+    <div class="inner">
+      <h2 class="seccion-titulo"><span>📋 ¿CÓMO FUNCIONA? 📋</span></h2>
+      <div class="pasos">
+        <div class="paso">
+          <div class="paso-num">1</div>
+          <div class="paso-icono">✍️</div>
+          <h3>REGÍSTRATE</h3>
+          <p>Llena el formulario con tu nombre, DNI y celular. ¡Sin pagar ni un sol pe! Es completamente gratis.</p>
+        </div>
+        <div class="paso">
+          <div class="paso-num">2</div>
+          <div class="paso-icono">🎟️</div>
+          <h3>ELIGE TU SORTEO</h3>
+          <p>Escoge el artículo que más te gusta y apunta tu nombre. ¡Puedes participar en varios a la vez!</p>
+        </div>
+        <div class="paso">
+          <div class="paso-num">3</div>
+          <div class="paso-icono">📲</div>
+          <h3>ESPERA EL SORTEO</h3>
+          <p>El sorteo se hace en vivo por Facebook Live. Todos pueden ver quién gana. ¡Sin trampa ni cartón!</p>
+        </div>
+        <div class="paso">
+          <div class="paso-num">4</div>
+          <div class="paso-icono">🎉</div>
+          <h3>¡RECOGE TU PREMIO!</h3>
+          <p>Si ganas, te avisamos por WhatsApp. Coordinas para recoger tu premio en Lima o enviamos a provincia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div id="registro">
+    <div class="inner">
+      <h2 class="seccion-titulo"><span>✍️ ¡INSCRÍBETE GRATIS PE! ✍️</span></h2>
+      <form class="form-chicha" id="form-registro" onsubmit="enviarRegistro(event)">
+        <div class="form-doble">
+          <div class="form-grupo">
+            <label for="nombres">👤 NOMBRES</label>
+            <input type="text" id="nombres" placeholder="Tus nombres" required />
+          </div>
+          <div class="form-grupo">
+            <label for="apellidos">👤 APELLIDOS</label>
+            <input type="text" id="apellidos" placeholder="Tus apellidos" required />
+          </div>
+        </div>
+        <div class="form-doble">
+          <div class="form-grupo">
+            <label for="dni">🪪 DNI</label>
+            <input type="text" id="dni" placeholder="12345678" maxlength="8" pattern="[0-9]{8}" required />
+          </div>
+          <div class="form-grupo">
+            <label for="celular">📱 CELULAR</label>
+            <input type="tel" id="celular" placeholder="9XXXXXXXX" maxlength="9" required />
+          </div>
+        </div>
+        <div class="form-grupo">
+          <label for="distrito">📍 DISTRITO</label>
+          <select id="distrito" required>
+            <option value="">— Elige tu distrito —</option>
+            <option>San Juan de Lurigancho</option>
+            <option>Villa El Salvador</option>
+            <option>San Martín de Porres</option>
+            <option>Ate Vitarte</option>
+            <option>Comas</option>
+            <option>El Agustino</option>
+            <option>Los Olivos</option>
+            <option>Villa María del Triunfo</option>
+            <option>Puente Piedra</option>
+            <option>Independencia</option>
+            <option>Carabayllo</option>
+            <option>Santa Anita</option>
+            <option>Lurín</option>
+            <option>Chorrillos</option>
+            <option>Cercado de Lima</option>
+            <option>Otro (provincia)</option>
+          </select>
+        </div>
+        <div class="form-grupo">
+          <label for="sorteo">🎰 SORTEO AL QUE QUIERO PARTICIPAR</label>
+          <select id="sorteo" required>
+            <option value="">— Elige un sorteo —</option>
+            <option>TV 32" Samsung</option>
+            <option>Moto Lineal 150cc</option>
+            <option>Refrigeradora Bosch</option>
+            <option>iPhone 12 64GB</option>
+            <option>Laptop HP 15"</option>
+            <option>Bicicleta Mountain</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-registro">🎉 ¡ME APUNTO GRATIS!</button>
+        <p class="form-nota">Al registrarte aceptas nuestros términos. Tus datos solo se usan para el sorteo.<br>No se cobra nada. El sorteo es 100% transparente y en vivo.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- GANADORES -->
+  <section id="ganadores">
+    <h2 class="seccion-titulo"><span>🏆 ÚLTIMOS GANADORES 🏆</span></h2>
+    <div class="tabla-wrap">
+      <table class="tabla-ganadores">
+        <thead>
+          <tr>
+            <th>🏆</th>
+            <th>Ganador</th>
+            <th>Premio</th>
+            <th>Distrito</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="trofeo">🥇</td>
+            <td><div class="nombre">Rosa M.***</div><div class="dni">DNI: 4527****</div></td>
+            <td class="premio">Refrigeradora Bosch</td>
+            <td>SJL</td>
+            <td>20 Mar 2026</td>
+          </tr>
+          <tr>
+            <td class="trofeo">🥇</td>
+            <td><div class="nombre">Jorge A.***</div><div class="dni">DNI: 7812****</div></td>
+            <td class="premio">TV 43" LG</td>
+            <td>VMT</td>
+            <td>15 Mar 2026</td>
+          </tr>
+          <tr>
+            <td class="trofeo">🥇</td>
+            <td><div class="nombre">Marisol C.***</div><div class="dni">DNI: 2345****</div></td>
+            <td class="premio">Laptop HP Pavilion</td>
+            <td>Comas</td>
+            <td>10 Mar 2026</td>
+          </tr>
+          <tr>
+            <td class="trofeo">🥇</td>
+            <td><div class="nombre">Erick T.***</div><div class="dni">DNI: 6698****</div></td>
+            <td class="premio">Moto Lineal 125cc</td>
+            <td>Ate</td>
+            <td>01 Mar 2026</td>
+          </tr>
+          <tr>
+            <td class="trofeo">🥇</td>
+            <td><div class="nombre">Yolanda P.***</div><div class="dni">DNI: 1123****</div></td>
+            <td class="premio">Celular Samsung A54</td>
+            <td>VES</td>
+            <td>20 Feb 2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <div id="faq">
+    <div class="inner">
+      <h2 class="seccion-titulo"><span>❓ PREGUNTAS FRECUENTES ❓</span></h2>
+      <div id="faqs">
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Realmente es gratis? ¿No hay trampas?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            Sí pe, 100% gratis. No pedimos pago, no pedimos tarjeta, nada. Los artículos los donan personas que ya no los usan y quieren que lleguen a alguien que los necesite. El sorteo se hace en vivo por Facebook.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Cómo sé que el sorteo es justo?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            Todos los sorteos se transmiten en vivo por Facebook Live. Usamos una ruleta online con todos los participantes y cualquier persona puede verlo en tiempo real. ¡Sin trampa ni cartón!
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Puedo participar en más de un sorteo?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            ¡Claro pe! Puedes inscribirte en todos los sorteos que quieras. Cada sorteo es independiente. Mientras más participas, más posibilidades de ganar.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Los artículos usados funcionan bien?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            Revisamos cada artículo antes del sorteo. En la descripción siempre te decimos si tiene algún defecto. Somos honestos con el estado del producto porque creemos en la transparencia.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Hacen envíos a provincia?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            Sí, coordinamos envío a provincia pero el costo del flete lo asume el ganador. Para Lima, el recojo es en un punto céntrico que se indica al ganador por WhatsApp.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-preg" onclick="toggleFaq(this)">
+            ¿Puedo donar un artículo para sortear?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-resp">
+            ¡Sí pues! Si tienes algo que ya no usas y quieres donarlo para un sorteo, escríbenos por WhatsApp. Revisamos el artículo y lo ponemos en el próximo sorteo. ¡Ayuda a tu prójimo pe!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">TU SUERTE PE</div>
+    <div class="footer-social">
+      <a class="social-btn" href="#">📘 Facebook</a>
+      <a class="social-btn" href="#">📸 Instagram</a>
+      <a class="social-btn" href="#">🎵 TikTok</a>
+      <a class="social-btn" href="#">▶️ YouTube Live</a>
+    </div>
+    <div class="footer-links">
+      <a href="#">Términos y Condiciones</a>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Cómo Donar</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div class="footer-copy">
+      © 2026 <strong>TU SUERTE PE</strong> | tusuerte.pe<br>
+      Sorteos gratuitos de artículos usados para el pueblo peruano 🇵🇪<br>
+      Los sorteos se realizan en vivo y son completamente transparentes.
+    </div>
+  </footer>
+
+  <!-- BOTÓN WHATSAPP -->
+  <a class="wsp-btn" href="https://wa.me/51999999999?text=Hola!%20Me%20interesa%20participar%20en%20Tu%20Suerte%20Pe" target="_blank" title="Escríbenos por WhatsApp">
+    💬
+  </a>
+
+  <!-- MODAL REGISTRO EXITOSO -->
+  <div class="modal-overlay" id="modal-exito">
+    <div class="modal-box">
+      <div class="modal-icono">🎉</div>
+      <div class="modal-titulo">¡TE INSCRIBISTE PE!</div>
+      <p class="modal-texto">Estás dentro del sorteo. Guarda tu código de participación:</p>
+      <div class="modal-codigo" id="codigo-participacion">TSP-00000</div>
+      <p class="modal-texto">Te avisaremos por WhatsApp si eres el ganador. El sorteo es en vivo por Facebook. ¡Suerte!</p>
+      <button class="btn-cerrar" onclick="cerrarModal()">¡LISTO PE! 🤙</button>
+    </div>
+  </div>
+
+  <!-- MODAL SORTEO INFO -->
+  <div class="modal-sorteo-overlay" id="modal-sorteo">
+    <div class="modal-sorteo-box">
+      <div class="modal-sorteo-emoji" id="ms-emoji">🎰</div>
+      <div class="modal-sorteo-titulo">¡QUIERES GANAR!</div>
+      <div class="modal-sorteo-nombre" id="ms-nombre">Premio</div>
+      <p class="modal-sorteo-texto">
+        Para participar solo tienes que registrarte gratis con tu nombre y DNI.
+        ¡Sin pagar ni un sol pe! El sorteo se hace en vivo.
+      </p>
+      <div class="modal-sorteo-btns">
+        <button class="btn-ir-registro" onclick="irARegistro()">✍️ REGÍSTRATE GRATIS</button>
+        <button class="btn-cerrar-sorteo" onclick="cerrarModalSorteo()">Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONTADOR REGRESIVO ──
+    function actualizarContador() {
+      const ahora = new Date();
+      const proximo = new Date(ahora);
+      proximo.setDate(proximo.getDate() + ((5 - proximo.getDay() + 7) % 7 || 7));
+      proximo.setHours(20, 0, 0, 0);
+      const diff = proximo - ahora;
+      if (diff <= 0) return;
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('dias').textContent = String(d).padStart(2,'0');
+      document.getElementById('horas').textContent = String(h).padStart(2,'0');
+      document.getElementById('minutos').textContent = String(m).padStart(2,'0');
+      document.getElementById('segundos').textContent = String(s).padStart(2,'0');
+    }
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+
+    // ── REGISTRO FORM ──
+    function enviarRegistro(e) {
+      e.preventDefault();
+      const cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('codigo-participacion').textContent = cod;
+      document.getElementById('modal-exito').classList.add('activo');
+      e.target.reset();
+    }
+    function cerrarModal() {
+      document.getElementById('modal-exito').classList.remove('activo');
+    }
+
+    // ── MODAL SORTEO ──
+    function abrirModalSorteo(nombre, emoji) {
+      document.getElementById('ms-nombre').textContent = nombre;
+      document.getElementById('ms-emoji').textContent = emoji;
+      document.getElementById('modal-sorteo').classList.add('activo');
+    }
+    function cerrarModalSorteo() {
+      document.getElementById('modal-sorteo').classList.remove('activo');
+    }
+    function irARegistro() {
+      cerrarModalSorteo();
+      document.getElementById('registro').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ── FAQ ──
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const activo = item.classList.contains('activo');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('activo'));
+      if (!activo) item.classList.add('activo');
+    }
+
+    // ── BARRA FILL ANIMADA ──
+    window.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const w = e.target.style.width;
+            e.target.style.width = '0';
+            setTimeout(() => { e.target.style.width = w; }, 100);
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('.barra-fill').forEach(b => observer.observe(b));
+    });
+
+    // Cerrar modales al hacer click fuera
+    document.getElementById('modal-exito').addEventListener('click', function(e) {
+      if (e.target === this) cerrarModal();
+    });
+    document.getElementById('modal-sorteo').addEventListener('click', function(e) {
+      if (e.target === this) cerrarModalSorteo();
+    });
+  </script>
+</body>
+</html>
