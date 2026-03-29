@@ -918,6 +918,9 @@
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
 
+  <!-- Audio silbido llama -->
+  <audio id="audio-silbido" src="./silbido_corto.mp3" preload="auto"></audio>
+
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     #llama-saludo {
@@ -1081,6 +1084,9 @@
         void el.offsetWidth;
         el.style.animationDuration = (DUR / 1000) + 's';
         el.classList.add('animando');
+        // Silbido al aparecer
+        var snd = document.getElementById('audio-silbido');
+        if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
         setTimeout(function() { el.classList.remove('animando'); }, DUR + 100);
       }
 
@@ -1090,7 +1096,7 @@
 
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
     var musica = (function() {
-      var ctx, playing = false, step = 0, nextTime = 0, timer = null;
+      var ctx, master, playing = false, step = 0, nextTime = 0, timer = null;
       var BPM = 118;
       function sDur() { return 60 / BPM / 2; } // corcheas
 
@@ -1134,7 +1140,7 @@
 
       function kick(t) {
         var o = ctx.createOscillator(), g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
+        o.connect(g); g.connect(master);
         o.frequency.setValueAtTime(160, t);
         o.frequency.exponentialRampToValueAtTime(40, t + 0.1);
         g.gain.setValueAtTime(1.6, t);
@@ -1147,7 +1153,7 @@
         var bp = ctx.createBiquadFilter();
         bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.7;
         var g = ctx.createGain();
-        src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+        src.connect(bp); bp.connect(g); g.connect(master);
         g.gain.setValueAtTime(0.8, t);
         g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
         src.start(t); src.stop(t + 0.2);
@@ -1158,7 +1164,7 @@
         var hp = ctx.createBiquadFilter();
         hp.type = 'highpass'; hp.frequency.value = 9000;
         var g = ctx.createGain();
-        src.connect(hp); hp.connect(g); g.connect(ctx.destination);
+        src.connect(hp); hp.connect(g); g.connect(master);
         g.gain.setValueAtTime(0.25, t);
         g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
         src.start(t); src.stop(t + 0.07);
@@ -1170,7 +1176,7 @@
           o.type = 'square'; o.frequency.value = f;
           var bp = ctx.createBiquadFilter();
           bp.type = 'bandpass'; bp.frequency.value = 680;
-          o.connect(bp); bp.connect(g); g.connect(ctx.destination);
+          o.connect(bp); bp.connect(g); g.connect(master);
           g.gain.setValueAtTime(0.22, t);
           g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
           o.start(t); o.stop(t + 0.16);
@@ -1182,7 +1188,7 @@
         var o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
         o.type = 'sawtooth'; o.frequency.value = freq;
         lp.type = 'lowpass'; lp.frequency.value = 380;
-        o.connect(lp); lp.connect(g); g.connect(ctx.destination);
+        o.connect(lp); lp.connect(g); g.connect(master);
         var d = sDur();
         g.gain.setValueAtTime(0.55, t);
         g.gain.setValueAtTime(0.35, t + 0.04);
@@ -1198,7 +1204,7 @@
         bp.type = 'bandpass'; bp.frequency.value = freq * 2.5; bp.Q.value = 1.8;
         var g = ctx.createGain();
         o.type = 'sawtooth'; o.frequency.value = freq;
-        o.connect(ws); ws.connect(bp); bp.connect(g); g.connect(ctx.destination);
+        o.connect(ws); ws.connect(bp); bp.connect(g); g.connect(master);
         var d = sDur();
         g.gain.setValueAtTime(0, t);
         g.gain.linearRampToValueAtTime(0.2, t + 0.012);
@@ -1229,6 +1235,10 @@
         start: function() {
           if (playing) return;
           ctx = new (window.AudioContext || window.webkitAudioContext)();
+          // Master gain — controla volumen general (0.0 a 1.0)
+          master = ctx.createGain();
+          master.gain.value = 0.45;
+          master.connect(ctx.destination);
           playing = true; step = 0; bar = 0;
           nextTime = ctx.currentTime + 0.08;
           schedule();
