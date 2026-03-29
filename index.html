@@ -742,12 +742,21 @@
   <!-- MODAL EXITO -->
   <div class="modal-overlay" id="modal-exito">
     <div class="modal-box">
-      <div class="modal-icono">🎉</div>
-      <div class="modal-titulo">¡TE APUNTASTE PE!</div>
+      <div class="modal-titulo">¡QUEDA!</div>
       <p class="modal-texto">Estás dentro del sorteo. Guarda tu código:</p>
       <div class="modal-codigo" id="codigo-participacion">TSP-00000</div>
       <p class="modal-texto">El sorteo es este domingo a las 10pm en el TikTok oficial <strong>@tusuerte.pe.oficial</strong>. ¡Suerte causa!</p>
-      <button class="btn-cerrar" onclick="cerrarModal()">¡LISTO PE! 🤙</button>
+      <button class="btn-cerrar" onclick="cerrarModal()">¡CHEVERE! 🤙</button>
+    </div>
+  </div>
+
+  <!-- MODAL YA REGISTRADO -->
+  <div class="modal-overlay" id="modal-ya-registrado" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">
+    <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
+      <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 NO SEAS HÁBIL</div>
+      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en otro sorteo.</p>
+      <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo por semana. ¡Espera el próximo domingo pe!</p>
+      <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">ENTENDIDO 🤙</button>
     </div>
   </div>
 
@@ -774,13 +783,30 @@
     setInterval(actualizarContador, 1000);
 
     // PANELES
+    var _panelAbierto = false;
     function abrirPanel(id) {
       document.getElementById(id).classList.add('activo');
       document.body.style.overflow = 'hidden';
+      _panelAbierto = true;
+      // Ocultar llama y silenciar silbido
+      var llama = document.getElementById('llama-saludo');
+      if (llama) llama.style.visibility = 'hidden';
+      var snd = document.getElementById('audio-silbido');
+      if (snd) { snd.pause(); snd.currentTime = 0; }
     }
     function cerrarPanel(id) {
       document.getElementById(id).classList.remove('activo');
       document.body.style.overflow = '';
+      // Verificar si queda algún panel abierto
+      var paneles = ['panel-como','panel-ganadores','panel-faq','panel-terminos','panel-registro'];
+      var alguno = paneles.some(function(p) {
+        return document.getElementById(p) && document.getElementById(p).classList.contains('activo');
+      });
+      if (!alguno) {
+        _panelAbierto = false;
+        var llama = document.getElementById('llama-saludo');
+        if (llama) llama.style.visibility = 'visible';
+      }
     }
     function cerrarPanelFuera(e, id) {
       if (e.target === document.getElementById(id)) cerrarPanel(id);
@@ -795,6 +821,11 @@
     const contadores = { '1':0, '2':0, '3':0 };
 
     function abrirRegistro(nombreSorteo, sorteoId) {
+      // Bloquear si ya está registrado esta semana
+      if (localStorage.getItem('tsp_registrado')) {
+        document.getElementById('modal-ya-registrado').classList.add('activo');
+        return;
+      }
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
@@ -872,6 +903,14 @@
       document.getElementById('inscritos-' + id).textContent = contadores[id];
       const pct = Math.max(5, Math.min(contadores[id], 100));
       document.getElementById('barra-' + id).style.width = pct + '%';
+
+      // ── Guardar en localStorage para bloquear otro registro esta semana ──
+      localStorage.setItem('tsp_registrado', JSON.stringify({
+        tiktok: datos.tiktok,
+        sorteo: datos.sorteo,
+        codigo: cod,
+        fecha: new Date().toISOString()
+      }));
 
       // ── Mostrar código y modal de éxito ──
       document.getElementById('codigo-participacion').textContent = cod;
@@ -953,7 +992,7 @@
       width: 70px;
     }
   </style>
-  <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()">🎵</button>
+  <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
 
   <!-- Audio silbido llama -->
@@ -1116,6 +1155,8 @@
       var DUR = 7500; // ms que dura la animación
 
       function mostrarLlama() {
+        // No mostrar ni silbar si hay un panel abierto
+        if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
         burbuja.textContent = frases[idx % frases.length];
         idx++;
         el.classList.remove('animando');
