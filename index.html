@@ -1685,6 +1685,24 @@
         },
         getVolume: function() {
           return master ? master.gain.value : 0.18;
+        },
+        // Suspende el AudioContext al ir al fondo (no destruye el estado)
+        pausar: function() {
+          if (ctx && ctx.state === 'running') {
+            clearTimeout(timer);
+            ctx.suspend();
+          }
+        },
+        // Reactiva el AudioContext al volver al frente
+        reanudar: function() {
+          if (ctx && ctx.state === 'suspended' && playing) {
+            ctx.resume().then(function() {
+              // Reiniciar scheduler con tiempo actualizado
+              clearTimeout(timer);
+              nextTime = ctx.currentTime + 0.08;
+              schedule();
+            }).catch(function() {});
+          }
         }
       };
     })();
@@ -1713,16 +1731,15 @@
     });
 
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
-    // NO usamos scroll ni keydown — iOS no los acepta como gesto de audio.
+    // Primero arranca la música, luego desbloquea los silbidos.
     // Los listeners se mantienen hasta confirmar que la música está corriendo.
     function arrancarEnInteraccion() {
-      // Intentar iniciar música en cada gesto hasta que realmente funcione
+      // 1) Música primero — dentro del gesto para que iOS/Android la permita
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
 
-      // Desbloquear <audio> de silbido (una sola vez es suficiente,
-      // pero repetirlo es inocuo — play+pause no se escucha)
+      // 2) Desbloquear <audio> de silbido después de la música
       ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
         var snd = document.getElementById(id);
         if (!snd) return;
@@ -1744,6 +1761,21 @@
     }
     document.addEventListener('click',      arrancarEnInteraccion);
     document.addEventListener('touchstart', arrancarEnInteraccion);
+
+    // Pausar todo cuando el móvil se bloquea o cambia de app (Page Visibility API)
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // En segundo plano: suspender música y cortar cualquier silbido activo
+        musica.pausar();
+        ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
+          var snd = document.getElementById(id);
+          if (snd && !snd.paused) { snd.pause(); snd.currentTime = 0; }
+        });
+      } else {
+        // Vuelve al frente: reanudar música si estaba sonando
+        musica.reanudar();
+      }
+    });
   </script>
 </body>
 </html>
