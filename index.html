@@ -65,7 +65,7 @@
 
     /* TICKER */
     .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
-    .ticker { display:flex; width:max-content; animation:ticker 14s linear infinite; }
+    .ticker { display:flex; width:max-content; animation:ticker 30s linear infinite; }
     .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 40px; }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
@@ -296,12 +296,6 @@
 
   <!-- HERO -->
   <div class="hero-banner">
-    <div class="hero-grid">
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--neon-rosa)">3</div>
-        <div class="hero-stat-lbl">Sorteos Activos</div>
-      </div>
-    </div>
     <div class="prox-sorteo-label">⏳ PRÓXIMO SORTEO EN:</div>
     <div class="prox-sorteo-fecha" id="prox-sorteo-fecha">📅 Cargando...</div>
     <div class="contador-wrap">
@@ -313,7 +307,7 @@
   </div>
 
   <!-- SORTEOS -->
-  <section id="sorteos" style="display:none">
+  <section id="sorteos">
     <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
     <div class="grid-sorteos">
 
@@ -784,17 +778,48 @@
   </div>
 
   <script>
+    // ── Utilidad: fecha actual en Lima (UTC-5, sin DST) ──
+    function ahoraLima() {
+      return new Date(Date.now() - new Date().getTimezoneOffset() * 60000 + (-5 * 3600000) - (new Date().getTimezoneOffset() !== 300 ? (new Date().getTimezoneOffset() - (-5*60)) * 60000 : 0));
+    }
+    function proximoDomingo10pm() {
+      // Trabajar todo en UTC pero pensando en Lima (UTC-5)
+      var utcAhora = Date.now();
+      var limaAhora = new Date(utcAhora);
+      // Forzar hora Lima desplazando el timezone
+      var offsetLima = -5 * 60; // minutos
+      var offsetLocal = limaAhora.getTimezoneOffset(); // minutos (positivo = detrás de UTC)
+      var limaNow = new Date(utcAhora + (offsetLocal - (-offsetLima)) * 60000);
+
+      var diaSemana = limaNow.getDay(); // 0=domingo
+      var diff = (7 - diaSemana) % 7;
+
+      var target = new Date(limaNow);
+      target.setHours(22, 0, 0, 0); // 10pm Lima
+
+      if (diff === 0) {
+        // Hoy es domingo: si ya pasaron las 10pm, ir al próximo
+        if (limaNow >= target) target.setDate(target.getDate() + 7);
+      } else {
+        target.setDate(target.getDate() + diff);
+      }
+      // Devolver la diferencia en ms (entre ahora real y el target en tiempo Lima)
+      return target - limaNow;
+    }
+
     // FECHA DINÁMICA — PRÓXIMO DOMINGO
     (function() {
-      var dias   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-      var meses  = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-      var ahora  = new Date();
-      var dom    = new Date(ahora);
-      var diff   = (7 - dom.getDay()) % 7 || 7;
-      dom.setDate(dom.getDate() + diff);
+      var meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      var utcAhora = Date.now();
+      var offsetLocal = new Date().getTimezoneOffset();
+      var limaNow = new Date(utcAhora + (offsetLocal - 300) * 60000);
+      var diaSemana = limaNow.getDay();
+      var diff = (7 - diaSemana) % 7;
+      var dom = new Date(limaNow);
       dom.setHours(22, 0, 0, 0);
+      if (diff === 0 && limaNow >= dom) { diff = 7; }
+      if (diff > 0) dom.setDate(dom.getDate() + diff);
       var etiqueta = 'Dom ' + dom.getDate() + ' ' + meses[dom.getMonth()];
-      // Actualizar todos los elementos
       var fechaEl = document.getElementById('prox-sorteo-fecha');
       if (fechaEl) fechaEl.textContent = '📅 ' + etiqueta + ' — 10:00 PM';
       document.querySelectorAll('.proxfecha').forEach(function(el) {
@@ -802,22 +827,17 @@
       });
     })();
 
-    // CONTADOR – PRÓXIMO DOMINGO 10PM
+    // CONTADOR – PRÓXIMO DOMINGO 10PM (Lima)
     function actualizarContador() {
-      const ahora = new Date();
-      const proximo = new Date(ahora);
-      const diasHastaDomingo = (7 - proximo.getDay()) % 7 || 7;
-      proximo.setDate(proximo.getDate() + diasHastaDomingo);
-      proximo.setHours(22, 0, 0, 0);
-      const diff = proximo - ahora;
-      if (diff <= 0) return;
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('dias').textContent = String(d).padStart(2,'0');
-      document.getElementById('horas').textContent = String(h).padStart(2,'0');
-      document.getElementById('minutos').textContent = String(m).padStart(2,'0');
+      var ms = proximoDomingo10pm();
+      if (ms <= 0) ms = 0;
+      var d = Math.floor(ms / 86400000);
+      var h = Math.floor((ms % 86400000) / 3600000);
+      var m = Math.floor((ms % 3600000) / 60000);
+      var s = Math.floor((ms % 60000) / 1000);
+      document.getElementById('dias').textContent     = String(d).padStart(2,'0');
+      document.getElementById('horas').textContent    = String(h).padStart(2,'0');
+      document.getElementById('minutos').textContent  = String(m).padStart(2,'0');
       document.getElementById('segundos').textContent = String(s).padStart(2,'0');
     }
     actualizarContador();
@@ -1096,41 +1116,45 @@
     #llama-saludo.animando #llama-burbuja2 {
       animation: burbuja2Anim 13s ease forwards;
     }
-    /* Llama entra desde la izquierda, rebota, cruza la pantalla y sale por la derecha */
+    /* Llama cruza toda la pantalla de izquierda a derecha */
     @keyframes llamaSlide {
-      0%   { left: -220px; }
-      12%  { left: 20px; }
-      18%  { left: 20px; transform: translateY(-16px); }
-      24%  { left: 20px; transform: translateY(0); }
-      30%  { left: 20px; transform: translateY(-10px); }
-      35%  { left: 20px; transform: translateY(0); }
-      /* pausa con cartel 1 */
-      55%  { left: 20px; transform: translateY(0); }
-      /* empieza a cruzar hacia la derecha */
-      80%  { left: calc(100vw - 180px); transform: translateY(0); }
+      0%   { left: -220px;                    transform: translateY(0); }
+      8%   { left: 20px;                      transform: translateY(0); }
+      /* pequeño rebote al entrar */
+      12%  { left: 20px;                      transform: translateY(-14px); }
+      16%  { left: 20px;                      transform: translateY(0); }
+      20%  { left: 20px;                      transform: translateY(-8px); }
+      24%  { left: 20px;                      transform: translateY(0); }
+      /* pausa breve mostrando cartel 1, luego empieza a cruzar */
+      30%  { left: 20px;                      transform: translateY(0); }
+      /* cruce lento de toda la pantalla */
+      78%  { left: calc(100vw - 200px);       transform: translateY(0); }
+      /* pequeño rebote antes de salir */
+      82%  { left: calc(100vw - 200px);       transform: translateY(-8px); }
+      86%  { left: calc(100vw - 200px);       transform: translateY(0); }
       /* sale por la derecha */
-      100% { left: calc(100vw + 220px); transform: translateY(0); }
+      100% { left: calc(100vw + 230px);       transform: translateY(0); }
     }
-    /* Cartel 1: aparece al entrar, desaparece al empezar a cruzar */
+    /* Cartel 1: aparece al entrar, desaparece a mitad del cruce */
     @keyframes burbuja1Anim {
       0%   { opacity:0; transform: scale(0.3); }
-      12%  { opacity:0; transform: scale(0.3); }
-      18%  { opacity:1; transform: scale(1.12); }
-      22%  { opacity:1; transform: scale(0.96); }
-      25%  { opacity:1; transform: scale(1); }
-      50%  { opacity:1; transform: scale(1); }
-      58%  { opacity:0; transform: scale(0.2); }
+      8%   { opacity:0; transform: scale(0.3); }
+      14%  { opacity:1; transform: scale(1.1); }
+      18%  { opacity:1; transform: scale(0.97); }
+      20%  { opacity:1; transform: scale(1); }
+      46%  { opacity:1; transform: scale(1); }
+      54%  { opacity:0; transform: scale(0.2); }
       100% { opacity:0; }
     }
-    /* Cartel 2: aparece cuando ya está cruzando, antes de irse */
+    /* Cartel 2: aparece en la mitad del cruce, antes de salir */
     @keyframes burbuja2Anim {
       0%   { opacity:0; transform: scale(0.3); }
-      62%  { opacity:0; transform: scale(0.3); }
-      70%  { opacity:1; transform: scale(1.12); }
-      74%  { opacity:1; transform: scale(0.96); }
-      77%  { opacity:1; transform: scale(1); }
-      88%  { opacity:1; transform: scale(1); }
-      96%  { opacity:0; transform: scale(0.2); }
+      58%  { opacity:0; transform: scale(0.3); }
+      66%  { opacity:1; transform: scale(1.1); }
+      70%  { opacity:1; transform: scale(0.97); }
+      73%  { opacity:1; transform: scale(1); }
+      86%  { opacity:1; transform: scale(1); }
+      94%  { opacity:0; transform: scale(0.2); }
       100% { opacity:0; }
     }
   </style>
