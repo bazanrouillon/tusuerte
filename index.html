@@ -248,7 +248,7 @@
       content:''; position:absolute; inset:0;
       background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,230,0,.04) 40px,rgba(255,230,0,.04) 80px);
     }
-    /* Contenedor principal — 18s ciclo: 0-30% corre, 30-58% frena y mira 5s, 58-100% se va */
+    /* Contenedor principal — 18s ciclo: 0-28% corre, 28-30% frena, 30-47% parado 3s, 47-100% sigue */
     .llama-runner {
       position:absolute; top:50%; transform:translateY(-50%);
       white-space:nowrap;
@@ -258,59 +258,265 @@
       0%   { left:-16%; }
       28%  { left:calc(50% - 50px); }
       30%  { left:calc(50% - 50px); }
-      58%  { left:calc(50% - 50px); }
-      60%  { left:calc(50% - 40px); }
+      47%  { left:calc(50% - 50px); }
+      50%  { left:calc(50% - 45px); }
       100% { left:112%; }
     }
     .llama-svg-wrap {
       display:inline-block; width:100px; height:55px;
-      animation: llamaFlip 18s ease-in-out infinite;
+      animation: combiBrake 18s ease-in-out infinite;
     }
-    @keyframes llamaFlip {
-      0%,28%   { transform:scaleX(1); }
-      29%      { transform:scaleX(1) rotate(-3deg); }
-      30%      { transform:scaleX(1) rotate(2deg); }
-      31%      { transform:scaleX(-1); }
-      58%      { transform:scaleX(-1); }
-      60%,100% { transform:scaleX(1); }
+    /* Sin flip — solo sacudida de frenado y sigue igual */
+    @keyframes combiBrake {
+      0%,27%   { transform:rotate(0deg); }
+      28%      { transform:rotate(-4deg); }
+      29%      { transform:rotate(3deg); }
+      30%      { transform:rotate(-1deg); }
+      31%,47%  { transform:rotate(0deg); }
+      48%,100% { transform:rotate(0deg); }
     }
-    /* Ruedas girando */
-    .combi-rueda { animation: ruedaSpin 0.4s linear infinite; transform-origin:center center; }
+    /* Ruedas girando — se detienen en la parada */
+    .combi-rueda { animation: ruedaSpin 18s linear infinite; transform-origin:center center; }
     @keyframes ruedaSpin {
-      0%   { transform:rotate(0deg); }
-      100% { transform:rotate(360deg); }
+      0%    { transform:rotate(0deg); }
+      1%    { transform:rotate(100deg); }
+      2%    { transform:rotate(200deg); }
+      3%    { transform:rotate(300deg); }
+      4%    { transform:rotate(400deg); }
+      5%    { transform:rotate(500deg); }
+      6%    { transform:rotate(600deg); }
+      7%    { transform:rotate(700deg); }
+      8%    { transform:rotate(800deg); }
+      9%    { transform:rotate(900deg); }
+      10%   { transform:rotate(1000deg); }
+      11%   { transform:rotate(1100deg); }
+      12%   { transform:rotate(1200deg); }
+      13%   { transform:rotate(1300deg); }
+      14%   { transform:rotate(1400deg); }
+      15%   { transform:rotate(1500deg); }
+      16%   { transform:rotate(1600deg); }
+      17%   { transform:rotate(1700deg); }
+      18%   { transform:rotate(1800deg); }
+      19%   { transform:rotate(1900deg); }
+      20%   { transform:rotate(2000deg); }
+      21%   { transform:rotate(2100deg); }
+      22%   { transform:rotate(2200deg); }
+      23%   { transform:rotate(2300deg); }
+      24%   { transform:rotate(2400deg); }
+      25%   { transform:rotate(2500deg); }
+      26%   { transform:rotate(2600deg); }
+      27%   { transform:rotate(2700deg); }
+      28%   { transform:rotate(2750deg); }
+      30%,47% { transform:rotate(2760deg); }
+      48%   { transform:rotate(2860deg); }
+      49%   { transform:rotate(2960deg); }
+      50%   { transform:rotate(3060deg); }
+      55%   { transform:rotate(3560deg); }
+      60%   { transform:rotate(4060deg); }
+      65%   { transform:rotate(4560deg); }
+      70%   { transform:rotate(5060deg); }
+      75%   { transform:rotate(5560deg); }
+      80%   { transform:rotate(6060deg); }
+      85%   { transform:rotate(6560deg); }
+      90%   { transform:rotate(7060deg); }
+      95%   { transform:rotate(7560deg); }
+      100%  { transform:rotate(8060deg); }
     }
     /* Humo del tubo de escape */
     .combi-humo { animation: humoCombi 18s linear infinite; }
     @keyframes humoCombi {
       0%,28%   { opacity:0.6; }
-      30%,58%  { opacity:0; }
-      60%,100% { opacity:0.6; }
+      30%,47%  { opacity:0; }
+      49%,100% { opacity:0.6; }
     }
-    /* Sacudida de la combi corriendo */
-    .combi-body-shake { animation: combiShake 0.3s ease-in-out infinite alternate; }
+    /* Sacudida de la combi corriendo — se detiene cuando frena */
+    .combi-body-shake { animation: combiShake 18s linear infinite; }
     @keyframes combiShake {
-      0%   { transform:translateY(0px); }
-      100% { transform:translateY(-1.5px); }
+      0%    { transform:translateY(0px); }
+      0.5%  { transform:translateY(-1.5px); }
+      1%    { transform:translateY(0px); }
+      1.5%  { transform:translateY(-1.5px); }
+      2%    { transform:translateY(0px); }
+      2.5%  { transform:translateY(-1.5px); }
+      3%    { transform:translateY(0px); }
+      3.5%  { transform:translateY(-1.5px); }
+      4%    { transform:translateY(0px); }
+      4.5%  { transform:translateY(-1.5px); }
+      5%    { transform:translateY(0px); }
+      5.5%  { transform:translateY(-1.5px); }
+      6%    { transform:translateY(0px); }
+      6.5%  { transform:translateY(-1.5px); }
+      7%    { transform:translateY(0px); }
+      7.5%  { transform:translateY(-1.5px); }
+      8%    { transform:translateY(0px); }
+      8.5%  { transform:translateY(-1.5px); }
+      9%    { transform:translateY(0px); }
+      9.5%  { transform:translateY(-1.5px); }
+      10%   { transform:translateY(0px); }
+      10.5% { transform:translateY(-1.5px); }
+      11%   { transform:translateY(0px); }
+      11.5% { transform:translateY(-1.5px); }
+      12%   { transform:translateY(0px); }
+      12.5% { transform:translateY(-1.5px); }
+      13%   { transform:translateY(0px); }
+      13.5% { transform:translateY(-1.5px); }
+      14%   { transform:translateY(0px); }
+      14.5% { transform:translateY(-1.5px); }
+      15%   { transform:translateY(0px); }
+      15.5% { transform:translateY(-1.5px); }
+      16%   { transform:translateY(0px); }
+      16.5% { transform:translateY(-1.5px); }
+      17%   { transform:translateY(0px); }
+      17.5% { transform:translateY(-1.5px); }
+      18%   { transform:translateY(0px); }
+      18.5% { transform:translateY(-1.5px); }
+      19%   { transform:translateY(0px); }
+      19.5% { transform:translateY(-1.5px); }
+      20%   { transform:translateY(0px); }
+      20.5% { transform:translateY(-1.5px); }
+      21%   { transform:translateY(0px); }
+      21.5% { transform:translateY(-1.5px); }
+      22%   { transform:translateY(0px); }
+      22.5% { transform:translateY(-1.5px); }
+      23%   { transform:translateY(0px); }
+      23.5% { transform:translateY(-1.5px); }
+      24%   { transform:translateY(0px); }
+      24.5% { transform:translateY(-1.5px); }
+      25%   { transform:translateY(0px); }
+      25.5% { transform:translateY(-1.5px); }
+      26%   { transform:translateY(0px); }
+      26.5% { transform:translateY(-1.5px); }
+      27%   { transform:translateY(0px); }
+      27.5% { transform:translateY(-1.5px); }
+      28%   { transform:translateY(0px); }
+      /* Parado — sin sacudida */
+      30%,47% { transform:translateY(0px); }
+      /* Arranca de nuevo */
+      48%   { transform:translateY(0px); }
+      48.5% { transform:translateY(-1.5px); }
+      49%   { transform:translateY(0px); }
+      49.5% { transform:translateY(-1.5px); }
+      50%   { transform:translateY(0px); }
+      50.5% { transform:translateY(-1.5px); }
+      51%   { transform:translateY(0px); }
+      51.5% { transform:translateY(-1.5px); }
+      52%   { transform:translateY(0px); }
+      52.5% { transform:translateY(-1.5px); }
+      53%   { transform:translateY(0px); }
+      53.5% { transform:translateY(-1.5px); }
+      54%   { transform:translateY(0px); }
+      54.5% { transform:translateY(-1.5px); }
+      55%   { transform:translateY(0px); }
+      55.5% { transform:translateY(-1.5px); }
+      56%   { transform:translateY(0px); }
+      56.5% { transform:translateY(-1.5px); }
+      57%   { transform:translateY(0px); }
+      57.5% { transform:translateY(-1.5px); }
+      58%   { transform:translateY(0px); }
+      58.5% { transform:translateY(-1.5px); }
+      59%   { transform:translateY(0px); }
+      59.5% { transform:translateY(-1.5px); }
+      60%   { transform:translateY(0px); }
+      60.5% { transform:translateY(-1.5px); }
+      61%   { transform:translateY(0px); }
+      61.5% { transform:translateY(-1.5px); }
+      62%   { transform:translateY(0px); }
+      62.5% { transform:translateY(-1.5px); }
+      63%   { transform:translateY(0px); }
+      63.5% { transform:translateY(-1.5px); }
+      64%   { transform:translateY(0px); }
+      64.5% { transform:translateY(-1.5px); }
+      65%   { transform:translateY(0px); }
+      65.5% { transform:translateY(-1.5px); }
+      66%   { transform:translateY(0px); }
+      66.5% { transform:translateY(-1.5px); }
+      67%   { transform:translateY(0px); }
+      67.5% { transform:translateY(-1.5px); }
+      68%   { transform:translateY(0px); }
+      68.5% { transform:translateY(-1.5px); }
+      69%   { transform:translateY(0px); }
+      69.5% { transform:translateY(-1.5px); }
+      70%   { transform:translateY(0px); }
+      70.5% { transform:translateY(-1.5px); }
+      71%   { transform:translateY(0px); }
+      71.5% { transform:translateY(-1.5px); }
+      72%   { transform:translateY(0px); }
+      72.5% { transform:translateY(-1.5px); }
+      73%   { transform:translateY(0px); }
+      73.5% { transform:translateY(-1.5px); }
+      74%   { transform:translateY(0px); }
+      74.5% { transform:translateY(-1.5px); }
+      75%   { transform:translateY(0px); }
+      75.5% { transform:translateY(-1.5px); }
+      76%   { transform:translateY(0px); }
+      76.5% { transform:translateY(-1.5px); }
+      77%   { transform:translateY(0px); }
+      77.5% { transform:translateY(-1.5px); }
+      78%   { transform:translateY(0px); }
+      78.5% { transform:translateY(-1.5px); }
+      79%   { transform:translateY(0px); }
+      79.5% { transform:translateY(-1.5px); }
+      80%   { transform:translateY(0px); }
+      80.5% { transform:translateY(-1.5px); }
+      81%   { transform:translateY(0px); }
+      81.5% { transform:translateY(-1.5px); }
+      82%   { transform:translateY(0px); }
+      82.5% { transform:translateY(-1.5px); }
+      83%   { transform:translateY(0px); }
+      83.5% { transform:translateY(-1.5px); }
+      84%   { transform:translateY(0px); }
+      84.5% { transform:translateY(-1.5px); }
+      85%   { transform:translateY(0px); }
+      85.5% { transform:translateY(-1.5px); }
+      86%   { transform:translateY(0px); }
+      86.5% { transform:translateY(-1.5px); }
+      87%   { transform:translateY(0px); }
+      87.5% { transform:translateY(-1.5px); }
+      88%   { transform:translateY(0px); }
+      88.5% { transform:translateY(-1.5px); }
+      89%   { transform:translateY(0px); }
+      89.5% { transform:translateY(-1.5px); }
+      90%   { transform:translateY(0px); }
+      90.5% { transform:translateY(-1.5px); }
+      91%   { transform:translateY(0px); }
+      91.5% { transform:translateY(-1.5px); }
+      92%   { transform:translateY(0px); }
+      92.5% { transform:translateY(-1.5px); }
+      93%   { transform:translateY(0px); }
+      93.5% { transform:translateY(-1.5px); }
+      94%   { transform:translateY(0px); }
+      94.5% { transform:translateY(-1.5px); }
+      95%   { transform:translateY(0px); }
+      95.5% { transform:translateY(-1.5px); }
+      96%   { transform:translateY(0px); }
+      96.5% { transform:translateY(-1.5px); }
+      97%   { transform:translateY(0px); }
+      97.5% { transform:translateY(-1.5px); }
+      98%   { transform:translateY(0px); }
+      98.5% { transform:translateY(-1.5px); }
+      99%   { transform:translateY(0px); }
+      99.5% { transform:translateY(-1.5px); }
+      100%  { transform:translateY(0px); }
     }
-    /* Luz azul interior pulsante */
-    .combi-luz-azul { animation: luzAzulPulse 1.2s ease-in-out infinite alternate; }
-    @keyframes luzAzulPulse {
-      0%   { opacity:0.3; }
-      100% { opacity:0.7; }
+    /* Luz azul neón interior */
+    .combi-luz-azul { animation: luzNeonPulse 0.8s ease-in-out infinite alternate; }
+    @keyframes luzNeonPulse {
+      0%   { opacity:0.35; filter:url(#glowAzul) brightness(0.8); }
+      50%  { opacity:0.55; filter:url(#glowAzul) brightness(1.2); }
+      100% { opacity:0.7; filter:url(#glowAzul) brightness(1.5); }
     }
-    /* Ojos normales/enojados en parabrisas */
+    /* Ojos normales/enojados en parabrisas — cara molesta siempre, más enojada al frenar */
     .combi-ojos-normal { animation: ojosNorm 18s linear infinite; }
     .combi-ojos-angry  { animation: ojosAngry 18s linear infinite; }
     @keyframes ojosNorm {
-      0%,29%   { opacity:1; }
-      30%,58%  { opacity:0; }
-      59%,100% { opacity:1; }
+      0%,28%   { opacity:1; }
+      29%,47%  { opacity:0; }
+      48%,100% { opacity:1; }
     }
     @keyframes ojosAngry {
-      0%,29%   { opacity:0; }
-      30%,58%  { opacity:1; }
-      59%,100% { opacity:0; }
+      0%,28%   { opacity:0; }
+      29%,47%  { opacity:1; }
+      48%,100% { opacity:0; }
     }
     /* Bandera en el techo */
     .combi-bandera {
@@ -322,18 +528,28 @@
       100% { transform:rotate(4deg) skewY(-2deg); }
     }
     /* Bocadillo */
+    /* Bocadillo — burbuja de diálogo desde dentro de la combi */
     .bocadillo-cinta {
       display:inline-block; opacity:0; font-family:'Bangers',cursive;
-      color:var(--neon-verde); font-size:1.1rem; letter-spacing:2px;
-      text-shadow:0 0 10px var(--neon-verde),0 0 20px rgba(57,255,20,.4);
-      vertical-align:middle; margin-left:8px; position:relative; top:-6px;
+      color:#fff; font-size:1rem; letter-spacing:2px;
+      background:rgba(0,80,255,0.85);
+      padding:4px 12px 4px 10px; border-radius:14px 14px 14px 4px;
+      box-shadow:0 0 12px rgba(0,100,255,.6), 0 0 25px rgba(0,100,255,.3), inset 0 0 8px rgba(100,180,255,.3);
+      vertical-align:middle; margin-left:-10px; position:relative; top:-18px;
       animation: bocadilloShow 18s linear infinite;
+      white-space:nowrap;
+    }
+    .bocadillo-cinta::before {
+      content:''; position:absolute; bottom:-6px; left:12px;
+      width:0; height:0;
+      border-left:6px solid transparent; border-right:6px solid transparent;
+      border-top:7px solid rgba(0,80,255,0.85);
     }
     @keyframes bocadilloShow {
-      0%,31%   { opacity:0; transform:scale(0.5); }
-      33%      { opacity:1; transform:scale(1.2); }
-      35%,56%  { opacity:1; transform:scale(1); }
-      58%      { opacity:0; transform:scale(0.5); }
+      0%,30%   { opacity:0; transform:scale(0.5) translateY(4px); }
+      32%      { opacity:1; transform:scale(1.15) translateY(-2px); }
+      34%,45%  { opacity:1; transform:scale(1) translateY(0); }
+      47%      { opacity:0; transform:scale(0.5) translateY(4px); }
       100%     { opacity:0; }
     }
     /* Polvo de frenada */
@@ -345,14 +561,16 @@
     .polvo-der { animation: polvoD 18s linear infinite; }
     @keyframes polvoI {
       0%,27%  { opacity:0; left:calc(50% - 60px); }
-      28%,29% { opacity:.8; left:calc(50% - 80px); }
-      32%     { opacity:0; left:calc(50% - 100px); }
+      28%     { opacity:1; left:calc(50% - 70px); }
+      29%     { opacity:.6; left:calc(50% - 90px); }
+      31%     { opacity:0; left:calc(50% - 110px); }
       100%    { opacity:0; }
     }
     @keyframes polvoD {
       0%,27%  { opacity:0; left:calc(50% + 40px); }
-      28%,29% { opacity:.8; left:calc(50% + 55px); }
-      32%     { opacity:0; left:calc(50% + 70px); }
+      28%     { opacity:1; left:calc(50% + 50px); }
+      29%     { opacity:.6; left:calc(50% + 65px); }
+      31%     { opacity:0; left:calc(50% + 80px); }
       100%    { opacity:0; }
     }
     /* APP COMING SOON */
@@ -711,13 +929,26 @@
       <div class="llama-svg-wrap">
         <svg viewBox="0 0 130 68" width="100" height="55" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <!-- Glow azul interior -->
-            <filter id="glowAzul" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2.5" result="blur"/>
-              <feFlood flood-color="#00aaff" flood-opacity="0.6" result="color"/>
-              <feComposite in="color" in2="blur" operator="in" result="glow"/>
-              <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <!-- Glow neón azul intenso -->
+            <filter id="glowAzul" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="3" result="blur1"/>
+              <feFlood flood-color="#00ccff" flood-opacity="0.8" result="color1"/>
+              <feComposite in="color1" in2="blur1" operator="in" result="glow1"/>
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur2"/>
+              <feFlood flood-color="#0088ff" flood-opacity="0.5" result="color2"/>
+              <feComposite in="color2" in2="blur2" operator="in" result="glow2"/>
+              <feMerge>
+                <feMergeNode in="glow1"/>
+                <feMergeNode in="glow2"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
             </filter>
+            <!-- Gradiente neón para ventanas -->
+            <radialGradient id="neonAzulGrad" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#66ddff" stop-opacity="0.9"/>
+              <stop offset="40%" stop-color="#0099ff" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#0044aa" stop-opacity="0.3"/>
+            </radialGradient>
           </defs>
           <g class="combi-body-shake">
             <!-- Sombra inferior -->
@@ -740,9 +971,9 @@
             <!-- Parabrisas grande frontal dividido -->
             <rect x="11" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
             <rect x="26" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
-            <!-- Luz azul interior en parabrisas -->
-            <rect class="combi-luz-azul" x="12" y="17" width="12" height="16" rx="1.5" fill="#0066ff" opacity="0.4" filter="url(#glowAzul)"/>
-            <rect class="combi-luz-azul" x="27" y="17" width="12" height="16" rx="1.5" fill="#0066ff" opacity="0.4" filter="url(#glowAzul)"/>
+            <!-- Luz neón azul interior en parabrisas -->
+            <rect class="combi-luz-azul" x="12" y="17" width="12" height="16" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.7" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="27" y="17" width="12" height="16" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.7" filter="url(#glowAzul)"/>
             <!-- Divisor central parabrisas -->
             <rect x="25" y="15" width="1.5" height="20" fill="#d4d0c4"/>
             <!-- Ventanas laterales -->
@@ -750,11 +981,11 @@
             <rect x="59" y="17" width="13" height="14" rx="2" fill="#88c8e8"/>
             <rect x="74" y="17" width="13" height="14" rx="2" fill="#88c8e8"/>
             <rect x="89" y="17" width="10" height="14" rx="2" fill="#88c8e8"/>
-            <!-- Luz azul interior en ventanas -->
-            <rect class="combi-luz-azul" x="45" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
-            <rect class="combi-luz-azul" x="60" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
-            <rect class="combi-luz-azul" x="75" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
-            <rect class="combi-luz-azul" x="90" y="18" width="8" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
+            <!-- Luz neón azul interior en ventanas laterales -->
+            <rect class="combi-luz-azul" x="45" y="18" width="11" height="12" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.6" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="60" y="18" width="11" height="12" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.6" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="75" y="18" width="11" height="12" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.6" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="90" y="18" width="8" height="12" rx="1.5" fill="url(#neonAzulGrad)" opacity="0.6" filter="url(#glowAzul)"/>
             <!-- Pilares entre ventanas -->
             <rect x="43" y="15" width="1.5" height="18" fill="#d4d0c4"/>
             <rect x="57.5" y="15" width="1.5" height="18" fill="#d4d0c4"/>
