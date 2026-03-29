@@ -171,6 +171,17 @@
     #panel-ganadores .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
     #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 16px var(--neon-naranja); }
     #panel-ganadores .panel-box { border:3px solid var(--neon-naranja); }
+    .ganador-entry {
+      background:linear-gradient(135deg,#1a1a00,#1a0800); border:2px solid var(--neon-amarillo);
+      border-radius:8px; padding:14px 18px; margin-bottom:12px;
+      display:flex; align-items:center; gap:14px;
+    }
+    .ganador-entry-icon { font-size:2rem; }
+    .ganador-entry-info { flex:1; }
+    .ganador-entry-nombre { font-family:'Bangers',cursive; font-size:1.15rem; color:var(--neon-amarillo); letter-spacing:1px; }
+    .ganador-entry-sorteo { font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-rosa); margin-top:2px; }
+    .ganador-entry-fecha { font-size:.7rem; color:#666; margin-top:2px; }
+    .ganador-entry-dni { font-family:'Righteous',cursive; font-size:.78rem; color:var(--neon-celeste); }
     .ganadores-empty { text-align:center; padding:40px 20px; border:2px dashed #333; border-radius:4px; margin-top:10px; }
     .ganadores-empty-icono { font-size:3.5rem; margin-bottom:14px; }
     .ganadores-empty-txt { font-family:'Righteous',cursive; font-size:1rem; color:#888; margin-bottom:20px; line-height:1.7; }
@@ -573,6 +584,99 @@
       29%     { opacity:.6; left:calc(50% + 65px); }
       31%     { opacity:0; left:calc(50% + 80px); }
       100%    { opacity:0; }
+    }
+    /* ══════════════════════════════════════════
+       RULETA DIGITAL
+    ══════════════════════════════════════════ */
+    .ruleta-overlay {
+      position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,0.92); display:none;
+      align-items:center; justify-content:center; flex-direction:column;
+      backdrop-filter:blur(6px);
+    }
+    .ruleta-overlay.activo { display:flex; }
+    .ruleta-titulo {
+      font-family:'Bangers',cursive; font-size:clamp(1.6rem,5vw,2.8rem);
+      color:var(--neon-amarillo); letter-spacing:4px;
+      text-shadow:0 0 20px var(--neon-amarillo),0 0 40px var(--neon-naranja);
+      margin-bottom:16px; text-align:center;
+    }
+    .ruleta-sorteo-nombre {
+      font-family:'Righteous',cursive; font-size:clamp(0.9rem,3vw,1.3rem);
+      color:var(--neon-rosa); text-shadow:0 0 12px var(--neon-rosa);
+      margin-bottom:24px; text-align:center;
+    }
+    .ruleta-container {
+      position:relative; width:min(80vw,400px); height:min(80vw,400px);
+    }
+    .ruleta-canvas {
+      width:100%; height:100%; border-radius:50%;
+      border:6px solid var(--neon-amarillo);
+      box-shadow:0 0 30px var(--neon-amarillo),0 0 60px rgba(255,230,0,.3),inset 0 0 40px rgba(0,0,0,.5);
+    }
+    .ruleta-flecha {
+      position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+      width:0; height:0;
+      border-left:16px solid transparent; border-right:16px solid transparent;
+      border-top:28px solid var(--neon-rosa);
+      filter:drop-shadow(0 0 10px var(--neon-rosa));
+      z-index:2;
+    }
+    .ruleta-centro {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:60px; height:60px; border-radius:50%;
+      background:radial-gradient(circle,var(--neon-amarillo),#ff8c00);
+      box-shadow:0 0 20px var(--neon-naranja);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Bangers',cursive; font-size:1.4rem; color:#000;
+      z-index:2;
+    }
+    .ruleta-estado {
+      margin-top:24px; font-family:'Righteous',cursive;
+      font-size:clamp(1rem,3vw,1.5rem); color:var(--neon-verde);
+      text-shadow:0 0 16px var(--neon-verde);
+      text-align:center; min-height:2em;
+    }
+    .ruleta-ganador-card {
+      display:none; margin-top:20px; padding:20px 30px;
+      background:linear-gradient(135deg,#1a0800,#2a1200);
+      border:3px solid var(--neon-amarillo); border-radius:12px;
+      text-align:center;
+      box-shadow:0 0 30px rgba(255,230,0,.3);
+      animation:ganadorPulse 1s ease-in-out infinite alternate;
+    }
+    @keyframes ganadorPulse {
+      0%{box-shadow:0 0 20px rgba(255,230,0,.3)} 100%{box-shadow:0 0 50px rgba(255,230,0,.6),0 0 80px rgba(255,0,128,.3)}
+    }
+    .ruleta-ganador-card.visible { display:block; }
+    .ruleta-ganador-nombre {
+      font-family:'Bangers',cursive; font-size:clamp(1.5rem,5vw,2.5rem);
+      color:var(--neon-amarillo); letter-spacing:3px;
+      text-shadow:0 0 12px var(--neon-amarillo);
+    }
+    .ruleta-ganador-dni {
+      font-family:'Righteous',cursive; font-size:1rem;
+      color:var(--neon-celeste); margin-top:6px;
+    }
+    .ruleta-btn-cerrar {
+      margin-top:20px; padding:12px 30px;
+      font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:2px;
+      background:var(--neon-rosa); color:#fff; border:none; border-radius:6px;
+      cursor:pointer; display:none;
+      box-shadow:0 0 16px var(--neon-rosa);
+      transition:transform .15s;
+    }
+    .ruleta-btn-cerrar.visible { display:inline-block; }
+    .ruleta-btn-cerrar:hover { transform:scale(1.05); }
+    /* Confeti */
+    .confeti-container { position:fixed; inset:0; pointer-events:none; z-index:10001; overflow:hidden; }
+    .confeti-piece {
+      position:absolute; width:10px; height:10px; top:-20px;
+      animation:confetiFall 3s linear forwards;
+    }
+    @keyframes confetiFall {
+      0%   { transform:translateY(0) rotate(0deg); opacity:1; }
+      100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
     }
     /* APP COMING SOON */
     .app-coming-soon {
@@ -1062,6 +1166,24 @@
       <span class="bocadillo-cinta">tsss sanaso</span>
     </div>
   </div>
+  <!-- RULETA DIGITAL -->
+  <div class="ruleta-overlay" id="ruleta-overlay">
+    <div class="ruleta-titulo">RULETA DEL SORTEO</div>
+    <div class="ruleta-sorteo-nombre" id="ruleta-sorteo-nombre"></div>
+    <div class="ruleta-container">
+      <div class="ruleta-flecha"></div>
+      <canvas class="ruleta-canvas" id="ruleta-canvas" width="400" height="400"></canvas>
+      <div class="ruleta-centro">PE</div>
+    </div>
+    <div class="ruleta-estado" id="ruleta-estado">Cargando participantes...</div>
+    <div class="ruleta-ganador-card" id="ruleta-ganador-card">
+      <div style="font-size:2.5rem;margin-bottom:8px;">🏆</div>
+      <div class="ruleta-ganador-nombre" id="ruleta-ganador-nombre"></div>
+      <div class="ruleta-ganador-dni" id="ruleta-ganador-dni"></div>
+    </div>
+    <button class="ruleta-btn-cerrar" id="ruleta-btn-cerrar" onclick="cerrarRuleta()">CERRAR</button>
+  </div>
+  <div class="confeti-container" id="confeti-container"></div>
   <!-- APP COMING SOON -->
   <div class="app-coming-soon">
     <p>pronto se vienen cositas</p>
@@ -1307,11 +1429,12 @@
         <button class="panel-cerrar" onclick="cerrarPanel('panel-ganadores')">✕</button>
       </div>
       <div class="panel-body">
-        <div class="ganadores-empty">
+        <div id="ganadores-lista"></div>
+        <div class="ganadores-empty" id="ganadores-empty">
           <div class="ganadores-empty-icono">🏆</div>
           <p class="ganadores-empty-txt">
             ¡Aún no hay ganadores pe!<br>
-            El primer sorteo es este <strong style="color:var(--neon-amarillo)">Domingo 30 de Marzo a las 10pm</strong>.<br>
+            El primer sorteo es este <strong style="color:var(--neon-amarillo)">Domingo</strong>.<br>
             Los ganadores se publicarán aquí y en el <strong style="color:var(--neon-rosa)">TikTok oficial @tusuerte.pe.oficial</strong>.
           </p>
           <a class="btn-fotos-ganadores" href="https://github.com/tusuerte-pe/ganadores" target="_blank" rel="noopener">
@@ -1711,6 +1834,286 @@
         });
       }, { threshold: 0.3 });
       document.querySelectorAll('.barra-fill').forEach(b => observer.observe(b));
+    });
+
+    // ══════════════════════════════════════════════════════
+    // RULETA DIGITAL — sorteo automático
+    // ══════════════════════════════════════════════════════
+    var GANADORES_KEY = 'tsp_ganadores';
+    var COLORES_RULETA = [
+      '#ff0080','#39ff14','#ffe600','#00e5ff','#cc00ff','#ff6a00',
+      '#ff4488','#22cc44','#ffcc00','#0099ff','#aa00ff','#ff8833'
+    ];
+
+    // ── Cargar ganadores de localStorage ──
+    function cargarGanadores() {
+      try { return JSON.parse(localStorage.getItem(GANADORES_KEY)) || []; }
+      catch(e) { return []; }
+    }
+    function guardarGanador(ganador) {
+      var lista = cargarGanadores();
+      lista.unshift(ganador); // más reciente primero
+      localStorage.setItem(GANADORES_KEY, JSON.stringify(lista));
+    }
+
+    // ── Renderizar lista de ganadores en el panel ──
+    function renderGanadores() {
+      var lista = cargarGanadores();
+      var container = document.getElementById('ganadores-lista');
+      var empty = document.getElementById('ganadores-empty');
+      if (!container) return;
+      container.innerHTML = '';
+      if (lista.length === 0) {
+        if (empty) empty.style.display = '';
+        return;
+      }
+      if (empty) empty.style.display = 'none';
+      lista.forEach(function(g) {
+        var div = document.createElement('div');
+        div.className = 'ganador-entry';
+        var dniMask = g.dni ? g.dni.substring(0,3) + '***' + g.dni.substring(g.dni.length - 2) : '---';
+        div.innerHTML =
+          '<div class="ganador-entry-icon">🏆</div>' +
+          '<div class="ganador-entry-info">' +
+            '<div class="ganador-entry-nombre">' + (g.nombres + ' ' + g.apellidos).toUpperCase() + '</div>' +
+            '<div class="ganador-entry-sorteo">' + (g.sorteo || '') + '</div>' +
+            '<div class="ganador-entry-fecha">' + (g.fecha || '') + '</div>' +
+          '</div>' +
+          '<div class="ganador-entry-dni">DNI: ' + dniMask + '</div>';
+        container.appendChild(div);
+      });
+    }
+    renderGanadores();
+
+    // ── Dibujar la ruleta en el canvas ──
+    function dibujarRuleta(participantes, anguloActual) {
+      var canvas = document.getElementById('ruleta-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var w = canvas.width, h = canvas.height;
+      var cx = w/2, cy = h/2, r = w/2 - 4;
+      ctx.clearRect(0,0,w,h);
+
+      var n = participantes.length;
+      if (n === 0) return;
+      var slice = (2 * Math.PI) / n;
+
+      for (var i = 0; i < n; i++) {
+        var startAngle = anguloActual + i * slice;
+        var endAngle = startAngle + slice;
+        // Segmento
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = COLORES_RULETA[i % COLORES_RULETA.length];
+        ctx.fill();
+        ctx.strokeStyle = '#0d0d1f';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        // Nombre (solo si caben)
+        if (n <= 40) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(startAngle + slice / 2);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold ' + Math.max(8, Math.min(14, 220/n)) + 'px Arial';
+          ctx.shadowColor = 'rgba(0,0,0,0.7)';
+          ctx.shadowBlur = 3;
+          var nombre = participantes[i].nombres.split(' ')[0];
+          if (nombre.length > 10) nombre = nombre.substring(0,9) + '.';
+          ctx.fillText(nombre, r - 12, 4);
+          ctx.restore();
+        }
+      }
+      // Borde externo
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, 2*Math.PI);
+      ctx.strokeStyle = 'rgba(255,230,0,0.4)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    // ── Obtener el índice del ganador basado en la posición de la flecha ──
+    function obtenerIndiceGanador(participantes, anguloFinal) {
+      var n = participantes.length;
+      var slice = (2 * Math.PI) / n;
+      // La flecha está arriba (270° = -PI/2). Normalizar el ángulo.
+      var flechaAngle = (3 * Math.PI / 2); // posición de la flecha
+      var relAngle = (flechaAngle - anguloFinal) % (2 * Math.PI);
+      if (relAngle < 0) relAngle += 2 * Math.PI;
+      return Math.floor(relAngle / slice) % n;
+    }
+
+    // ── Lanzar confeti ──
+    function lanzarConfeti() {
+      var container = document.getElementById('confeti-container');
+      if (!container) return;
+      var colores = ['#ff0080','#39ff14','#ffe600','#00e5ff','#cc00ff','#ff6a00','#fff'];
+      for (var i = 0; i < 80; i++) {
+        var piece = document.createElement('div');
+        piece.className = 'confeti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colores[Math.floor(Math.random() * colores.length)];
+        piece.style.width = (6 + Math.random() * 8) + 'px';
+        piece.style.height = (6 + Math.random() * 8) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.animationDelay = (Math.random() * 1.5) + 's';
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        container.appendChild(piece);
+      }
+      setTimeout(function() { container.innerHTML = ''; }, 5000);
+    }
+
+    // ── Flujo principal de la ruleta ──
+    var ruletaActiva = false;
+    var ruletaSorteoYaEjecutado = {}; // evita que un sorteo se ejecute dos veces
+
+    function iniciarRuleta(sorteoId) {
+      if (ruletaActiva) return;
+      var cfg = SORTEOS_CFG[sorteoId];
+      if (!cfg) return;
+      // Marcar como ejecutado
+      if (ruletaSorteoYaEjecutado[sorteoId]) return;
+      ruletaSorteoYaEjecutado[sorteoId] = true;
+
+      ruletaActiva = true;
+      var overlay = document.getElementById('ruleta-overlay');
+      overlay.classList.add('activo');
+      document.getElementById('ruleta-sorteo-nombre').textContent = cfg.nombre;
+      document.getElementById('ruleta-estado').textContent = 'Cargando participantes...';
+      document.getElementById('ruleta-ganador-card').classList.remove('visible');
+      document.getElementById('ruleta-btn-cerrar').classList.remove('visible');
+
+      // Dibujar ruleta vacía
+      dibujarRuleta([], 0);
+
+      // Obtener participantes de Google Sheets
+      var nombreSorteo = cfg.nombre.split('–')[0].trim();
+      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
+
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
+            document.getElementById('ruleta-estado').textContent = 'No hay participantes registrados para este sorteo.';
+            document.getElementById('ruleta-btn-cerrar').classList.add('visible');
+            ruletaActiva = false;
+            return;
+          }
+          var participantes = data.participantes;
+          document.getElementById('ruleta-estado').textContent = participantes.length + ' participantes. Girando la ruleta...';
+
+          // Dibujar ruleta con participantes
+          dibujarRuleta(participantes, 0);
+
+          // Seleccionar ganador al azar (crypto random)
+          var ganadorIdx;
+          if (window.crypto && window.crypto.getRandomValues) {
+            var arr = new Uint32Array(1);
+            window.crypto.getRandomValues(arr);
+            ganadorIdx = arr[0] % participantes.length;
+          } else {
+            ganadorIdx = Math.floor(Math.random() * participantes.length);
+          }
+
+          // Calcular ángulo final para que la flecha apunte al ganador
+          var n = participantes.length;
+          var slice = (2 * Math.PI) / n;
+          // La flecha está en 3PI/2 (arriba). El ganador debe estar ahí.
+          var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
+          // Sumar vueltas completas para dramatismo (8-12 vueltas)
+          var vueltas = 8 + Math.floor(Math.random() * 5);
+          var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
+
+          // Animar la ruleta
+          var duracion = 6000; // 6 segundos
+          var inicio = performance.now();
+          var anguloInicio = 0;
+
+          function animarRuleta(timestamp) {
+            var progreso = Math.min(1, (timestamp - inicio) / duracion);
+            // Easing: desacelera al final (ease-out cubic)
+            var eased = 1 - Math.pow(1 - progreso, 3);
+            var anguloActual = anguloInicio + anguloTotal * eased;
+
+            dibujarRuleta(participantes, anguloActual);
+
+            if (progreso < 1) {
+              requestAnimationFrame(animarRuleta);
+            } else {
+              // Sorteo terminado — mostrar ganador
+              var ganador = participantes[ganadorIdx];
+              var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
+              var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
+
+              document.getElementById('ruleta-estado').textContent = '🎉 ¡TENEMOS GANADOR!';
+              document.getElementById('ruleta-ganador-nombre').textContent = nombreCompleto.toUpperCase();
+              document.getElementById('ruleta-ganador-dni').textContent = 'DNI: ' + dniMask;
+              document.getElementById('ruleta-ganador-card').classList.add('visible');
+              document.getElementById('ruleta-btn-cerrar').classList.add('visible');
+
+              lanzarConfeti();
+
+              // Guardar ganador en localStorage
+              var ahora = new Date();
+              guardarGanador({
+                nombres: ganador.nombres,
+                apellidos: ganador.apellidos,
+                dni: ganador.dni,
+                sorteo: cfg.nombre,
+                sorteoId: sorteoId,
+                fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
+              });
+              renderGanadores();
+              ruletaActiva = false;
+            }
+          }
+          // Esperar 2s antes de girar (tensión)
+          setTimeout(function() {
+            inicio = performance.now();
+            requestAnimationFrame(animarRuleta);
+          }, 2000);
+        })
+        .catch(function(err) {
+          console.error('Error cargando participantes:', err);
+          document.getElementById('ruleta-estado').textContent = 'Error al cargar participantes. Intenta de nuevo.';
+          document.getElementById('ruleta-btn-cerrar').classList.add('visible');
+          ruletaActiva = false;
+        });
+    }
+
+    function cerrarRuleta() {
+      document.getElementById('ruleta-overlay').classList.remove('activo');
+      ruletaActiva = false;
+    }
+
+    // ── Verificar si algún sorteo debe activarse AHORA ──
+    // Chequea cada 5 segundos si llegó la hora de un sorteo
+    function verificarSorteosActivos() {
+      var ahora = Date.now();
+      Object.keys(SORTEOS_CFG).forEach(function(id) {
+        var ts = SORTEOS_CFG[id].ts;
+        // Activar si estamos dentro de los 30 segundos del horario del sorteo
+        var diff = ahora - ts;
+        if (diff >= 0 && diff < 30000 && !ruletaSorteoYaEjecutado[id]) {
+          iniciarRuleta(id);
+        }
+      });
+    }
+    setInterval(verificarSorteosActivos, 5000);
+
+    // ── Botón manual para testing: doble click en el título de un sorteo ──
+    // (Solo para pruebas — remover en producción si quieres)
+    document.querySelectorAll('.card-titulo').forEach(function(el, idx) {
+      el.addEventListener('dblclick', function() {
+        var id = String(idx + 1);
+        if (confirm('¿Iniciar ruleta de prueba para ' + SORTEOS_CFG[id].nombre + '?')) {
+          ruletaSorteoYaEjecutado[id] = false; // resetear para permitir prueba
+          iniciarRuleta(id);
+        }
+      });
     });
   </script>
   <!-- ══════════════ MÚSICA PERUANA ══════════════ -->
