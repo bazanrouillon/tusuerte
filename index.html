@@ -1170,34 +1170,30 @@
   <style>
     #llama-saludo {
       position: fixed;
-      bottom: 0;
-      left: -220px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
       align-items: center;
       pointer-events: none;
-      transition: none;
+      /* posición inicial fuera de pantalla; JS la ubica */
+      left: -300px; bottom: 30%;
     }
-    /* Esquinas superiores: llama aparece arriba, burbuja debajo */
-    #llama-saludo.top-corner {
-      bottom: auto;
-      top: 0;
+    /* Lado derecho: llama espejada */
+    #llama-saludo.lado-derecho svg { transform: scaleX(-1); }
+    /* Lado superior: burbuja debajo de la llama */
+    #llama-saludo.lado-top {
       flex-direction: column-reverse;
     }
-    #llama-saludo.top-corner #llama-burbuja::after,
-    #llama-saludo.top-corner #llama-burbuja2::after {
-      bottom: auto;
-      top: -13px;
+    #llama-saludo.lado-top #llama-burbuja::after {
+      bottom: auto; top: -13px;
       border-top-color: transparent;
+      border-bottom-color: var(--neon-amarillo);
     }
-    #llama-saludo.top-corner #llama-burbuja::after  { border-bottom-color: var(--neon-amarillo); }
-    #llama-saludo.top-corner #llama-burbuja2::after { border-bottom-color: var(--neon-celeste); }
-    /* Llama espejada (va de derecha a izquierda) */
-    #llama-saludo.dir-rl svg { transform: scaleX(-1); }
-    /* Animaciones */
-    #llama-saludo.animando.dir-lr { animation: llamaDirLR 13s ease-in-out forwards; }
-    #llama-saludo.animando.dir-rl { animation: llamaDirRL 13s ease-in-out forwards; }
+    /* Animaciones peek por cada lado */
+    #llama-saludo.animando.lado-izq    { animation: peekIzq    9s cubic-bezier(.4,0,.6,1) forwards; }
+    #llama-saludo.animando.lado-derecho{ animation: peekDer    9s cubic-bezier(.4,0,.6,1) forwards; }
+    #llama-saludo.animando.lado-bottom { animation: peekBottom 9s cubic-bezier(.4,0,.6,1) forwards; }
+    #llama-saludo.animando.lado-top    { animation: peekTop    9s cubic-bezier(.4,0,.6,1) forwards; }
     /* Estilos compartidos para ambas burbujas */
     #llama-burbuja, #llama-burbuja2 {
       position: relative;
@@ -1234,59 +1230,69 @@
       border-top-color: var(--neon-celeste);
     }
     #llama-saludo.animando #llama-burbuja {
-      animation: burbuja1Anim 13s ease forwards;
+      animation: burbujaAppear 9s ease forwards;
     }
-    #llama-saludo.animando #llama-burbuja2 {
-      animation: burbuja2Anim 13s ease forwards;
+    #llama-burbuja2 { display:none; }
+    /* ── Peek izquierda: entra, wiggle, se retira por donde vino ── */
+    @keyframes peekIzq {
+      0%   { transform: translateX(-300px) rotate(0deg); }
+      20%  { transform: translateX(0)      rotate(0deg); }
+      28%  { transform: translateX(0)      rotate(-8deg); }
+      36%  { transform: translateX(0)      rotate(7deg); }
+      44%  { transform: translateX(0)      rotate(-6deg); }
+      52%  { transform: translateX(0)      rotate(5deg); }
+      62%  { transform: translateX(0)      rotate(0deg); }
+      75%  { transform: translateX(0)      rotate(0deg); }
+      100% { transform: translateX(-300px) rotate(0deg); }
     }
-    /* Izquierda → Derecha */
-    @keyframes llamaDirLR {
-      0%   { left: -220px; }
-      8%   { left: 20px;                transform: translateY(0); }
-      13%  { left: 20px;                transform: translateY(-14px); }
-      17%  { left: 20px;                transform: translateY(0); }
-      21%  { left: 20px;                transform: translateY(-8px); }
-      25%  { left: 20px;                transform: translateY(0); }
-      30%  { left: 20px;                transform: translateY(0); }
-      78%  { left: calc(100vw - 200px); transform: translateY(0); }
-      82%  { left: calc(100vw - 200px); transform: translateY(-8px); }
-      86%  { left: calc(100vw - 200px); transform: translateY(0); }
-      100% { left: calc(100vw + 230px); transform: translateY(0); }
+    /* ── Peek derecha ── */
+    @keyframes peekDer {
+      0%   { transform: translateX(300px)  rotate(0deg); }
+      20%  { transform: translateX(0)      rotate(0deg); }
+      28%  { transform: translateX(0)      rotate(8deg); }
+      36%  { transform: translateX(0)      rotate(-7deg); }
+      44%  { transform: translateX(0)      rotate(6deg); }
+      52%  { transform: translateX(0)      rotate(-5deg); }
+      62%  { transform: translateX(0)      rotate(0deg); }
+      75%  { transform: translateX(0)      rotate(0deg); }
+      100% { transform: translateX(300px)  rotate(0deg); }
     }
-    /* Derecha → Izquierda */
-    @keyframes llamaDirRL {
-      0%   { left: calc(100vw + 220px); }
-      8%   { left: calc(100vw - 180px); transform: translateY(0); }
-      13%  { left: calc(100vw - 180px); transform: translateY(-14px); }
-      17%  { left: calc(100vw - 180px); transform: translateY(0); }
-      21%  { left: calc(100vw - 180px); transform: translateY(-8px); }
-      25%  { left: calc(100vw - 180px); transform: translateY(0); }
-      30%  { left: calc(100vw - 180px); transform: translateY(0); }
-      78%  { left: 200px;               transform: translateY(0); }
-      82%  { left: 200px;               transform: translateY(-8px); }
-      86%  { left: 200px;               transform: translateY(0); }
-      100% { left: -230px;              transform: translateY(0); }
+    /* ── Peek desde abajo ── */
+    @keyframes peekBottom {
+      0%   { transform: translateY(300px)  rotate(0deg); }
+      20%  { transform: translateY(0)      rotate(0deg); }
+      28%  { transform: translateY(0)      rotate(-8deg); }
+      36%  { transform: translateY(0)      rotate(7deg); }
+      44%  { transform: translateY(0)      rotate(-6deg); }
+      52%  { transform: translateY(0)      rotate(5deg); }
+      62%  { transform: translateY(0)      rotate(0deg); }
+      75%  { transform: translateY(0)      rotate(0deg); }
+      100% { transform: translateY(300px)  rotate(0deg); }
     }
-    /* Cartel 1 */
-    @keyframes burbuja1Anim {
-      0%   { opacity:0; transform: scale(0.3); }
-      8%   { opacity:0; transform: scale(0.3); }
-      14%  { opacity:1; transform: scale(1.1); }
-      18%  { opacity:1; transform: scale(0.97); }
-      20%  { opacity:1; transform: scale(1); }
-      46%  { opacity:1; transform: scale(1); }
-      54%  { opacity:0; transform: scale(0.2); }
-      100% { opacity:0; }
+    /* ── Peek desde arriba ── */
+    @keyframes peekTop {
+      0%   { transform: translateY(-300px) rotate(0deg); }
+      20%  { transform: translateY(0)      rotate(0deg); }
+      28%  { transform: translateY(0)      rotate(-8deg); }
+      36%  { transform: translateY(0)      rotate(7deg); }
+      44%  { transform: translateY(0)      rotate(-6deg); }
+      52%  { transform: translateY(0)      rotate(5deg); }
+      62%  { transform: translateY(0)      rotate(0deg); }
+      75%  { transform: translateY(0)      rotate(0deg); }
+      100% { transform: translateY(-300px) rotate(0deg); }
     }
-    /* Cartel 2 */
-    @keyframes burbuja2Anim {
-      0%   { opacity:0; transform: scale(0.3); }
-      58%  { opacity:0; transform: scale(0.3); }
-      66%  { opacity:1; transform: scale(1.1); }
-      70%  { opacity:1; transform: scale(0.97); }
-      73%  { opacity:1; transform: scale(1); }
-      86%  { opacity:1; transform: scale(1); }
-      94%  { opacity:0; transform: scale(0.2); }
+    /* ── Burbuja: aparece, se mueve con el wiggle, desaparece ── */
+    @keyframes burbujaAppear {
+      0%   { opacity:0; transform:scale(0.2) rotate(8deg); }
+      18%  { opacity:0; transform:scale(0.2) rotate(8deg); }
+      26%  { opacity:1; transform:scale(1.15) rotate(-4deg); }
+      32%  { opacity:1; transform:scale(0.95) rotate(3deg); }
+      40%  { opacity:1; transform:scale(1) rotate(-5deg); }
+      48%  { opacity:1; transform:scale(1) rotate(4deg); }
+      58%  { opacity:1; transform:scale(1) rotate(-2deg); }
+      68%  { opacity:1; transform:scale(1) rotate(0deg); }
+      75%  { opacity:1; transform:scale(1) rotate(0deg); }
+      88%  { opacity:0; transform:scale(0.3) rotate(-6deg); }
       100% { opacity:0; }
     }
   </style>
@@ -1371,44 +1377,53 @@
         'No seas sapo y registrate!',
         'Somos!'
       ];
-      var idx = 0;
       var el      = document.getElementById('llama-saludo');
       var burbuja = document.getElementById('llama-burbuja');
-      var burbuja2= document.getElementById('llama-burbuja2');
-      var DUR     = 15000;
-
-      // 4 esquinas: [dirClass, topOrBottom]
-      var esquinas = [
-        ['dir-lr', 'bottom'],   // 0: inferior izquierda → derecha
-        ['dir-rl', 'bottom'],   // 1: inferior derecha → izquierda
-        ['dir-lr', 'top'],      // 2: superior izquierda → derecha
-        ['dir-rl', 'top']       // 3: superior derecha → izquierda
-      ];
+      var DUR     = 9000;
+      var CLASES  = ['animando','lado-izq','lado-derecho','lado-bottom','lado-top'];
 
       function mostrarLlama() {
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
 
-        // Frase aleatoria para cartel 1, diferente para cartel 2
-        var i1 = Math.floor(Math.random() * frases.length);
-        var i2; do { i2 = Math.floor(Math.random() * frases.length); } while (i2 === i1);
-        burbuja.textContent  = frases[i1];
-        burbuja2.textContent = frases[i2];
+        // Frase aleatoria
+        burbuja.textContent = frases[Math.floor(Math.random() * frases.length)];
 
-        // Esquina aleatoria
-        var esq = esquinas[Math.floor(Math.random() * 4)];
-        var dirClass  = esq[0];
-        var vertClass = esq[1] === 'top' ? 'top-corner' : '';
-
-        // Limpiar clases anteriores y aplicar nuevas
-        el.classList.remove('animando','dir-lr','dir-rl','top-corner');
-        el.style.bottom = esq[1] === 'bottom' ? '0' : 'auto';
-        el.style.top    = esq[1] === 'top'    ? '0' : 'auto';
+        // Limpiar clases y estilos anteriores
+        el.classList.remove.apply(el.classList, CLASES);
+        el.style.left = el.style.right = el.style.top = el.style.bottom = 'auto';
         void el.offsetWidth;
-        el.classList.add(dirClass);
-        if (vertClass) el.classList.add(vertClass);
+
+        // Elegir lado aleatorio y posicionar en ese borde
+        var lado = Math.floor(Math.random() * 4); // 0=izq 1=der 2=abajo 3=arriba
+        switch(lado) {
+          case 0: // izquierda
+            el.style.left   = '20px';
+            el.style.bottom = (20 + Math.random() * 40) + 'vh';
+            el.style.transformOrigin = 'left center';
+            el.classList.add('lado-izq');
+            break;
+          case 1: // derecha
+            el.style.left   = 'calc(100vw - 165px)';
+            el.style.bottom = (20 + Math.random() * 40) + 'vh';
+            el.style.transformOrigin = 'right center';
+            el.classList.add('lado-derecho');
+            break;
+          case 2: // abajo
+            el.style.bottom = '10px';
+            el.style.left   = (15 + Math.random() * 55) + 'vw';
+            el.style.transformOrigin = 'center bottom';
+            el.classList.add('lado-bottom');
+            break;
+          case 3: // arriba
+            el.style.top  = '10px';
+            el.style.left = (15 + Math.random() * 55) + 'vw';
+            el.style.transformOrigin = 'center top';
+            el.classList.add('lado-top');
+            break;
+        }
         el.classList.add('animando');
 
-        // Silbido aleatorio 1 segundo después de aparecer
+        // Silbido 1 segundo después
         setTimeout(function() {
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
@@ -1421,7 +1436,8 @@
           setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
         }
         setTimeout(function() {
-          el.classList.remove('animando','dir-lr','dir-rl','top-corner');
+          el.classList.remove.apply(el.classList, CLASES);
+          el.style.transformOrigin = '';
         }, DUR + 100);
       }
 
