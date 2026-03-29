@@ -457,7 +457,7 @@
         <div class="card-body">
           <div class="card-categoria">Dinero • Yape</div>
           <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
-          <div class="card-desc">S/7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
+          <div class="card-desc">7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
           <div class="card-meta">
             <span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span>
             <span class="card-fecha proxfecha">📅 ...</span>
@@ -474,7 +474,7 @@
               <div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div>
             </div>
           </div>
-          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – S/7','2')">¡QUIERO GANAR!</button>
+          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – 7','2')">¡QUIERO GANAR!</button>
         </div>
       </div>
 
@@ -1009,8 +1009,8 @@
   <!-- MODAL YA REGISTRADO -->
   <div class="modal-overlay" id="modal-ya-registrado" onclick="cerrarModalYaReg()">
     <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
-      <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 NO SEAS HÁBIL</div>
-      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en otro sorteo.</p>
+      <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 ¡ESPERA!</div>
+      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Solo puedes participar en un sorteo a la vez. ¡te toca esperar mi soli!</p>
       <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo por semana. ¡Espera el próximo domingo pe!</p>
       <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="cerrarModalYaReg()">YA FUE</button>
     </div>
@@ -1023,7 +1023,7 @@
     // ═══════════════════════════════════════════════════════════════
     var SORTEOS_CFG = {
       '1': { fechaISO: '2026-04-05T22:00:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
-      '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – S/7' },
+      '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – 7' },
       '3': { fechaISO: '2026-04-19T22:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
       '4': { fechaISO: '2026-04-26T22:00:00-05:00', nombre: 'Yape pal Chicle – S/2' },
       '5': { fechaISO: '2026-05-03T22:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
@@ -1607,7 +1607,7 @@
           if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
+          if (snd) { snd.volume = 0.35; snd.currentTime = 0; snd.play().catch(function(){}); }
         }, 1000);
 
         // Atenuar música
