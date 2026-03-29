@@ -1659,35 +1659,46 @@
         timer = setTimeout(schedule, 18);
       }
 
+      function crearCtx() {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        master = ctx.createGain();
+        master.gain.value = 0.18;
+        master.connect(ctx.destination);
+        playing = true; step = 0; bar = 0;
+        nextTime = ctx.currentTime + 0.08;
+        schedule();
+      }
+
       return {
         start: function() {
-          if (playing) return;
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          // Master gain — controla volumen general (0.0 a 1.0)
-          master = ctx.createGain();
-          master.gain.value = 0.18;
-          master.connect(ctx.destination);
-          playing = true; step = 0; bar = 0;
-          nextTime = ctx.currentTime + 0.08;
-          schedule();
+          // Caso 1: ya corriendo normalmente
+          if (ctx && ctx.state === 'running' && playing) return;
+          // Caso 2: ctx existe pero suspendido (móvil antes del primer gesto)
+          if (ctx && ctx.state === 'suspended') {
+            ctx.resume().then(function() {
+              // Resetear scheduler para que arranque limpio tras resume
+              clearTimeout(timer);
+              playing = true; step = 0; bar = 0;
+              nextTime = ctx.currentTime + 0.08;
+              schedule();
+            }).catch(function() {});
+            return;
+          }
+          // Caso 3: no hay ctx aún, o ctx cerrado — crear fresco
+          if (ctx) { clearTimeout(timer); ctx.close(); ctx = null; playing = false; }
+          crearCtx();
         },
         stop: function() {
           playing = false;
           clearTimeout(timer);
           if (ctx) { ctx.close(); ctx = null; }
         },
-        isPlaying: function() { return playing; },
+        isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
         setVolume: function(v) {
-          if (master) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
+          if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
         },
         getVolume: function() {
           return master ? master.gain.value : 0.18;
-        },
-        // Reactiva el AudioContext si quedó suspendido (iOS/Android tras gesto)
-        resumeCtx: function() {
-          if (ctx && ctx.state === 'suspended') {
-            ctx.resume();
-          }
         }
       };
     })();
@@ -1710,29 +1721,38 @@
       }
     }
 
-    // Intento autoplay al cargar (funciona en escritorio, bloqueado en móvil)
+    // Intento de autoplay en escritorio (suele ser bloqueado en móvil, no importa)
     window.addEventListener('load', function() {
       try { iniciarMusica(); } catch(e) {}
     });
 
-    // En móvil el AudioContext nace en estado "suspended" hasta el primer gesto.
-    // Este handler lo reactiva y desbloquea los audios de silbido.
+    // Primer gesto del usuario: arranca/reactiva música y desbloquea silbidos
+    var _audioDesbloqueado = false;
     function arrancarEnInteraccion() {
-      // Reanudar AudioContext si está suspended (iOS/Android)
-      if (typeof musica !== 'undefined') {
-        musica.resumeCtx(); // reactiva ctx.resume() si hace falta
-      }
-      if (!musica.isPlaying()) {
-        iniciarMusica();
-      }
-      // Desbloquear elementos <audio> del silbido en móvil
+      if (_audioDesbloqueado) return;
+      _audioDesbloqueado = true;
+
+      // musica.start() detecta si ctx está suspended/cerrado/nulo y actúa
+      iniciarMusica();
+
+      // Desbloquear <audio> del silbido en iOS/Android:
+      // hay que llamar .play() sincrónicamente dentro del handler del gesto
       ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
         var snd = document.getElementById(id);
-        if (snd) {
-          var p = snd.play();
-          if (p && p.then) p.then(function(){ snd.pause(); snd.currentTime = 0; }).catch(function(){});
+        if (!snd) return;
+        snd.muted = true;          // silencioso para que no se escuche el desbloqueo
+        var p = snd.play();
+        if (p && p.then) {
+          p.then(function() {
+            snd.pause();
+            snd.currentTime = 0;
+            snd.muted = false;     // restaurar volumen para uso real
+          }).catch(function() { snd.muted = false; });
+        } else {
+          snd.pause(); snd.currentTime = 0; snd.muted = false;
         }
       });
+
       document.removeEventListener('click',      arrancarEnInteraccion);
       document.removeEventListener('touchstart', arrancarEnInteraccion);
       document.removeEventListener('keydown',    arrancarEnInteraccion);
