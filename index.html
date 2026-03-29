@@ -255,15 +255,15 @@
       animation: llamaRun 18s ease-in-out infinite;
     }
     @keyframes llamaRun {
-      0%   { left:-14%; }
-      28%  { left:calc(50% - 45px); }
-      30%  { left:calc(50% - 45px); }
-      58%  { left:calc(50% - 45px); }
-      60%  { left:calc(50% - 35px); }
+      0%   { left:-16%; }
+      28%  { left:calc(50% - 50px); }
+      30%  { left:calc(50% - 50px); }
+      58%  { left:calc(50% - 50px); }
+      60%  { left:calc(50% - 40px); }
       100% { left:112%; }
     }
     .llama-svg-wrap {
-      display:inline-block; width:90px; height:60px;
+      display:inline-block; width:100px; height:55px;
       animation: llamaFlip 18s ease-in-out infinite;
     }
     @keyframes llamaFlip {
@@ -292,6 +292,12 @@
     @keyframes combiShake {
       0%   { transform:translateY(0px); }
       100% { transform:translateY(-1.5px); }
+    }
+    /* Luz azul interior pulsante */
+    .combi-luz-azul { animation: luzAzulPulse 1.2s ease-in-out infinite alternate; }
+    @keyframes luzAzulPulse {
+      0%   { opacity:0.3; }
+      100% { opacity:0.7; }
     }
     /* Ojos normales/enojados en parabrisas */
     .combi-ojos-normal { animation: ojosNorm 18s linear infinite; }
@@ -703,95 +709,121 @@
     <span class="polvo polvo-der">💨</span>
     <div class="llama-runner">
       <div class="llama-svg-wrap">
-        <svg viewBox="0 0 120 65" width="90" height="52" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 130 68" width="100" height="55" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Glow azul interior -->
+            <filter id="glowAzul" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feFlood flood-color="#00aaff" flood-opacity="0.6" result="color"/>
+              <feComposite in="color" in2="blur" operator="in" result="glow"/>
+              <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
           <g class="combi-body-shake">
-            <!-- Bandera peruana en el techo -->
-            <g class="combi-bandera" transform="translate(55,2)">
-              <rect x="0" y="0" width="2" height="14" fill="#666"/>
-              <rect x="2" y="0" width="7" height="12" fill="#d52b1e"/>
-              <rect x="9" y="0" width="8" height="12" fill="#fff"/>
-              <rect x="17" y="0" width="7" height="12" fill="#d52b1e"/>
-            </g>
-            <!-- Cuerpo principal combi -->
-            <rect x="8" y="16" width="95" height="32" rx="6" fill="#e8c020"/>
-            <rect x="10" y="18" width="91" height="28" rx="4" fill="#f0d030"/>
-            <!-- Franja roja abajo -->
-            <rect x="8" y="38" width="95" height="10" rx="3" fill="#d52b1e"/>
-            <!-- Franja blanca en medio -->
-            <rect x="8" y="33" width="95" height="7" fill="#fff"/>
+            <!-- Sombra inferior -->
+            <ellipse cx="58" cy="58" rx="48" ry="3" fill="rgba(0,0,0,0.3)"/>
+            <!-- Cuerpo principal — forma tipo Nissan Urvan -->
+            <!-- Panel inferior (falda) gris oscuro -->
+            <rect x="6" y="42" width="100" height="10" rx="2" fill="#555"/>
+            <!-- Carrocería blanca/crema -->
+            <path d="M8,18 L8,50 Q8,52 10,52 L102,52 Q104,52 104,50 L104,18 Q104,14 100,12 L16,12 Q10,12 8,18Z" fill="#e8e4d8"/>
+            <path d="M10,19 L10,49 Q10,50 11,50 L101,50 Q102,50 102,49 L102,19 Q102,15 99,13.5 L17,13.5 Q12,13.5 10,19Z" fill="#f0ece0"/>
+            <!-- Franja verde horizontal (como la foto) -->
+            <rect x="6" y="32" width="100" height="5" rx="1" fill="#1a8a3a"/>
+            <rect x="6" y="33" width="100" height="3" fill="#22a848"/>
             <!-- Techo -->
-            <rect x="12" y="14" width="88" height="6" rx="3" fill="#c8a818"/>
-            <rect x="20" y="12" width="70" height="5" rx="2.5" fill="#b89818"/>
-            <!-- Parabrisas grande (frente) -->
-            <rect x="12" y="19" width="28" height="17" rx="3" fill="#aadcf0"/>
-            <rect x="13" y="20" width="26" height="15" rx="2" fill="#c8eeff"/>
+            <path d="M14,12 L98,12 Q102,12 102,14 L102,15 L10,15 L10,14 Q10,12 14,12Z" fill="#d4d0c4"/>
+            <!-- Letrero de ruta en techo -->
+            <rect x="25" y="7" width="62" height="6" rx="2" fill="#222"/>
+            <rect x="26" y="7.5" width="60" height="5" rx="1.5" fill="#111"/>
+            <text x="56" y="12" text-anchor="middle" font-family="Arial,sans-serif" font-size="4" fill="#ffe600" font-weight="bold">TUSUERTE.PE</text>
+            <!-- Parabrisas grande frontal dividido -->
+            <rect x="11" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
+            <rect x="26" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
+            <!-- Luz azul interior en parabrisas -->
+            <rect class="combi-luz-azul" x="12" y="17" width="12" height="16" rx="1.5" fill="#0066ff" opacity="0.4" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="27" y="17" width="12" height="16" rx="1.5" fill="#0066ff" opacity="0.4" filter="url(#glowAzul)"/>
+            <!-- Divisor central parabrisas -->
+            <rect x="25" y="15" width="1.5" height="20" fill="#d4d0c4"/>
             <!-- Ventanas laterales -->
-            <rect x="44" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
-            <rect x="61" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
-            <rect x="78" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
-            <!-- Divisiones ventanas -->
-            <rect x="43" y="18" width="1.5" height="15" fill="#c8a818"/>
-            <rect x="59.5" y="18" width="1.5" height="15" fill="#c8a818"/>
-            <rect x="76.5" y="18" width="1.5" height="15" fill="#c8a818"/>
-            <rect x="93" y="18" width="1.5" height="15" fill="#c8a818"/>
+            <rect x="44" y="17" width="13" height="14" rx="2" fill="#88c8e8"/>
+            <rect x="59" y="17" width="13" height="14" rx="2" fill="#88c8e8"/>
+            <rect x="74" y="17" width="13" height="14" rx="2" fill="#88c8e8"/>
+            <rect x="89" y="17" width="10" height="14" rx="2" fill="#88c8e8"/>
+            <!-- Luz azul interior en ventanas -->
+            <rect class="combi-luz-azul" x="45" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="60" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="75" y="18" width="11" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
+            <rect class="combi-luz-azul" x="90" y="18" width="8" height="12" rx="1.5" fill="#0066ff" opacity="0.35" filter="url(#glowAzul)"/>
+            <!-- Pilares entre ventanas -->
+            <rect x="43" y="15" width="1.5" height="18" fill="#d4d0c4"/>
+            <rect x="57.5" y="15" width="1.5" height="18" fill="#d4d0c4"/>
+            <rect x="72.5" y="15" width="1.5" height="18" fill="#d4d0c4"/>
+            <rect x="87.5" y="15" width="1.5" height="18" fill="#d4d0c4"/>
+            <rect x="99.5" y="15" width="1.5" height="18" fill="#d4d0c4"/>
             <!-- Ojos normales en parabrisas -->
             <g class="combi-ojos-normal">
-              <circle cx="20" cy="26" r="3" fill="#222"/>
-              <circle cx="33" cy="26" r="3" fill="#222"/>
-              <circle cx="21" cy="25" r="1" fill="#fff"/>
-              <circle cx="34" cy="25" r="1" fill="#fff"/>
+              <circle cx="18" cy="25" r="3.2" fill="#222"/>
+              <circle cx="33" cy="25" r="3.2" fill="#222"/>
+              <circle cx="19" cy="24" r="1.1" fill="#fff"/>
+              <circle cx="34" cy="24" r="1.1" fill="#fff"/>
             </g>
             <!-- Ojos enojados en parabrisas -->
             <g class="combi-ojos-angry">
-              <circle cx="20" cy="27" r="3.5" fill="#222"/>
-              <circle cx="33" cy="27" r="3.5" fill="#222"/>
-              <circle cx="21" cy="26" r="0.8" fill="#f44"/>
-              <circle cx="34" cy="26" r="0.8" fill="#f44"/>
+              <circle cx="18" cy="26" r="3.8" fill="#222"/>
+              <circle cx="33" cy="26" r="3.8" fill="#222"/>
+              <circle cx="19" cy="25" r="0.9" fill="#ff2222"/>
+              <circle cx="34" cy="25" r="0.9" fill="#ff2222"/>
               <!-- Cejas enojadas -->
-              <line x1="15" y1="22" x2="23" y2="23.5" stroke="#222" stroke-width="2" stroke-linecap="round"/>
-              <line x1="38" y1="22" x2="30" y2="23.5" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+              <line x1="13" y1="20.5" x2="21" y2="22" stroke="#222" stroke-width="2.2" stroke-linecap="round"/>
+              <line x1="38" y1="20.5" x2="30" y2="22" stroke="#222" stroke-width="2.2" stroke-linecap="round"/>
             </g>
-            <!-- Parachoques delantero -->
-            <rect x="5" y="46" width="100" height="4" rx="2" fill="#888"/>
-            <rect x="6" y="47" width="98" height="2" rx="1" fill="#aaa"/>
-            <!-- Faros delanteros -->
-            <circle cx="12" cy="42" r="3.5" fill="#fff8a0"/>
-            <circle cx="12" cy="42" r="2" fill="#ffe040"/>
-            <!-- Faros traseros -->
-            <circle cx="98" cy="42" r="3" fill="#ff3030"/>
-            <circle cx="98" cy="42" r="1.5" fill="#ff6060"/>
-            <!-- Puerta -->
-            <rect x="44" y="26" width="12" height="17" rx="1" fill="none" stroke="#c8a818" stroke-width="1"/>
-            <circle cx="54" cy="35" r="1" fill="#888"/>
-            <!-- Letrero ruta en techo -->
-            <rect x="30" y="12" width="50" height="5" rx="1.5" fill="#111"/>
-            <text x="55" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="3.5" fill="#ffe600" font-weight="bold">TUSUERTE.PE</text>
+            <!-- Parachoques cromado -->
+            <rect x="4" y="50" width="104" height="3.5" rx="1.5" fill="#999"/>
+            <rect x="5" y="50.5" width="102" height="2.5" rx="1" fill="#bbb"/>
+            <!-- Faro delantero -->
+            <rect x="8" y="40" width="5" height="5" rx="2" fill="#fff8a0"/>
+            <rect x="9" y="41" width="3" height="3" rx="1" fill="#ffe040"/>
+            <!-- Faro trasero -->
+            <rect x="99" y="40" width="4" height="5" rx="1.5" fill="#ff2020"/>
+            <rect x="100" y="41" width="2" height="3" rx="1" fill="#ff5050"/>
+            <!-- Puerta lateral corrediza -->
+            <rect x="45" y="22" width="10" height="21" rx="1" fill="none" stroke="#b0ac9c" stroke-width="0.8"/>
+            <circle cx="54" cy="33" r="0.8" fill="#888"/>
+            <!-- Letrero lateral "PERU BUS" -->
+            <text x="72" y="40" font-family="Arial,sans-serif" font-size="3.2" fill="#1a8a3a" font-weight="bold">PERU BUS</text>
+            <!-- Espejo retrovisor -->
+            <rect x="4" y="20" width="4" height="3" rx="1" fill="#666"/>
+            <rect x="3" y="20.5" width="2" height="2" rx="0.5" fill="#88c8e8"/>
             <!-- Humo del escape -->
             <g class="combi-humo">
-              <circle cx="106" cy="44" r="2" fill="#aaa" opacity="0.5"/>
-              <circle cx="110" cy="41" r="2.5" fill="#999" opacity="0.4"/>
-              <circle cx="114" cy="38" r="2" fill="#888" opacity="0.3"/>
+              <circle cx="110" cy="48" r="2.2" fill="#bbb" opacity="0.5"/>
+              <circle cx="115" cy="45" r="2.8" fill="#aaa" opacity="0.4"/>
+              <circle cx="120" cy="42" r="2.2" fill="#999" opacity="0.3"/>
+              <circle cx="124" cy="39" r="1.8" fill="#888" opacity="0.2"/>
             </g>
           </g>
           <!-- Rueda delantera -->
-          <g class="combi-rueda" style="transform-origin:24px 52px">
-            <circle cx="24" cy="52" r="7" fill="#333"/>
-            <circle cx="24" cy="52" r="5" fill="#555"/>
-            <circle cx="24" cy="52" r="2" fill="#888"/>
-            <line x1="24" y1="46" x2="24" y2="48" stroke="#777" stroke-width="1"/>
-            <line x1="24" y1="56" x2="24" y2="58" stroke="#777" stroke-width="1"/>
-            <line x1="18" y1="52" x2="20" y2="52" stroke="#777" stroke-width="1"/>
-            <line x1="28" y1="52" x2="30" y2="52" stroke="#777" stroke-width="1"/>
+          <g class="combi-rueda" style="transform-origin:24px 55px">
+            <circle cx="24" cy="55" r="7.5" fill="#222"/>
+            <circle cx="24" cy="55" r="5.5" fill="#444"/>
+            <circle cx="24" cy="55" r="2.5" fill="#777"/>
+            <circle cx="24" cy="55" r="1" fill="#999"/>
+            <line x1="24" y1="49" x2="24" y2="51" stroke="#666" stroke-width="1"/>
+            <line x1="24" y1="59" x2="24" y2="61" stroke="#666" stroke-width="1"/>
+            <line x1="18" y1="55" x2="20" y2="55" stroke="#666" stroke-width="1"/>
+            <line x1="28" y1="55" x2="30" y2="55" stroke="#666" stroke-width="1"/>
           </g>
           <!-- Rueda trasera -->
-          <g class="combi-rueda" style="transform-origin:86px 52px">
-            <circle cx="86" cy="52" r="7" fill="#333"/>
-            <circle cx="86" cy="52" r="5" fill="#555"/>
-            <circle cx="86" cy="52" r="2" fill="#888"/>
-            <line x1="86" y1="46" x2="86" y2="48" stroke="#777" stroke-width="1"/>
-            <line x1="86" y1="56" x2="86" y2="58" stroke="#777" stroke-width="1"/>
-            <line x1="80" y1="52" x2="82" y2="52" stroke="#777" stroke-width="1"/>
-            <line x1="90" y1="52" x2="92" y2="52" stroke="#777" stroke-width="1"/>
+          <g class="combi-rueda" style="transform-origin:88px 55px">
+            <circle cx="88" cy="55" r="7.5" fill="#222"/>
+            <circle cx="88" cy="55" r="5.5" fill="#444"/>
+            <circle cx="88" cy="55" r="2.5" fill="#777"/>
+            <circle cx="88" cy="55" r="1" fill="#999"/>
+            <line x1="88" y1="49" x2="88" y2="51" stroke="#666" stroke-width="1"/>
+            <line x1="88" y1="59" x2="88" y2="61" stroke="#666" stroke-width="1"/>
+            <line x1="82" y1="55" x2="84" y2="55" stroke="#666" stroke-width="1"/>
+            <line x1="92" y1="55" x2="94" y2="55" stroke="#666" stroke-width="1"/>
           </g>
         </svg>
       </div>
