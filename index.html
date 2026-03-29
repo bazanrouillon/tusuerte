@@ -256,7 +256,7 @@
     animation: protoBanner 4s linear infinite;
     padding:8px 16px; text-align:center; border-bottom:3px solid #000;">
     <span style="font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:3px;color:#000;text-shadow:1px 1px 0 rgba(255,255,255,.4);">
-      🚧 SITIO EN DESARROLLO — VERSIÓN PROTOTIPO 🚧 &nbsp;&nbsp;|&nbsp;&nbsp; ¡Pronto estamos al 100 pe!
+      🚧 SITIO EN DESARROLLO — VERSIÓN PROTOTIPO 🚧 &nbsp;&nbsp;|&nbsp;&nbsp; ¡Pronto venimos con todo!
     </span>
   </div>
   <style>
@@ -265,7 +265,7 @@
 
   <!-- HEADER -->
   <header>
-    <div class="metele-tag">¡Métele sin<br>miedo mi neto!</div>
+    <div class="metele-tag">¡Métele sin<br>miedo, mi neto!</div>
     <div class="logo-principal">TUSUERTE.PE</div>
     <div class="logo-sub">✦ Sorteo pa la gente ✦</div>
   </header>
@@ -281,14 +281,16 @@
   <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker">
-      <span>🔥 ¡No arrugues! </span>
-      <span>💸 Lo Houston </span>
-      <span>📅 Sorteo este DOMINGO 10pm </span>
-      <span>🍀 ¡Tu suerte está aquí! </span>
-      <span>🔥 ¡No arrugues! </span>
-      <span>💸 Lo Houston </span>
-      <span>📅 Sorteo este DOMINGO 10pm </span>
-      <span>🍀 ¡Tu suerte está aquí! </span>
+      <span>Dale con todo, causa</span>
+      <span>Sin miedo al éxito, papi</span>
+      <span>Con fe y sin llorar</span>
+      <span>Con todo o nada</span>
+      <span>Que salga lo que tenga que salir</span>
+      <span>Dale con todo, causa</span>
+      <span>Sin miedo al éxito, papi</span>
+      <span>Con fe y sin llorar</span>
+      <span>Con todo o nada</span>
+      <span>Que salga lo que tenga que salir</span>
     </div>
   </div>
 
@@ -301,7 +303,7 @@
       </div>
     </div>
     <div class="prox-sorteo-label">⏳ PRÓXIMO SORTEO EN:</div>
-    <div class="prox-sorteo-fecha">📅 Este Domingo — 10:00 PM</div>
+    <div class="prox-sorteo-fecha" id="prox-sorteo-fecha">📅 Cargando...</div>
     <div class="contador-wrap">
       <div class="contador-bloque"><div class="contador-num" id="dias">00</div><div class="contador-lbl">Días</div></div>
       <div class="contador-bloque"><div class="contador-num" id="horas">00</div><div class="contador-lbl">Horas</div></div>
@@ -311,7 +313,7 @@
   </div>
 
   <!-- SORTEOS -->
-  <section id="sorteos">
+  <section id="sorteos" style="display:none">
     <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
     <div class="grid-sorteos">
 
@@ -328,8 +330,8 @@
           <div class="card-titulo">YAPE PAL POLLITO</div>
           <div class="card-desc">20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. ¡Come rico papi!</div>
           <div class="card-meta">
-            <span class="card-participantes">👥 <span id="inscritos-1">0</span> inscritos</span>
-            <span class="card-fecha">📅 Dom 30 Mar</span>
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-1">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
           <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
@@ -349,8 +351,8 @@
           <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
           <div class="card-desc">S/7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
           <div class="card-meta">
-            <span class="card-participantes">👥 <span id="inscritos-2">0</span> inscritos</span>
-            <span class="card-fecha">📅 Dom 30 Mar</span>
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
           <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – S/7','2')">¡QUIERO GANAR!</button>
@@ -370,8 +372,8 @@
           <div class="card-titulo">YAPE PA LA GASEOSA</div>
           <div class="card-desc">5 lukitas directo a tu número pa que te tomes tu gaseosa bien helada. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
           <div class="card-meta">
-            <span class="card-participantes">👥 <span id="inscritos-3">0</span> inscritos</span>
-            <span class="card-fecha">📅 Dom 30 Mar</span>
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
@@ -777,11 +779,29 @@
       <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 NO SEAS HÁBIL</div>
       <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en otro sorteo.</p>
       <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo por semana. ¡Espera el próximo domingo pe!</p>
-      <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">ENTENDIDO 🤙</button>
+      <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">YA FUE</button>
     </div>
   </div>
 
   <script>
+    // FECHA DINÁMICA — PRÓXIMO DOMINGO
+    (function() {
+      var dias   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+      var meses  = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      var ahora  = new Date();
+      var dom    = new Date(ahora);
+      var diff   = (7 - dom.getDay()) % 7 || 7;
+      dom.setDate(dom.getDate() + diff);
+      dom.setHours(22, 0, 0, 0);
+      var etiqueta = 'Dom ' + dom.getDate() + ' ' + meses[dom.getMonth()];
+      // Actualizar todos los elementos
+      var fechaEl = document.getElementById('prox-sorteo-fecha');
+      if (fechaEl) fechaEl.textContent = '📅 ' + etiqueta + ' — 10:00 PM';
+      document.querySelectorAll('.proxfecha').forEach(function(el) {
+        el.textContent = '📅 ' + etiqueta;
+      });
+    })();
+
     // CONTADOR – PRÓXIMO DOMINGO 10PM
     function actualizarContador() {
       const ahora = new Date();
