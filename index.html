@@ -1670,30 +1670,18 @@
       }
 
       return {
+        // start() solo debe llamarse DESDE un gesto de usuario (o botón)
         start: function() {
-          // Caso 1: ya corriendo normalmente
-          if (ctx && ctx.state === 'running' && playing) return;
-          // Caso 2: ctx existe pero suspendido (móvil antes del primer gesto)
-          if (ctx && ctx.state === 'suspended') {
-            ctx.resume().then(function() {
-              // Resetear scheduler para que arranque limpio tras resume
-              clearTimeout(timer);
-              playing = true; step = 0; bar = 0;
-              nextTime = ctx.currentTime + 0.08;
-              schedule();
-            }).catch(function() {});
-            return;
-          }
-          // Caso 3: no hay ctx aún, o ctx cerrado — crear fresco
+          if (playing && ctx && ctx.state === 'running') return; // ya suena
           if (ctx) { clearTimeout(timer); ctx.close(); ctx = null; playing = false; }
-          crearCtx();
+          crearCtx(); // crea AudioContext fresco dentro del gesto = funciona en iOS
         },
         stop: function() {
           playing = false;
           clearTimeout(timer);
           if (ctx) { ctx.close(); ctx = null; }
         },
-        isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
+        isPlaying: function() { return playing && !!ctx; },
         setVolume: function(v) {
           if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
         },
@@ -1721,19 +1709,20 @@
       }
     }
 
-    // Intento de autoplay en escritorio (suele ser bloqueado en móvil, no importa)
+    // Escritorio: intento de autoplay al cargar (bloqueado en móvil — no importa)
     window.addEventListener('load', function() {
       try { iniciarMusica(); } catch(e) {}
     });
 
-    // Primer gesto del usuario: arranca/reactiva música y desbloquea silbidos
+    // Móvil: el AudioContext SOLO funciona si se crea dentro de un gesto del usuario.
+    // Este handler espera el primer toque y arranca todo desde cero.
     var _audioDesbloqueado = false;
     function arrancarEnInteraccion() {
       if (_audioDesbloqueado) return;
       _audioDesbloqueado = true;
 
-      // musica.start() detecta si ctx está suspended/cerrado/nulo y actúa
-      iniciarMusica();
+      // Crear AudioContext fresco dentro del gesto (requerido por iOS/Android)
+      if (!musica.isPlaying()) iniciarMusica();
 
       // Desbloquear <audio> del silbido en iOS/Android:
       // hay que llamar .play() sincrónicamente dentro del handler del gesto
