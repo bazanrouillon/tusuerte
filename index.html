@@ -262,69 +262,172 @@
     .cinta-llama {
       position:relative; overflow:hidden; background:linear-gradient(90deg,#1a0a00,#2a1000,#1a0a00);
       border-top:3px solid var(--neon-amarillo); border-bottom:3px solid var(--neon-amarillo);
-      height:64px; width:100%;
+      height:80px; width:100%;
       box-shadow:0 0 20px rgba(255,230,0,.15);
     }
     .cinta-llama::before {
       content:''; position:absolute; inset:0;
       background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,230,0,.04) 40px,rgba(255,230,0,.04) 80px);
     }
+    /* Contenedor principal — 18s ciclo: 0-30% corre, 30-58% frena y mira 5s, 58-100% se va */
     .llama-runner {
       position:absolute; top:50%; transform:translateY(-50%);
-      white-space:nowrap; font-size:1.6rem;
-      animation: llamaRun 12s linear infinite;
-    }
-    .llama-runner .bandera { display:inline; }
-    .llama-runner .llamita { display:inline; }
-    .llama-runner .bocadillo {
-      display:inline-block; opacity:0; font-family:'Bangers',cursive;
-      color:var(--neon-verde); font-size:1rem; letter-spacing:2px;
-      text-shadow:0 0 8px var(--neon-verde); vertical-align:middle;
-      margin-left:6px;
-      animation: bocadilloShow 12s linear infinite;
+      white-space:nowrap;
+      animation: llamaRun 18s ease-in-out infinite;
     }
     @keyframes llamaRun {
-      0%   { left:-15%; }
-      38%  { left:45%; }
-      42%  { left:45%; }
-      44%  { left:45%; }
-      48%  { left:45%; }
-      100% { left:110%; }
+      0%   { left:-12%; }
+      28%  { left:calc(50% - 30px); }
+      30%  { left:calc(50% - 30px); }
+      58%  { left:calc(50% - 30px); }
+      60%  { left:calc(50% - 20px); }
+      100% { left:112%; }
+    }
+    .llama-svg-wrap {
+      display:inline-block; width:60px; height:60px;
+      animation: llamaFlip 18s ease-in-out infinite;
+    }
+    @keyframes llamaFlip {
+      0%,28%   { transform:scaleX(1); }
+      30%      { transform:scaleX(1) rotate(-5deg); }
+      31%      { transform:scaleX(-1); }
+      58%      { transform:scaleX(-1); }
+      60%,100% { transform:scaleX(1); }
+    }
+    /* Patas corriendo */
+    .llama-pata-del { animation: pataCorrer 18s linear infinite; }
+    .llama-pata-tra { animation: pataCorrer 18s linear infinite; animation-delay:-0.15s; }
+    @keyframes pataCorrer {
+      0%,1%    { transform:rotate(-20deg); transform-origin:top center; }
+      2%       { transform:rotate(20deg); }
+      3%       { transform:rotate(-20deg); }
+      4%       { transform:rotate(20deg); }
+      5%       { transform:rotate(-20deg); }
+      6%       { transform:rotate(20deg); }
+      7%       { transform:rotate(-20deg); }
+      8%       { transform:rotate(20deg); }
+      9%       { transform:rotate(-20deg); }
+      10%      { transform:rotate(20deg); }
+      11%      { transform:rotate(-20deg); }
+      12%      { transform:rotate(20deg); }
+      13%      { transform:rotate(-20deg); }
+      14%      { transform:rotate(20deg); }
+      15%      { transform:rotate(-20deg); }
+      16%      { transform:rotate(20deg); }
+      17%      { transform:rotate(-20deg); }
+      18%      { transform:rotate(20deg); }
+      19%      { transform:rotate(-20deg); }
+      20%      { transform:rotate(20deg); }
+      21%      { transform:rotate(-20deg); }
+      22%      { transform:rotate(20deg); }
+      23%      { transform:rotate(-20deg); }
+      24%      { transform:rotate(20deg); }
+      25%      { transform:rotate(-20deg); }
+      26%      { transform:rotate(20deg); }
+      27%      { transform:rotate(-20deg); }
+      28%      { transform:rotate(10deg); }
+      30%,58%  { transform:rotate(0deg); }
+      60%      { transform:rotate(-20deg); }
+      61%      { transform:rotate(20deg); }
+      62%      { transform:rotate(-20deg); }
+      63%      { transform:rotate(20deg); }
+      64%      { transform:rotate(-20deg); }
+      65%      { transform:rotate(20deg); }
+      66%      { transform:rotate(-20deg); }
+      67%      { transform:rotate(20deg); }
+      68%      { transform:rotate(-20deg); }
+      69%      { transform:rotate(20deg); }
+      70%      { transform:rotate(-20deg); }
+      71%      { transform:rotate(20deg); }
+      72%      { transform:rotate(-20deg); }
+      73%      { transform:rotate(20deg); }
+      74%      { transform:rotate(-20deg); }
+      75%      { transform:rotate(20deg); }
+      76%      { transform:rotate(-20deg); }
+      77%      { transform:rotate(20deg); }
+      78%      { transform:rotate(-20deg); }
+      79%      { transform:rotate(20deg); }
+      80%      { transform:rotate(-20deg); }
+      81%      { transform:rotate(20deg); }
+      82%      { transform:rotate(-20deg); }
+      83%      { transform:rotate(20deg); }
+      84%      { transform:rotate(-20deg); }
+      85%      { transform:rotate(20deg); }
+      86%      { transform:rotate(-20deg); }
+      87%      { transform:rotate(20deg); }
+      88%      { transform:rotate(-20deg); }
+      89%      { transform:rotate(20deg); }
+      90%      { transform:rotate(-20deg); }
+      91%      { transform:rotate(20deg); }
+      92%      { transform:rotate(-20deg); }
+      93%      { transform:rotate(20deg); }
+      94%      { transform:rotate(-20deg); }
+      95%      { transform:rotate(20deg); }
+      96%      { transform:rotate(-20deg); }
+      97%      { transform:rotate(20deg); }
+      98%      { transform:rotate(-20deg); }
+      99%      { transform:rotate(10deg); }
+      100%     { transform:rotate(0deg); }
+    }
+    /* Bandera flameando en el lomo */
+    .bandera-cape {
+      animation: flamear 0.4s ease-in-out infinite alternate, banderaVis 18s linear infinite;
+      transform-origin:left center;
+    }
+    @keyframes flamear {
+      0%   { transform:rotate(-6deg) skewY(3deg); }
+      100% { transform:rotate(4deg) skewY(-2deg); }
+    }
+    @keyframes banderaVis {
+      0%,28%  { opacity:1; }
+      30%,58% { opacity:1; }
+      100%    { opacity:1; }
+    }
+    /* Ojos enojados al frenar */
+    .llama-ojos-normal { animation: ojosNorm 18s linear infinite; }
+    .llama-ojos-angry  { animation: ojosAngry 18s linear infinite; }
+    @keyframes ojosNorm {
+      0%,29%   { opacity:1; }
+      30%,58%  { opacity:0; }
+      59%,100% { opacity:1; }
+    }
+    @keyframes ojosAngry {
+      0%,29%   { opacity:0; }
+      30%,58%  { opacity:1; }
+      59%,100% { opacity:0; }
+    }
+    /* Bocadillo */
+    .bocadillo-cinta {
+      display:inline-block; opacity:0; font-family:'Bangers',cursive;
+      color:var(--neon-verde); font-size:1.1rem; letter-spacing:2px;
+      text-shadow:0 0 10px var(--neon-verde),0 0 20px rgba(57,255,20,.4);
+      vertical-align:middle; margin-left:8px; position:relative; top:-6px;
+      animation: bocadilloShow 18s linear infinite;
     }
     @keyframes bocadilloShow {
-      0%,40%   { opacity:0; transform:translateY(-50%) scale(0.5); }
-      43%      { opacity:1; transform:translateY(-50%) scale(1.15); }
-      44%      { opacity:1; transform:translateY(-50%) scale(1); }
-      48%      { opacity:1; transform:translateY(-50%) scale(1); }
-      50%      { opacity:0; transform:translateY(-50%) scale(0.5); }
+      0%,31%   { opacity:0; transform:scale(0.5); }
+      33%      { opacity:1; transform:scale(1.2); }
+      35%,56%  { opacity:1; transform:scale(1); }
+      58%      { opacity:0; transform:scale(0.5); }
       100%     { opacity:0; }
     }
-    .llama-runner .frenada {
-      display:inline-block;
-      animation: frenar 12s linear infinite;
-    }
-    @keyframes frenar {
-      0%,37%   { transform:scaleX(1); }
-      38%,39%  { transform:scaleX(1) rotate(-8deg); }
-      40%,48%  { transform:scaleX(-1); }
-      50%,100% { transform:scaleX(1); }
-    }
+    /* Polvo de frenada */
     .polvo {
       position:absolute; top:50%; transform:translateY(-50%);
-      font-size:1rem; opacity:0; pointer-events:none;
-      animation: polvoShow 12s linear infinite;
+      font-size:1.1rem; opacity:0; pointer-events:none;
     }
-    .polvo.izq { animation-name: polvoIzq; }
-    @keyframes polvoShow {
-      0%,37%  { opacity:0; left:44%; }
-      38%,40% { opacity:.7; left:43%; }
-      42%     { opacity:0; left:41%; }
+    .polvo-izq { animation: polvoI 18s linear infinite; }
+    .polvo-der { animation: polvoD 18s linear infinite; }
+    @keyframes polvoI {
+      0%,27%  { opacity:0; left:calc(50% - 50px); }
+      28%,29% { opacity:.8; left:calc(50% - 65px); }
+      32%     { opacity:0; left:calc(50% - 80px); }
       100%    { opacity:0; }
     }
-    @keyframes polvoIzq {
-      0%,37%  { opacity:0; left:49%; }
-      38%,40% { opacity:.7; left:50%; }
-      42%     { opacity:0; left:52%; }
+    @keyframes polvoD {
+      0%,27%  { opacity:0; left:calc(50% + 20px); }
+      28%,29% { opacity:.8; left:calc(50% + 35px); }
+      32%     { opacity:0; left:calc(50% + 50px); }
       100%    { opacity:0; }
     }
 
@@ -681,12 +784,74 @@
 
   <!-- CINTA LLAMA CORRIENDO -->
   <div class="cinta-llama">
-    <span class="polvo">💨</span>
-    <span class="polvo izq">💨</span>
+    <span class="polvo polvo-izq">💨</span>
+    <span class="polvo polvo-der">💨</span>
     <div class="llama-runner">
-      <span class="bandera">🇵🇪</span>
-      <span class="frenada">🦙</span>
-      <span class="bocadillo">tsss sano 🤙</span>
+      <div class="llama-svg-wrap">
+        <svg viewBox="0 0 80 70" width="60" height="52" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bandera peruana como capa en el lomo -->
+          <g class="bandera-cape" transform="translate(30,12)">
+            <rect x="0" y="-8" width="8" height="18" rx="1" fill="#d52b1e"/>
+            <rect x="8" y="-8" width="9" height="18" rx="0" fill="#fff"/>
+            <rect x="17" y="-8" width="8" height="18" rx="1" fill="#d52b1e"/>
+          </g>
+          <!-- Cuerpo -->
+          <ellipse cx="35" cy="32" rx="18" ry="12" fill="#f5e6c8"/>
+          <ellipse cx="35" cy="30" rx="16" ry="10" fill="#faf0dc"/>
+          <!-- Cuello -->
+          <rect x="14" y="8" width="10" height="24" rx="5" fill="#f5e6c8"/>
+          <rect x="15" y="9" width="8" height="22" rx="4" fill="#faf0dc"/>
+          <!-- Cabeza -->
+          <ellipse cx="19" cy="9" rx="10" ry="8" fill="#faf0dc"/>
+          <ellipse cx="19" cy="10" rx="9" ry="7" fill="#f5e6c8"/>
+          <!-- Orejas -->
+          <ellipse cx="12" cy="3" rx="2.5" ry="5" transform="rotate(-15,12,3)" fill="#faf0dc"/>
+          <ellipse cx="25" cy="2" rx="2.5" ry="5" transform="rotate(15,25,2)" fill="#faf0dc"/>
+          <ellipse cx="12" cy="3" rx="1.5" ry="3.5" transform="rotate(-15,12,3)" fill="#f0c8a0"/>
+          <ellipse cx="25" cy="2" rx="1.5" ry="3.5" transform="rotate(15,25,2)" fill="#f0c8a0"/>
+          <!-- Ojos normales -->
+          <g class="llama-ojos-normal">
+            <circle cx="14" cy="9" r="2" fill="#222"/>
+            <circle cx="23" cy="9" r="2" fill="#222"/>
+            <circle cx="14.6" cy="8.4" r="0.7" fill="#fff"/>
+            <circle cx="23.6" cy="8.4" r="0.7" fill="#fff"/>
+          </g>
+          <!-- Ojos enojados -->
+          <g class="llama-ojos-angry">
+            <circle cx="14" cy="10" r="2.2" fill="#222"/>
+            <circle cx="23" cy="10" r="2.2" fill="#222"/>
+            <circle cx="14.7" cy="9.3" r="0.6" fill="#f44"/>
+            <circle cx="23.7" cy="9.3" r="0.6" fill="#f44"/>
+            <!-- Cejas enojadas -->
+            <line x1="11" y1="6" x2="16" y2="7.5" stroke="#222" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="26" y1="6" x2="21" y2="7.5" stroke="#222" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Boca molesta -->
+            <path d="M15 14 Q19 12 23 14" stroke="#222" stroke-width="1" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Hocico -->
+          <ellipse cx="19" cy="13" rx="4" ry="2.5" fill="#e8d5b8"/>
+          <ellipse cx="17.5" cy="12.5" rx="0.8" ry="0.6" fill="#333"/>
+          <ellipse cx="20.5" cy="12.5" rx="0.8" ry="0.6" fill="#333"/>
+          <!-- Patas delanteras -->
+          <g class="llama-pata-del">
+            <rect x="22" y="40" width="4" height="18" rx="2" fill="#e8d5b8"/>
+            <rect x="28" y="40" width="4" height="18" rx="2" fill="#f5e6c8"/>
+            <ellipse cx="24" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
+            <ellipse cx="30" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
+          </g>
+          <!-- Patas traseras -->
+          <g class="llama-pata-tra">
+            <rect x="38" y="40" width="4" height="18" rx="2" fill="#e8d5b8"/>
+            <rect x="44" y="40" width="4" height="18" rx="2" fill="#f5e6c8"/>
+            <ellipse cx="40" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
+            <ellipse cx="46" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
+          </g>
+          <!-- Cola -->
+          <path d="M52 26 Q60 20 56 14" stroke="#f5e6c8" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="56" cy="14" r="3" fill="#faf0dc"/>
+        </svg>
+      </div>
+      <span class="bocadillo-cinta">tsss sano</span>
     </div>
   </div>
 
