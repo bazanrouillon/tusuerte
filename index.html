@@ -248,6 +248,21 @@
 <body>
   <div class="bg-pattern"></div>
 
+  <!-- BANNER PROTOTIPO -->
+  <div id="banner-prototipo" style="
+    position:sticky; top:0; z-index:10000;
+    background: repeating-linear-gradient(90deg,#ff0080 0px,#ff6a00 80px,#ffe600 160px,#39ff14 240px,#00e5ff 320px,#cc00ff 400px,#ff0080 480px);
+    background-size:480px 100%;
+    animation: protoBanner 4s linear infinite;
+    padding:8px 16px; text-align:center; border-bottom:3px solid #000;">
+    <span style="font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:3px;color:#000;text-shadow:1px 1px 0 rgba(255,255,255,.4);">
+      🚧 SITIO EN DESARROLLO — VERSIÓN PROTOTIPO 🚧 &nbsp;&nbsp;|&nbsp;&nbsp; ¡Pronto estamos al 100 pe!
+    </span>
+  </div>
+  <style>
+    @keyframes protoBanner { from{background-position:0 0} to{background-position:480px 0} }
+  </style>
+
   <!-- HEADER -->
   <header>
     <div class="metele-tag">¡Métele sin<br>miedo mi neto!</div>
@@ -545,26 +560,32 @@
         <div class="pasos">
           <div class="paso">
             <div class="paso-num">1</div>
+            <div class="paso-icono">📱</div>
+            <h3>SIGUE NUESTRA CUENTA</h3>
+            <p><strong style="color:var(--neon-rosa)">¡PRIMERO LO PRIMERO PE!</strong> Sigue <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong> en TikTok y dale ❤️ like a la página. ¡Sin esto no te puedes registrar!</p>
+          </div>
+          <div class="paso">
+            <div class="paso-num">2</div>
             <div class="paso-icono">🍀</div>
             <h3>ELIGE TU SORTEO</h3>
             <p>Escoge el premio que más te gusta y dale clic en ¡QUIERO GANAR! ¡Puedes participar solo en uno por semana!</p>
           </div>
           <div class="paso">
-            <div class="paso-num">2</div>
+            <div class="paso-num">3</div>
             <div class="paso-icono">✍️</div>
             <h3>REGÍSTRATE</h3>
-            <p>Sigue a <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong> en TikTok, dale like y llena el formulario con tu nombre, DNI, celular, correo y tu usuario de TikTok. ¡Gratis pe!</p>
-          </div>
-          <div class="paso">
-            <div class="paso-num">3</div>
-            <div class="paso-icono">📲</div>
-            <h3>ESPERA EL SORTEO</h3>
-            <p>El sorteo se realiza en la fecha y hora indicada y se publicará el nombre de los ganadores en el TikTok oficial de tusuerte.pe. ¡Sin trampa ni cartón!</p>
+            <p>Llena el formulario con tu nombre, DNI, celular, correo y tu usuario de TikTok. ¡Es gratis pe, no se cobra nada!</p>
           </div>
           <div class="paso">
             <div class="paso-num">4</div>
+            <div class="paso-icono">📲</div>
+            <h3>ESPERA EL SORTEO</h3>
+            <p>El sorteo se realiza en vivo por <strong style="color:var(--neon-rosa)">TikTok Live @tusuerte.pe.oficial</strong> todos los domingos a las 10pm. ¡Sin trampa ni cartón!</p>
+          </div>
+          <div class="paso">
+            <div class="paso-num">5</div>
             <div class="paso-icono">🎉</div>
-            <h3>¡RECOGE TU PREMIO!</h3>
+            <h3>¡RECLAMA TU PREMIO!</h3>
             <p>Si ganas, visita la página, busca tu nombre en Ganadores, dale clic y sigue las instrucciones que te llegarán al correo.</p>
           </div>
         </div>
@@ -1003,7 +1024,7 @@
     #llama-saludo {
       position: fixed;
       bottom: 0;
-      right: -220px;
+      left: -220px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -1012,14 +1033,15 @@
       transition: none;
     }
     #llama-saludo.animando {
-      animation: llamaShow 7.5s cubic-bezier(.22,.68,0,1.1) forwards;
+      animation: llamaSlide 13s ease-in-out forwards;
     }
-    #llama-burbuja {
+    /* Estilos compartidos para ambas burbujas */
+    #llama-burbuja, #llama-burbuja2 {
       position: relative;
       background: #fff;
       color: #0d0d1f;
       font-family: 'Bangers', cursive;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       letter-spacing: 2px;
       padding: 10px 20px;
       border-radius: 18px;
@@ -1029,9 +1051,14 @@
       text-align: center;
       white-space: nowrap;
       opacity: 0;
-      transform: scale(0.4) rotate(-8deg);
     }
-    #llama-burbuja::after {
+    #llama-burbuja2 {
+      border-color: var(--neon-celeste);
+      box-shadow: 0 0 20px var(--neon-celeste), 0 0 6px #000;
+      position: absolute;
+      top: -60px;
+    }
+    #llama-burbuja::after, #llama-burbuja2::after {
       content: '';
       position: absolute;
       bottom: -13px;
@@ -1040,42 +1067,56 @@
       border: 7px solid transparent;
       border-top-color: var(--neon-amarillo);
     }
+    #llama-burbuja2::after {
+      border-top-color: var(--neon-celeste);
+    }
     #llama-saludo.animando #llama-burbuja {
-      animation: burbujaViva 7.5s ease forwards;
+      animation: burbuja1Anim 13s ease forwards;
     }
-    /* Llama: entra suave, rebota, se queda, sale despacio */
-    @keyframes llamaShow {
-      0%   { right: -220px; }
-      18%  { right: 16px; }
-      /* rebotes suaves sin girar */
-      26%  { right: 16px; transform: translateY(-16px); }
-      32%  { right: 16px; transform: translateY(0); }
-      38%  { right: 16px; transform: translateY(-12px); }
-      44%  { right: 16px; transform: translateY(0); }
-      50%  { right: 16px; transform: translateY(-8px); }
-      56%  { right: 16px; transform: translateY(0); }
-      /* pausa tranquila */
-      72%  { right: 16px; transform: translateY(0); }
-      /* salida lenta */
-      100% { right: 110%; transform: translateY(0); }
+    #llama-saludo.animando #llama-burbuja2 {
+      animation: burbuja2Anim 13s ease forwards;
     }
-    @keyframes burbujaViva {
+    /* Llama entra desde la izquierda, rebota, cruza la pantalla y sale por la derecha */
+    @keyframes llamaSlide {
+      0%   { left: -220px; }
+      12%  { left: 20px; }
+      18%  { left: 20px; transform: translateY(-16px); }
+      24%  { left: 20px; transform: translateY(0); }
+      30%  { left: 20px; transform: translateY(-10px); }
+      35%  { left: 20px; transform: translateY(0); }
+      /* pausa con cartel 1 */
+      55%  { left: 20px; transform: translateY(0); }
+      /* empieza a cruzar hacia la derecha */
+      80%  { left: calc(100vw - 180px); transform: translateY(0); }
+      /* sale por la derecha */
+      100% { left: calc(100vw + 220px); transform: translateY(0); }
+    }
+    /* Cartel 1: aparece al entrar, desaparece al empezar a cruzar */
+    @keyframes burbuja1Anim {
       0%   { opacity:0; transform: scale(0.3); }
-      20%  { opacity:0; transform: scale(0.3); }
-      26%  { opacity:1; transform: scale(1.12); }
-      30%  { opacity:1; transform: scale(0.96); }
-      32%  { opacity:1; transform: scale(1); }
-      /* pulso suave */
-      45%  { opacity:1; transform: scale(1.05); }
-      55%  { opacity:1; transform: scale(0.98); }
-      65%  { opacity:1; transform: scale(1); }
-      70%  { opacity:1; transform: scale(1); }
-      76%  { opacity:0; transform: scale(0.3); }
+      12%  { opacity:0; transform: scale(0.3); }
+      18%  { opacity:1; transform: scale(1.12); }
+      22%  { opacity:1; transform: scale(0.96); }
+      25%  { opacity:1; transform: scale(1); }
+      50%  { opacity:1; transform: scale(1); }
+      58%  { opacity:0; transform: scale(0.2); }
+      100% { opacity:0; }
+    }
+    /* Cartel 2: aparece cuando ya está cruzando, antes de irse */
+    @keyframes burbuja2Anim {
+      0%   { opacity:0; transform: scale(0.3); }
+      62%  { opacity:0; transform: scale(0.3); }
+      70%  { opacity:1; transform: scale(1.12); }
+      74%  { opacity:1; transform: scale(0.96); }
+      77%  { opacity:1; transform: scale(1); }
+      88%  { opacity:1; transform: scale(1); }
+      96%  { opacity:0; transform: scale(0.2); }
       100% { opacity:0; }
     }
   </style>
 
   <div id="llama-saludo">
+    <div id="llama-burbuja2">¡APÚNTATE AL TOQUE!</div>
     <div id="llama-burbuja">¡OE CHOLO MÉTELE!</div>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" width="145" height="185">
       <defs>
@@ -1141,31 +1182,49 @@
   <script>
     /* ─── LLAMA ─── */
     (function() {
-      var frases = [
+      // Frases para el cartel 1 (al entrar)
+      var frases1 = [
         '¡OE CHOLO MÉTELE! 🔥',
         '¡NO ARRUGUES CAUSA! 💪',
-        '¡APÚNTATE AL TOQUE! 🍀',
-        '¡NO SEAS SALAO! 🎉',
+        '¡NO SEAS SALAO! 🎯',
         '¡SU RICO CHINCHIN! 🥂',
-        '¡UN SENCILLO LO HOUSTON! 🔥'
+        '¡APÚNTATE YA PE! 🍀',
+        '¡DALE SIN MIEDO! 🔥'
+      ];
+      // Frases para el cartel 2 (al salir)
+      var frases2 = [
+        '¡APÚNTATE AL TOQUE! 🍀',
+        '¡UN SENCILLO LO HOUSTON! 🎉',
+        '¡ES GRATIS PE! 💸',
+        '¡SUERTE CAUSA! 🤙',
+        '¡MÉTELE QUE HAY! 🎯',
+        '¡TU SUERTE ESTÁ ACÁ! ⭐'
       ];
       var idx = 0;
       var el = document.getElementById('llama-saludo');
       var burbuja = document.getElementById('llama-burbuja');
-      var DUR = 7500; // ms que dura la animación
+      var burbuja2 = document.getElementById('llama-burbuja2');
+      var DUR = 13000; // ms que dura la animación completa
 
       function mostrarLlama() {
         // No mostrar ni silbar si hay un panel abierto
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
-        burbuja.textContent = frases[idx % frases.length];
+        burbuja.textContent  = frases1[idx % frases1.length];
+        burbuja2.textContent = frases2[idx % frases2.length];
         idx++;
         el.classList.remove('animando');
         void el.offsetWidth;
-        el.style.animationDuration = (DUR / 1000) + 's';
         el.classList.add('animando');
         // Silbido al aparecer
         var snd = document.getElementById('audio-silbido');
         if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
+        // Atenuar música mientras la llama está visible
+        if (typeof musica !== 'undefined' && musica.isPlaying()) {
+          musica.setVolume(0.06);
+          setTimeout(function() {
+            if (musica.isPlaying()) musica.setVolume(0.18);
+          }, DUR - 500);
+        }
         setTimeout(function() { el.classList.remove('animando'); }, DUR + 100);
       }
 
@@ -1316,7 +1375,7 @@
           ctx = new (window.AudioContext || window.webkitAudioContext)();
           // Master gain — controla volumen general (0.0 a 1.0)
           master = ctx.createGain();
-          master.gain.value = 0.45;
+          master.gain.value = 0.18;
           master.connect(ctx.destination);
           playing = true; step = 0; bar = 0;
           nextTime = ctx.currentTime + 0.08;
@@ -1327,7 +1386,13 @@
           clearTimeout(timer);
           if (ctx) { ctx.close(); ctx = null; }
         },
-        isPlaying: function() { return playing; }
+        isPlaying: function() { return playing; },
+        setVolume: function(v) {
+          if (master) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
+        },
+        getVolume: function() {
+          return master ? master.gain.value : 0.18;
+        }
       };
     })();
 
