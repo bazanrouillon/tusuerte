@@ -423,7 +423,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL POLLITO</div>
           <div class="card-desc">20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. ¡Come rico papi!</div>
           <div class="card-meta">
@@ -455,7 +455,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
           <div class="card-desc">7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
           <div class="card-meta">
@@ -487,7 +487,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA GASEOSA</div>
           <div class="card-desc">5 lukitas directo a tu número pa que te tomes tu gaseosa bien helada. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
           <div class="card-meta">
@@ -519,7 +519,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL CHICLE</div>
           <div class="card-desc">2 lukitas directo a tu número pa que te compres tu chicle favorito. ¡Chiquitito pero es tuyo causa!</div>
           <div class="card-meta">
@@ -551,7 +551,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA CHELITA</div>
           <div class="card-desc">6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. ¡Te lo mereces causa!</div>
           <div class="card-meta">
@@ -583,7 +583,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA QUINUA</div>
           <div class="card-desc">2 lukitas pa tu vaso de quinua del mercado. ¡Nutritivo y ganado con pura suerte causa!</div>
           <div class="card-meta">
@@ -1057,7 +1057,11 @@
       var wrap = document.getElementById('mini-cnt-' + id);
       if (wrap) {
         var fechaSpan = wrap.closest('.card-body') && wrap.closest('.card-body').querySelector('.proxfecha');
-        if (fechaSpan) fechaSpan.textContent = '📅 ' + DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
+        if (fechaSpan) {
+          var hh = dLima.getUTCHours(); var mm = dLima.getUTCMinutes();
+          var horaStr = (hh > 12 ? hh - 12 : hh) + ':' + (mm < 10 ? '0' + mm : mm) + (hh >= 12 ? ' PM' : ' AM');
+          fechaSpan.textContent = '📅 ' + DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()] + ' • ' + horaStr;
+        }
       }
     });
 
@@ -1602,23 +1606,19 @@
         void el.offsetWidth;
         el.classList.add('animando');
 
-        // Silenciar música y reproducir solo silbido limpio
+        // Bajar un poco la música y silbido sutil encima
         if (typeof musica !== 'undefined' && musica.isPlaying()) {
-          musica.setVolume(0);
+          musica.setVolume(0.08);
+          setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
         }
 
-        // Silbido 1 segundo después — solo si la app está visible
+        // Silbido 1 segundo después — sutil sobre la música
         setTimeout(function() {
           if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) { snd.volume = 0.7; snd.currentTime = 0; snd.play().catch(function(){}); }
+          if (snd) { snd.volume = 0.4; snd.currentTime = 0; snd.play().catch(function(){}); }
         }, 1000);
-
-        // Restaurar música después de la animación
-        setTimeout(function() {
-          if (typeof musica !== 'undefined' && musica.isPlaying()) musica.setVolume(0.18);
-        }, DUR - 500);
 
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
