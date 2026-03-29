@@ -8,7 +8,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --negro: #0a0a0a; --neon-rosa: #ff0080; --neon-verde: #39ff14;
+      --negro: #0d0d1f; --neon-rosa: #ff0080; --neon-verde: #39ff14;
       --neon-amarillo: #ffe600; --neon-naranja: #ff6a00;
       --neon-celeste: #00e5ff; --neon-violeta: #cc00ff; --blanco: #ffffff;
     }
@@ -16,17 +16,18 @@
     body { background-color: var(--negro); color: var(--blanco); font-family: 'Paytone One', sans-serif; overflow-x: hidden; }
 
     .bg-pattern { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
-      background: repeating-linear-gradient(45deg,#0a0a0a 0px,#0a0a0a 20px,#111 20px,#111 40px); }
+      background: repeating-linear-gradient(45deg,#0d0d1f 0px,#0d0d1f 20px,#13132e 20px,#13132e 40px); }
     .bg-pattern::after { content:''; position:absolute; inset:0;
-      background: radial-gradient(ellipse at 20% 50%,rgba(255,0,128,.08) 0%,transparent 60%),
-                  radial-gradient(ellipse at 80% 20%,rgba(57,255,20,.06) 0%,transparent 60%);
+      background: radial-gradient(ellipse at 20% 50%,rgba(255,0,128,.13) 0%,transparent 60%),
+                  radial-gradient(ellipse at 80% 20%,rgba(57,255,20,.10) 0%,transparent 60%),
+                  radial-gradient(ellipse at 50% 90%,rgba(0,229,255,.08) 0%,transparent 55%);
       animation: bgpulse 6s ease-in-out infinite alternate; }
-    @keyframes bgpulse { 0%{opacity:.5} 100%{opacity:1} }
+    @keyframes bgpulse { 0%{opacity:.6} 100%{opacity:1} }
 
     /* METELE TAG */
     .metele-tag {
       position:absolute; top:14px; left:18px;
-      font-family:'Permanent Marker',cursive; font-size:clamp(1rem,2.8vw,1.55rem);
+      font-family:'Permanent Marker',cursive; font-size:clamp(1.3rem,3.8vw,2.1rem);
       color:var(--neon-amarillo); text-shadow:2px 2px 0 #7a3300,0 0 18px var(--neon-naranja);
       transform:rotate(-4deg); transform-origin:left center;
       animation:metele-pulse 2.4s ease-in-out infinite alternate;
@@ -64,7 +65,7 @@
 
     /* TICKER */
     .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
-    .ticker { display:flex; width:max-content; animation:ticker 22s linear infinite; }
+    .ticker { display:flex; width:max-content; animation:ticker 14s linear infinite; }
     .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 40px; }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
@@ -250,20 +251,8 @@
   <!-- HEADER -->
   <header>
     <div class="metele-tag">¡Métele sin<br>miedo mi neto!</div>
-    <div class="header-decoracion">
-      <span class="estrella">★</span><span class="estrella">✦</span>
-      <span class="estrella">★</span><span class="estrella">✦</span>
-      <span class="estrella">★</span><span class="estrella">✦</span>
-      <span class="estrella">★</span>
-    </div>
     <div class="logo-principal">TUSUERTE.PE</div>
     <div class="logo-sub">✦ Sorteo pa la gente ✦</div>
-    <div class="header-decoracion" style="margin-top:14px;">
-      <span class="estrella">♦</span><span class="estrella">★</span>
-      <span class="estrella">♦</span><span class="estrella">★</span>
-      <span class="estrella">♦</span><span class="estrella">★</span>
-      <span class="estrella">♦</span>
-    </div>
   </header>
 
   <!-- NAV -->
@@ -277,12 +266,14 @@
   <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker">
-      <span>🔥 ¡No arrugues! ★ </span>
-      <span>Lo Houston ★ </span>
-      <span>📅 Sorteo este DOMINGO 10pm ★ </span>
-      <span>🔥 ¡No arrugues! ★ </span>
-      <span>Lo Houston ★ </span>
-      <span>📅 Sorteo este DOMINGO 10pm ★ </span>
+      <span>🔥 ¡No arrugues! </span>
+      <span>💸 Lo Houston </span>
+      <span>📅 Sorteo este DOMINGO 10pm </span>
+      <span>🍀 ¡Tu suerte está aquí! </span>
+      <span>🔥 ¡No arrugues! </span>
+      <span>💸 Lo Houston </span>
+      <span>📅 Sorteo este DOMINGO 10pm </span>
+      <span>🍀 ¡Tu suerte está aquí! </span>
     </div>
   </div>
 
@@ -292,10 +283,6 @@
       <div class="hero-stat">
         <div class="hero-stat-num" style="color:var(--neon-rosa)">3</div>
         <div class="hero-stat-lbl">Sorteos Activos</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" style="color:var(--neon-verde)">S/. 0</div>
-        <div class="hero-stat-lbl">Costo de participar</div>
       </div>
     </div>
     <div class="prox-sorteo-label">⏳ PRÓXIMO SORTEO EN:</div>
@@ -314,62 +301,65 @@
     <div class="grid-sorteos">
 
       <div class="card-sorteo" style="border-color:var(--neon-verde)">
-        <div class="badge-gratis">GRATIS</div>
-        <div class="card-img" style="background:#0a1a0a;border-bottom-color:var(--neon-verde)">
-          <div class="petcenter-logo">
-            <span class="petcenter-paw">🐾</span>
-            <div class="petcenter-nombre">PET CENTER</div>
-            <div class="petcenter-sub">Flora Tristán</div>
+        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-verde)">
+          <div class="yape-logo">
+            <span class="yape-icon">🍗</span>
+            <div class="yape-nombre">YAPE</div>
+            <div class="yape-sub">Pal pollito 🔥</div>
           </div>
         </div>
         <div class="card-body">
-          <div class="card-categoria">Mascotas • Servicio</div>
-          <div class="card-titulo">BAÑO DE PERRO</div>
-          <div class="card-desc">Baño completo para tu mascota en Pet Center de Flora Tristán. Incluye baño, secado y perfume. ¡Tu perro va a quedar hermoso pe!</div>
+          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-titulo">YAPE PAL POLLITO</div>
+          <div class="card-desc">20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. ¡Come rico papi!</div>
           <div class="card-meta">
             <span class="card-participantes">👥 <span id="inscritos-1">0</span> inscritos</span>
             <span class="card-fecha">📅 Dom 30 Mar</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
-          <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Baño de Perro – Pet Center Flora Tristán','1')">¡QUIERO GANAR!</button>
+          <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
         </div>
       </div>
 
       <div class="card-sorteo" style="border-color:var(--neon-celeste)">
-        <div class="badge-gratis">GRATIS</div>
-        <div class="card-img" style="border-bottom-color:var(--neon-celeste)">📱</div>
+        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-celeste)">
+          <div class="yape-logo">
+            <span class="yape-icon">🚌</span>
+            <div class="yape-nombre">YAPE</div>
+            <div class="yape-sub">Pa la recarga 🚌</div>
+          </div>
+        </div>
         <div class="card-body">
-          <div class="card-categoria">Celular • Seminuevo</div>
-          <div class="card-titulo">SAMSUNG A1 SEMINUEVO</div>
-          <div class="card-desc">Samsung Galaxy A1 seminuevo, en buen estado. Pantalla sin rajadura, funciona al 100. ¡Hazte con un celular sin gastar nada pe!</div>
+          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
+          <div class="card-desc">S/7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
           <div class="card-meta">
             <span class="card-participantes">👥 <span id="inscritos-2">0</span> inscritos</span>
             <span class="card-fecha">📅 Dom 30 Mar</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
-          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Samsung A1 Seminuevo','2')">¡QUIERO GANAR!</button>
+          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – S/7','2')">¡QUIERO GANAR!</button>
         </div>
       </div>
 
       <div class="card-sorteo" style="border-color:var(--neon-violeta)">
-        <div class="badge-gratis">GRATIS</div>
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-violeta)">
           <div class="yape-logo">
             <span class="yape-icon">💸</span>
             <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Para la gaseosa 🥤</div>
+            <div class="yape-sub">Pa la gaseosa 🥤</div>
           </div>
         </div>
         <div class="card-body">
           <div class="card-categoria">Dinero • Yape</div>
-          <div class="card-titulo">YAPE PARA LA GASEOSA</div>
-          <div class="card-desc">Un Yape directo a tu número para que te compres tu gaseosa. Pequeño pero seguro, causa. ¡Lo que importa es participar pe!</div>
+          <div class="card-titulo">YAPE PA LA GASEOSA</div>
+          <div class="card-desc">5 lukitas directo a tu número pa que te tomes tu gaseosa bien helada. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
           <div class="card-meta">
             <span class="card-participantes">👥 <span id="inscritos-3">0</span> inscritos</span>
             <span class="card-fecha">📅 Dom 30 Mar</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
-          <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape para la Gaseosa','3')">¡QUIERO GANAR!</button>
+          <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
         </div>
       </div>
 
@@ -400,6 +390,7 @@
     <input name="celular"/>
     <input name="correo"/>
     <input name="distrito"/>
+    <input name="tiktok"/>
   </form>
 
   <div class="panel-overlay" id="panel-registro" onclick="cerrarPanelFuera(event,'panel-registro')">
@@ -526,6 +517,13 @@
                 </optgroup>
               </select>
             </div>
+            <div class="form-grupo">
+              <label for="tiktok">📱 TU USUARIO DE TIKTOK</label>
+              <input type="text" id="tiktok" name="tiktok" placeholder="@tunombre" required
+                style="border-color:var(--neon-rosa);"
+                oninput="this.value=this.value.startsWith('@')?this.value:'@'+this.value.replace('@','')"/>
+              <p style="font-size:.75rem;color:#888;margin-top:5px;line-height:1.4;">Se verificará que sigas <strong style="color:#ff0050;">@tusuerte.pe.oficial</strong> antes del sorteo. Si no sigues, se pasa al siguiente.</p>
+            </div>
             <input type="hidden" id="sorteo-id" name="sorteo" value="" />
             <button type="submit" class="btn-registro">🔥 ¡ME APUNTO CAUSA!</button>
             <p class="form-nota">Al registrarte aceptas nuestros <a onclick="cerrarPanel('panel-registro');abrirPanel('panel-terminos')" style="color:var(--neon-celeste);cursor:pointer;">términos y condiciones</a>.<br>Tus datos solo se usan para el sorteo. No se cobra nada.</p>
@@ -555,7 +553,7 @@
             <div class="paso-num">2</div>
             <div class="paso-icono">✍️</div>
             <h3>REGÍSTRATE</h3>
-            <p>Llena el formulario con tu nombre, DNI, celular y correo. ¡Sin pagar ni un sol pe! Es completamente gratis.</p>
+            <p>Sigue a <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong> en TikTok, dale like y llena el formulario con tu nombre, DNI, celular, correo y tu usuario de TikTok. ¡Gratis pe!</p>
           </div>
           <div class="paso">
             <div class="paso-num">3</div>
@@ -646,6 +644,7 @@
               <li>Solo pueden participar personas mayores de 18 años con DNI peruano vigente y residencia en territorio peruano.</li>
               <li>Cada persona puede inscribirse en un solo sorteo por semana. Las inscripciones duplicadas serán eliminadas automáticamente.</li>
               <li>Al registrarse, el participante declara que los datos ingresados son verídicos y actuales. El ingreso de datos falsos implica la descalificación inmediata.</li>
+              <li><strong style="color:var(--neon-rosa)">📱 REQUISITO TIKTOK:</strong> Para participar, el inscrito debe seguir la cuenta <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong> en TikTok y haberle dado like a la página. El usuario de TikTok proporcionado en el formulario será verificado manualmente antes del sorteo. Si el ganador no cumple este requisito, será descalificado y se seleccionará al siguiente participante.</li>
               <li>tusuerte.pe se reserva el derecho de rechazar o anular inscripciones que no cumplan con los requisitos establecidos.</li>
             </ul>
           </div>
