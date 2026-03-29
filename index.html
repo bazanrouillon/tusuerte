@@ -135,14 +135,12 @@
     .barra-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--neon-verde),var(--neon-amarillo)); box-shadow:0 0 8px var(--neon-verde); transition:width 1s ease; }
     /* Mini-contador por sorteo */
     .mini-cnt-wrap { margin-bottom:14px; background:#0a0a1a; border-radius:4px; border:1px solid #333; overflow:hidden; }
-    .mc-fecha-lbl { font-family:'Righteous',cursive; font-size:.72rem; letter-spacing:2px; color:var(--neon-celeste); text-align:center; padding:5px 6px 3px; border-bottom:1px solid #1a1a2e; text-transform:uppercase; }
     .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; padding:7px 6px 8px; }
     .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:34px; }
     .mc-num { font-family:'Bangers',cursive; font-size:1.4rem; line-height:1; color:var(--neon-amarillo); text-shadow:0 0 8px var(--neon-amarillo); }
     .mc-lbl { font-family:'Righteous',cursive; font-size:.52rem; color:#666; letter-spacing:1px; text-transform:uppercase; }
     .mc-sep { font-family:'Bangers',cursive; font-size:1.2rem; color:#444; margin-bottom:10px; }
     .mini-contador.vencido .mc-num { color:var(--neon-rosa); text-shadow:0 0 8px var(--neon-rosa); }
-    .mini-cnt-wrap.vencido .mc-fecha-lbl { color:var(--neon-rosa); }
     .btn-participar { display:block; width:100%; background:var(--neon-rosa); color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
       cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase; }
@@ -434,7 +432,6 @@
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-1">
-            <div class="mc-fecha-lbl" id="mc1-fecha">📅 ...</div>
             <div class="mini-contador">
               <div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div>
               <div class="mc-sep">:</div>
@@ -467,7 +464,6 @@
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-2">
-            <div class="mc-fecha-lbl" id="mc2-fecha">📅 ...</div>
             <div class="mini-contador">
               <div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div>
               <div class="mc-sep">:</div>
@@ -500,7 +496,6 @@
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-3">
-            <div class="mc-fecha-lbl" id="mc3-fecha">📅 ...</div>
             <div class="mini-contador">
               <div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div>
               <div class="mc-sep">:</div>
@@ -512,6 +507,102 @@
             </div>
           </div>
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-naranja)">
+        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-naranja)">
+          <div class="yape-logo">
+            <span class="yape-icon">🍬</span>
+            <div class="yape-nombre">YAPE</div>
+            <div class="yape-sub">Pal chicle 😜</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-titulo">YAPE PAL CHICLE</div>
+          <div class="card-desc">2 lukitas directo a tu número pa que te compres tu chicle favorito. ¡Chiquitito pero es tuyo causa!</div>
+          <div class="card-meta">
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-4">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" id="barra-4" style="width:5%;background:linear-gradient(90deg,var(--neon-naranja),var(--neon-amarillo))"></div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-4">
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc4d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc4h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc4m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc4s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
+          </div>
+          <button class="btn-participar" style="background:var(--neon-naranja);border-bottom-color:#8a3600" onclick="abrirRegistro('Yape pal Chicle – S/2','4')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-amarillo)">
+        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-amarillo)">
+          <div class="yape-logo">
+            <span class="yape-icon">🍺</span>
+            <div class="yape-nombre">YAPE</div>
+            <div class="yape-sub">Pa la chelita 🍻</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-titulo">YAPE PA LA CHELITA</div>
+          <div class="card-desc">6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. ¡Te lo mereces causa!</div>
+          <div class="card-meta">
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-5">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" id="barra-5" style="width:5%;background:linear-gradient(90deg,var(--neon-amarillo),var(--neon-verde))"></div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-5">
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc5d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc5h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc5m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc5s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
+          </div>
+          <button class="btn-participar" style="background:var(--neon-amarillo);color:#000;border-bottom-color:#7a6e00" onclick="abrirRegistro('Yape pa la Chelita – S/6','5')">¡QUIERO GANAR!</button>
+        </div>
+      </div>
+
+      <div class="card-sorteo" style="border-color:var(--neon-rosa)">
+        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-rosa)">
+          <div class="yape-logo">
+            <span class="yape-icon">🌾</span>
+            <div class="yape-nombre">YAPE</div>
+            <div class="yape-sub">Pa la quinua 💪</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-categoria">Dinero • Yape</div>
+          <div class="card-titulo">YAPE PA LA QUINUA</div>
+          <div class="card-desc">2 lukitas pa tu vaso de quinua del mercado. ¡Nutritivo y ganado con pura suerte causa!</div>
+          <div class="card-meta">
+            <span class="card-participantes" style="display:none">👥 <span id="inscritos-6">0</span> inscritos</span>
+            <span class="card-fecha proxfecha">📅 ...</span>
+          </div>
+          <div class="barra-wrap"><div class="barra-fill" id="barra-6" style="width:5%;background:linear-gradient(90deg,var(--neon-rosa),var(--neon-violeta))"></div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-6">
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc6d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc6h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc6m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc6s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
+          </div>
+          <button class="btn-participar" style="background:var(--neon-rosa);border-bottom-color:#7a003d" onclick="abrirRegistro('Yape pa la Quinua – S/2','6')">¡QUIERO GANAR!</button>
         </div>
       </div>
 
@@ -600,6 +691,7 @@
               <div class="form-grupo">
                 <label for="celular">📱 CELULAR</label>
                 <input type="tel" id="celular" name="celular" placeholder="9XXXXXXXX" maxlength="9" required />
+                <p style="font-size:.72rem;color:var(--neon-celeste);margin:4px 0 0;line-height:1.4;">⚡ Debe tener <strong>Yape</strong> o <strong>Plin</strong> activo para recibir el premio.</p>
               </div>
             </div>
             <div class="form-grupo">
@@ -677,6 +769,12 @@
               <p style="font-size:.75rem;color:#888;margin-top:5px;line-height:1.4;">Se verificará que sigas <strong style="color:#ff0050;">@tusuerte.pe.oficial</strong> antes del sorteo. Si no sigues, se pasa al siguiente.</p>
             </div>
             <input type="hidden" id="sorteo-id" name="sorteo" value="" />
+            <div class="form-grupo" style="margin-top:12px;">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-family:inherit;font-size:.88rem;color:#ccc;letter-spacing:normal;text-transform:none;font-weight:normal;">
+                <input type="checkbox" id="chk-yapeplin" name="yapeplin" required style="margin-top:3px;accent-color:var(--neon-celeste);width:18px;height:18px;flex-shrink:0;" />
+                <span>Confirmo que mi número tiene <strong style="color:var(--neon-celeste)">Yape</strong> o <strong style="color:var(--neon-celeste)">Plin</strong> activo</span>
+              </label>
+            </div>
             <button type="submit" class="btn-registro">🔥 ¡ME APUNTO CAUSA!</button>
             <p class="form-nota">Al registrarte aceptas nuestros <a onclick="cerrarPanel('panel-registro');abrirPanel('panel-terminos')" style="color:var(--neon-celeste);cursor:pointer;">términos y condiciones</a>.<br>Tus datos solo se usan para el sorteo. No se cobra nada.</p>
           </form>
@@ -926,7 +1024,10 @@
     var SORTEOS_CFG = {
       '1': { fechaISO: '2026-04-05T22:00:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
       '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – S/7' },
-      '3': { fechaISO: '2026-04-19T22:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' }
+      '3': { fechaISO: '2026-04-19T22:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
+      '4': { fechaISO: '2026-04-26T22:00:00-05:00', nombre: 'Yape pal Chicle – S/2' },
+      '5': { fechaISO: '2026-05-03T22:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
+      '6': { fechaISO: '2026-05-10T22:00:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
     };
     // Pre-calcular timestamps en ms para cada sorteo
     Object.keys(SORTEOS_CFG).forEach(function(id) {
@@ -947,18 +1048,11 @@
     }
     function pad(n) { return String(n).padStart(2,'0'); }
 
-    // ── Fecha de cada sorteo para el label del mini-contador y tarjeta ──
+    // ── Fecha de cada sorteo para la tarjeta ──
     var MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     var DIAS_SEM = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
     Object.keys(SORTEOS_CFG).forEach(function(id) {
       var dLima = new Date(SORTEOS_CFG[id].ts - 5*3600000); // ajuste UTC-5
-      var hh = String(dLima.getUTCHours()).padStart(2,'0');
-      var mm = String(dLima.getUTCMinutes()).padStart(2,'0');
-      var etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()] + ' · ' + hh + ':' + mm + ' PM';
-      SORTEOS_CFG[id].etiqueta = etiqueta;
-      // Label fecha dentro del mini-contador
-      var lbl = document.getElementById('mc' + id + '-fecha');
-      if (lbl) lbl.textContent = '📅 ' + etiqueta;
       // Fecha en la tarjeta (.proxfecha)
       var wrap = document.getElementById('mini-cnt-' + id);
       if (wrap) {
@@ -1028,7 +1122,7 @@
     });
 
     // CONTADORES POR SORTEO
-    const contadores = { '1':0, '2':0, '3':0 };
+    const contadores = { '1':0, '2':0, '3':0, '4':0, '5':0, '6':0 };
 
     function cerrarModalYaReg() {
       document.getElementById('modal-ya-registrado').classList.remove('activo');
