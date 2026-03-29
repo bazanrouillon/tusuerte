@@ -334,7 +334,7 @@
 
       /* ── Llama: tamaño reducido en móvil ── */
       #llama-saludo svg { width:85px !important; height:108px !important; }
-      #llama-burbuja, #llama-burbuja2 { font-size:.95rem; padding:7px 13px; white-space:normal; max-width:160px; text-align:center; }
+      #llama-burbuja, #llama-burbuja2 { font-size:clamp(.6rem,2.5vw,.85rem); padding:6px 10px; white-space:normal; max-width:145px; text-align:center; word-break:break-word; }
 
       /* ── Footer ── */
       footer { padding:18px 14px 16px; }
@@ -347,7 +347,7 @@
 
   <!-- BANNER PROTOTIPO -->
   <div id="banner-prototipo" style="
-    position:sticky; top:0; z-index:10000;
+    position:sticky; top:0; z-index:500;
     background: repeating-linear-gradient(90deg,#ff0080 0px,#ff6a00 80px,#ffe600 160px,#39ff14 240px,#00e5ff 320px,#cc00ff 400px,#ff0080 480px);
     background-size:480px 100%;
     animation: protoBanner 4s linear infinite;
@@ -1382,45 +1382,68 @@
       var DUR     = 9000;
       var CLASES  = ['animando','lado-izq','lado-derecho','lado-bottom','lado-top'];
 
+      // Resetea la llama completamente fuera de pantalla
+      function resetLlama() {
+        CLASES.forEach(function(c) { el.classList.remove(c); });
+        el.style.transform       = 'translateX(-300px)'; // fuera de pantalla siempre
+        el.style.transformOrigin = '';
+        el.style.left   = '-300px';
+        el.style.right  = 'auto';
+        el.style.top    = 'auto';
+        el.style.bottom = '30%';
+      }
+
+      resetLlama(); // estado inicial
+
       function mostrarLlama() {
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
 
-        // Frase aleatoria
         burbuja.textContent = frases[Math.floor(Math.random() * frases.length)];
 
-        // Limpiar clases y estilos anteriores
-        el.classList.remove.apply(el.classList, CLASES);
-        el.style.left = el.style.right = el.style.top = el.style.bottom = 'auto';
-        void el.offsetWidth;
+        // 1) Reset completo
+        resetLlama();
 
-        // Elegir lado aleatorio y posicionar en ese borde
-        var lado = Math.floor(Math.random() * 4); // 0=izq 1=der 2=abajo 3=arriba
+        // 2) Posicionar en el borde elegido.
+        //    IMPORTANTE: el transform se fija igual al keyframe 0% de cada animación
+        //    para que el elemento esté siempre fuera de pantalla antes del reflow.
+        var lado = Math.floor(Math.random() * 4);
         switch(lado) {
-          case 0: // izquierda
+          case 0: // izquierda — peekIzq 0% = translateX(-300px)
             el.style.left   = '20px';
             el.style.bottom = (20 + Math.random() * 40) + 'vh';
+            el.style.top    = 'auto';
             el.style.transformOrigin = 'left center';
+            el.style.transform = 'translateX(-300px)';
             el.classList.add('lado-izq');
             break;
-          case 1: // derecha
+          case 1: // derecha — peekDer 0% = translateX(300px)
             el.style.left   = 'calc(100vw - 165px)';
             el.style.bottom = (20 + Math.random() * 40) + 'vh';
+            el.style.top    = 'auto';
             el.style.transformOrigin = 'right center';
+            el.style.transform = 'translateX(300px)';
             el.classList.add('lado-derecho');
             break;
-          case 2: // abajo
+          case 2: // abajo — peekBottom 0% = translateY(300px)
             el.style.bottom = '10px';
+            el.style.top    = 'auto';
             el.style.left   = (15 + Math.random() * 55) + 'vw';
             el.style.transformOrigin = 'center bottom';
+            el.style.transform = 'translateY(300px)';
             el.classList.add('lado-bottom');
             break;
-          case 3: // arriba
-            el.style.top  = '10px';
-            el.style.left = (15 + Math.random() * 55) + 'vw';
+          case 3: // arriba — peekTop 0% = translateY(-300px)
+            el.style.top    = '10px';
+            el.style.bottom = 'auto';
+            el.style.left   = (15 + Math.random() * 55) + 'vw';
             el.style.transformOrigin = 'center top';
+            el.style.transform = 'translateY(-300px)';
             el.classList.add('lado-top');
             break;
         }
+
+        // 3) Un solo reflow con el elemento ya off-screen, luego lanzar animación
+        void el.offsetWidth;
         el.classList.add('animando');
 
         // Silbido 1 segundo después
@@ -1435,10 +1458,9 @@
           musica.setVolume(0.06);
           setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
         }
-        setTimeout(function() {
-          el.classList.remove.apply(el.classList, CLASES);
-          el.style.transformOrigin = '';
-        }, DUR + 100);
+
+        // Al terminar: reset limpio fuera de pantalla
+        setTimeout(resetLlama, DUR + 50);
       }
 
       setTimeout(mostrarLlama, 2000);
@@ -1639,6 +1661,14 @@
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
+      // Desbloquear audios de silbido en móvil (requieren gesto de usuario)
+      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
+        var snd = document.getElementById(id);
+        if (snd) {
+          var p = snd.play();
+          if (p && p.then) p.then(function(){ snd.pause(); snd.currentTime = 0; }).catch(function(){});
+        }
+      });
       document.removeEventListener('click', arrancarEnInteraccion);
       document.removeEventListener('touchstart', arrancarEnInteraccion);
       document.removeEventListener('keydown', arrancarEnInteraccion);
