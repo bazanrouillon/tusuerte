@@ -4,26 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TUSUERTE.PE – Sorteos Gratis en Perú | Participa Cada Domingo</title>
-
   <!-- SEO básico -->
   <meta name="description" content="Participa gratis en los sorteos semanales de tusuerte.pe. Cada domingo en TikTok @tusuerte.pe.oficial. ¡Regístrate, no pierdas nada y gana de una!"/>
   <meta name="keywords" content="sorteos gratis peru, sorteo online peru, ganar premios peru, tusuerte, sorteo tiktok peru, concursos gratis peru"/>
   <meta name="author" content="tusuerte.pe"/>
   <meta name="robots" content="index, follow"/>
   <link rel="canonical" href="https://tusuerte.pe/"/>
-
   <!-- Open Graph (WhatsApp, Facebook, etc.) -->
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://tusuerte.pe/"/>
   <meta property="og:title" content="TUSUERTE.PE – Sorteos Gratis en Perú"/>
   <meta property="og:description" content="Participa gratis cada semana. Sorteo en vivo todos los domingos en TikTok @tusuerte.pe.oficial. ¡Regístrate ya pe!"/>
   <meta property="og:locale" content="es_PE"/>
-
   <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary"/>
   <meta name="twitter:title" content="TUSUERTE.PE – Sorteos Gratis en Perú"/>
   <meta name="twitter:description" content="Participa gratis cada semana. Sorteo en vivo todos los domingos en TikTok @tusuerte.pe.oficial."/>
-
   <!-- Schema.org: evento de sorteo (ayuda a Google a entender el sitio) -->
   <script type="application/ld+json">
   {
@@ -39,7 +35,6 @@
     }
   }
   </script>
-
   <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bangers&family=Righteous&family=Paytone+One&family=Permanent+Marker&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,7 +45,6 @@
     }
     html { scroll-behavior: smooth; }
     body { background-color: var(--negro); color: var(--blanco); font-family: 'Paytone One', sans-serif; overflow-x: hidden; }
-
     .bg-pattern { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
       background: repeating-linear-gradient(45deg,#0d0d1f 0px,#0d0d1f 20px,#13132e 20px,#13132e 40px); }
     .bg-pattern::after { content:''; position:absolute; inset:0;
@@ -59,7 +53,6 @@
                   radial-gradient(ellipse at 50% 90%,rgba(0,229,255,.08) 0%,transparent 55%);
       animation: bgpulse 6s ease-in-out infinite alternate; }
     @keyframes bgpulse { 0%{opacity:.6} 100%{opacity:1} }
-
     /* METELE TAG */
     .metele-tag {
       position:absolute; top:14px; left:18px;
@@ -70,7 +63,6 @@
       letter-spacing:1px; line-height:1.25; z-index:10;
     }
     @keyframes metele-pulse { 0%{transform:rotate(-4deg) scale(1)} 100%{transform:rotate(-4deg) scale(1.15)} }
-
     /* HEADER */
     header { position:relative; text-align:center; padding:30px 20px 20px;
       border-bottom:4px solid var(--neon-rosa);
@@ -90,7 +82,6 @@
       letter-spacing:6px; color:var(--neon-verde);
       text-shadow:0 0 10px var(--neon-verde),0 0 20px var(--neon-verde);
       margin-top:4px; text-transform:uppercase; }
-
     /* NAV */
     nav { background:#0d0d0d; border-bottom:3px solid var(--neon-amarillo);
       display:flex; justify-content:center; flex-wrap:wrap; }
@@ -98,13 +89,11 @@
       font-size:1.2rem; letter-spacing:2px; padding:14px 24px;
       transition:background .2s,color .2s; border-right:2px solid #1a1a1a; cursor:pointer; }
     nav a:hover { background:var(--neon-amarillo); color:#000; }
-
     /* TICKER */
     .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
     .ticker { display:flex; width:max-content; animation:ticker 30s linear infinite; }
     .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 100px; }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-
     /* SORTEOS */
     #sorteos { padding:50px 20px; max-width:1200px; margin:0 auto; }
     .seccion-titulo { font-family:'Bangers',cursive; font-size:clamp(2.2rem,6vw,4rem);
@@ -112,7 +101,6 @@
     .seccion-titulo::after { content:''; display:block; height:4px; width:120px; margin:8px auto 0; border-radius:2px; }
     #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 20px var(--neon-rosa); }
     #sorteos .seccion-titulo::after { background:var(--neon-rosa); }
-
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
     .card-sorteo { background:#111; border:3px solid var(--neon-rosa); border-radius:4px;
       overflow:hidden; box-shadow:0 0 25px rgba(255,0,128,.25);
@@ -145,7 +133,6 @@
       font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
       cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase; }
     .btn-participar:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-rosa); }
-
     /* LOGOS ESPECIALES */
     .petcenter-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:6px; }
     .petcenter-paw { font-size:3.2rem; }
@@ -155,7 +142,6 @@
     .yape-icon { font-size:3rem; }
     .yape-nombre { font-family:'Bangers',cursive; font-size:2.2rem; letter-spacing:4px; color:#fff; text-shadow:0 0 10px #cc00ff; }
     .yape-sub { font-family:'Righteous',cursive; font-size:.72rem; color:#ddd; letter-spacing:1px; }
-
     /* PANELES FLOTANTES */
     .panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82);
       z-index:900; align-items:center; justify-content:center; padding:20px; }
@@ -169,7 +155,6 @@
     .panel-cerrar { background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; line-height:1; padding:4px 8px; transition:color .2s; }
     .panel-cerrar:hover { color:var(--neon-rosa); }
     .panel-body { padding:10px 28px 32px; }
-
     /* PANEL COMO */
     #panel-como .panel-header { background:#0d001a; border-bottom:3px solid var(--neon-violeta); }
     #panel-como .panel-titulo { color:var(--neon-violeta); text-shadow:0 0 16px var(--neon-violeta); }
@@ -182,7 +167,6 @@
     .paso-icono { font-size:2.2rem; margin:10px 0; }
     .paso h3 { font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
     .paso p { font-size:.88rem; color:#ccc; line-height:1.5; }
-
     /* PANEL GANADORES */
     #panel-ganadores .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
     #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 16px var(--neon-naranja); }
@@ -194,7 +178,6 @@
       font-family:'Bangers',cursive; font-size:1.3rem; letter-spacing:3px; padding:12px 28px;
       text-decoration:none; border-bottom:4px solid #7a3300; transition:transform .15s,box-shadow .15s; }
     .btn-fotos-ganadores:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-naranja); }
-
     /* PANEL FAQ */
     #panel-faq .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
     #panel-faq .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 16px var(--neon-naranja); }
@@ -210,7 +193,6 @@
     .faq-resp { max-height:0; overflow:hidden; transition:max-height .4s ease,padding .3s;
       background:#0d0d0d; color:#bbb; font-size:.88rem; line-height:1.7; }
     .faq-item.activo .faq-resp { max-height:200px; padding:16px 20px; }
-
     /* PANEL TERMINOS */
     #panel-terminos .panel-header { background:#00101a; border-bottom:3px solid var(--neon-celeste); }
     #panel-terminos .panel-titulo { color:var(--neon-celeste); text-shadow:0 0 16px var(--neon-celeste); }
@@ -226,7 +208,6 @@
     .terminos-aviso { background:#1a0010; border:2px dashed var(--neon-rosa); border-radius:4px;
       padding:14px 18px; margin-top:20px; text-align:center;
       font-family:'Righteous',cursive; font-size:.82rem; color:#bbb; line-height:1.7; }
-
     /* PANEL REGISTRO */
     .form-chicha { background:#0f0f0f; border:3px solid var(--neon-verde); border-radius:4px; padding:36px 32px; box-shadow:0 0 40px rgba(57,255,20,.2); }
     .form-grupo { margin-bottom:22px; }
@@ -241,7 +222,6 @@
       transition:transform .15s,box-shadow .15s; }
     .btn-registro:hover { transform:translateY(-3px); box-shadow:0 0 30px var(--neon-verde); }
     .form-nota { text-align:center; font-size:.78rem; color:#666; margin-top:14px; line-height:1.5; }
-
     /* MODAL EXITO */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
       z-index:1000; align-items:center; justify-content:center; padding:20px; }
@@ -257,7 +237,6 @@
       color:var(--neon-amarillo); text-shadow:0 0 10px var(--neon-amarillo); padding:14px; margin-bottom:20px; }
     .btn-cerrar { background:var(--neon-verde); color:#000; border:none; font-family:'Bangers',cursive;
       font-size:1.3rem; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-bottom:4px solid #1a7a0a; }
-
     /* CINTA LLAMA CORRIENDO */
     .cinta-llama {
       position:relative; overflow:hidden; background:linear-gradient(90deg,#1a0a00,#2a1000,#1a0a00);
@@ -276,116 +255,47 @@
       animation: llamaRun 18s ease-in-out infinite;
     }
     @keyframes llamaRun {
-      0%   { left:-12%; }
-      28%  { left:calc(50% - 30px); }
-      30%  { left:calc(50% - 30px); }
-      58%  { left:calc(50% - 30px); }
-      60%  { left:calc(50% - 20px); }
+      0%   { left:-14%; }
+      28%  { left:calc(50% - 45px); }
+      30%  { left:calc(50% - 45px); }
+      58%  { left:calc(50% - 45px); }
+      60%  { left:calc(50% - 35px); }
       100% { left:112%; }
     }
     .llama-svg-wrap {
-      display:inline-block; width:60px; height:60px;
+      display:inline-block; width:90px; height:60px;
       animation: llamaFlip 18s ease-in-out infinite;
     }
     @keyframes llamaFlip {
       0%,28%   { transform:scaleX(1); }
-      30%      { transform:scaleX(1) rotate(-5deg); }
+      29%      { transform:scaleX(1) rotate(-3deg); }
+      30%      { transform:scaleX(1) rotate(2deg); }
       31%      { transform:scaleX(-1); }
       58%      { transform:scaleX(-1); }
       60%,100% { transform:scaleX(1); }
     }
-    /* Patas corriendo */
-    .llama-pata-del { animation: pataCorrer 18s linear infinite; }
-    .llama-pata-tra { animation: pataCorrer 18s linear infinite; animation-delay:-0.15s; }
-    @keyframes pataCorrer {
-      0%,1%    { transform:rotate(-20deg); transform-origin:top center; }
-      2%       { transform:rotate(20deg); }
-      3%       { transform:rotate(-20deg); }
-      4%       { transform:rotate(20deg); }
-      5%       { transform:rotate(-20deg); }
-      6%       { transform:rotate(20deg); }
-      7%       { transform:rotate(-20deg); }
-      8%       { transform:rotate(20deg); }
-      9%       { transform:rotate(-20deg); }
-      10%      { transform:rotate(20deg); }
-      11%      { transform:rotate(-20deg); }
-      12%      { transform:rotate(20deg); }
-      13%      { transform:rotate(-20deg); }
-      14%      { transform:rotate(20deg); }
-      15%      { transform:rotate(-20deg); }
-      16%      { transform:rotate(20deg); }
-      17%      { transform:rotate(-20deg); }
-      18%      { transform:rotate(20deg); }
-      19%      { transform:rotate(-20deg); }
-      20%      { transform:rotate(20deg); }
-      21%      { transform:rotate(-20deg); }
-      22%      { transform:rotate(20deg); }
-      23%      { transform:rotate(-20deg); }
-      24%      { transform:rotate(20deg); }
-      25%      { transform:rotate(-20deg); }
-      26%      { transform:rotate(20deg); }
-      27%      { transform:rotate(-20deg); }
-      28%      { transform:rotate(10deg); }
-      30%,58%  { transform:rotate(0deg); }
-      60%      { transform:rotate(-20deg); }
-      61%      { transform:rotate(20deg); }
-      62%      { transform:rotate(-20deg); }
-      63%      { transform:rotate(20deg); }
-      64%      { transform:rotate(-20deg); }
-      65%      { transform:rotate(20deg); }
-      66%      { transform:rotate(-20deg); }
-      67%      { transform:rotate(20deg); }
-      68%      { transform:rotate(-20deg); }
-      69%      { transform:rotate(20deg); }
-      70%      { transform:rotate(-20deg); }
-      71%      { transform:rotate(20deg); }
-      72%      { transform:rotate(-20deg); }
-      73%      { transform:rotate(20deg); }
-      74%      { transform:rotate(-20deg); }
-      75%      { transform:rotate(20deg); }
-      76%      { transform:rotate(-20deg); }
-      77%      { transform:rotate(20deg); }
-      78%      { transform:rotate(-20deg); }
-      79%      { transform:rotate(20deg); }
-      80%      { transform:rotate(-20deg); }
-      81%      { transform:rotate(20deg); }
-      82%      { transform:rotate(-20deg); }
-      83%      { transform:rotate(20deg); }
-      84%      { transform:rotate(-20deg); }
-      85%      { transform:rotate(20deg); }
-      86%      { transform:rotate(-20deg); }
-      87%      { transform:rotate(20deg); }
-      88%      { transform:rotate(-20deg); }
-      89%      { transform:rotate(20deg); }
-      90%      { transform:rotate(-20deg); }
-      91%      { transform:rotate(20deg); }
-      92%      { transform:rotate(-20deg); }
-      93%      { transform:rotate(20deg); }
-      94%      { transform:rotate(-20deg); }
-      95%      { transform:rotate(20deg); }
-      96%      { transform:rotate(-20deg); }
-      97%      { transform:rotate(20deg); }
-      98%      { transform:rotate(-20deg); }
-      99%      { transform:rotate(10deg); }
-      100%     { transform:rotate(0deg); }
+    /* Ruedas girando */
+    .combi-rueda { animation: ruedaSpin 0.4s linear infinite; transform-origin:center center; }
+    @keyframes ruedaSpin {
+      0%   { transform:rotate(0deg); }
+      100% { transform:rotate(360deg); }
     }
-    /* Bandera flameando en el lomo */
-    .bandera-cape {
-      animation: flamear 0.4s ease-in-out infinite alternate, banderaVis 18s linear infinite;
-      transform-origin:left center;
+    /* Humo del tubo de escape */
+    .combi-humo { animation: humoCombi 18s linear infinite; }
+    @keyframes humoCombi {
+      0%,28%   { opacity:0.6; }
+      30%,58%  { opacity:0; }
+      60%,100% { opacity:0.6; }
     }
-    @keyframes flamear {
-      0%   { transform:rotate(-6deg) skewY(3deg); }
-      100% { transform:rotate(4deg) skewY(-2deg); }
+    /* Sacudida de la combi corriendo */
+    .combi-body-shake { animation: combiShake 0.3s ease-in-out infinite alternate; }
+    @keyframes combiShake {
+      0%   { transform:translateY(0px); }
+      100% { transform:translateY(-1.5px); }
     }
-    @keyframes banderaVis {
-      0%,28%  { opacity:1; }
-      30%,58% { opacity:1; }
-      100%    { opacity:1; }
-    }
-    /* Ojos enojados al frenar */
-    .llama-ojos-normal { animation: ojosNorm 18s linear infinite; }
-    .llama-ojos-angry  { animation: ojosAngry 18s linear infinite; }
+    /* Ojos normales/enojados en parabrisas */
+    .combi-ojos-normal { animation: ojosNorm 18s linear infinite; }
+    .combi-ojos-angry  { animation: ojosAngry 18s linear infinite; }
     @keyframes ojosNorm {
       0%,29%   { opacity:1; }
       30%,58%  { opacity:0; }
@@ -395,6 +305,15 @@
       0%,29%   { opacity:0; }
       30%,58%  { opacity:1; }
       59%,100% { opacity:0; }
+    }
+    /* Bandera en el techo */
+    .combi-bandera {
+      animation: flamear 0.4s ease-in-out infinite alternate;
+      transform-origin:left bottom;
+    }
+    @keyframes flamear {
+      0%   { transform:rotate(-6deg) skewY(3deg); }
+      100% { transform:rotate(4deg) skewY(-2deg); }
     }
     /* Bocadillo */
     .bocadillo-cinta {
@@ -419,39 +338,58 @@
     .polvo-izq { animation: polvoI 18s linear infinite; }
     .polvo-der { animation: polvoD 18s linear infinite; }
     @keyframes polvoI {
-      0%,27%  { opacity:0; left:calc(50% - 50px); }
-      28%,29% { opacity:.8; left:calc(50% - 65px); }
-      32%     { opacity:0; left:calc(50% - 80px); }
+      0%,27%  { opacity:0; left:calc(50% - 60px); }
+      28%,29% { opacity:.8; left:calc(50% - 80px); }
+      32%     { opacity:0; left:calc(50% - 100px); }
       100%    { opacity:0; }
     }
     @keyframes polvoD {
-      0%,27%  { opacity:0; left:calc(50% + 20px); }
-      28%,29% { opacity:.8; left:calc(50% + 35px); }
-      32%     { opacity:0; left:calc(50% + 50px); }
+      0%,27%  { opacity:0; left:calc(50% + 40px); }
+      28%,29% { opacity:.8; left:calc(50% + 55px); }
+      32%     { opacity:0; left:calc(50% + 70px); }
       100%    { opacity:0; }
     }
-
+    /* APP COMING SOON */
+    .app-coming-soon {
+      position:fixed; bottom:16px; right:16px; z-index:90;
+      background:rgba(13,13,31,0.92); border:2px solid var(--neon-violeta);
+      border-radius:12px; padding:12px 16px; text-align:center;
+      box-shadow:0 0 20px rgba(204,0,255,.25);
+      backdrop-filter:blur(8px);
+      animation:appBadgePulse 3s ease-in-out infinite alternate;
+    }
+    @keyframes appBadgePulse {
+      0%{box-shadow:0 0 12px rgba(204,0,255,.2)} 100%{box-shadow:0 0 25px rgba(204,0,255,.4)}
+    }
+    .app-coming-soon p {
+      font-family:'Bangers',cursive; font-size:0.85rem; letter-spacing:2px;
+      color:var(--neon-violeta); text-shadow:0 0 8px var(--neon-violeta);
+      margin-bottom:8px; line-height:1.3;
+    }
+    .app-badges { display:flex; gap:8px; justify-content:center; align-items:center; }
+    .app-badges svg { opacity:0.7; transition:opacity .2s; cursor:pointer; }
+    .app-badges svg:hover { opacity:1; }
+    @media(max-width:480px){
+      .app-coming-soon { bottom:10px; right:10px; padding:8px 12px; }
+      .app-coming-soon p { font-size:.75rem; }
+    }
     /* FOOTER */
     footer { background:#050505; border-top:4px solid var(--neon-rosa); padding:30px 20px 20px; text-align:center; }
     .footer-copy { color:#444; font-size:.76rem; line-height:1.6; }
     .footer-copy strong { color:#666; }
-
     /* ══════════════════════════════════════════
        VERSIÓN MÓVIL — max 640px
     ══════════════════════════════════════════ */
     @media(max-width:640px){
-
       /* ── Banner prototipo ── */
       #banner-prototipo { padding:6px 10px; }
       #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
-
       /* ── Header ── */
       header { padding:18px 14px 14px; }
       .metele-tag { font-size:.72rem; top:8px; left:10px; line-height:1.2; }
       .header-decoracion { gap:5px; margin-bottom:4px; }
       .estrella { font-size:.9rem; }
       .logo-sub { font-size:.7rem; letter-spacing:3px; }
-
       /* ── Nav: scroll horizontal sin saltos ── */
       nav {
         overflow-x: auto;
@@ -468,10 +406,8 @@
         border-right: 1px solid #2a2a2a;
         flex-shrink: 0;
       }
-
       /* ── Ticker ── */
       .ticker span { font-size:.95rem; padding:0 55px; }
-
       /* ── Sorteos ── */
       #sorteos { padding:28px 12px; }
       .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
@@ -480,7 +416,6 @@
       .card-titulo { font-size:1.35rem; }
       .card-desc { font-size:.82rem; }
       .btn-participar { font-size:1.2rem; padding:14px; }
-
       /* ── Paneles: sheet desde abajo ── */
       .panel-overlay { padding:0; align-items:flex-end; }
       .panel-box {
@@ -494,17 +429,14 @@
       .panel-header { padding:14px 18px; }
       .panel-titulo { font-size:1.4rem; letter-spacing:2px; }
       .panel-body { padding:10px 14px 36px; }
-
       /* ── Pasos cómo funciona ── */
       .pasos { grid-template-columns:1fr; gap:12px; }
       .paso { padding:16px 14px; }
       .paso-num { font-size:2.4rem; }
       .paso h3 { font-size:1.2rem; }
-
       /* ── FAQ ── */
       .faq-item.activo .faq-resp { max-height:300px; }
       .faq-preg { font-size:.85rem; padding:14px 16px; }
-
       /* ── Formulario registro ── */
       .form-doble { grid-template-columns:1fr; }
       .form-grupo { margin-bottom:16px; }
@@ -512,21 +444,17 @@
       .form-grupo input,
       .form-grupo select { font-size:1rem; padding:13px 12px; }
       .btn-registro { font-size:1.4rem; letter-spacing:2px; padding:16px; }
-
       /* ── Panel registro: paso TikTok ── */
       #paso-tiktok a[href*="tiktok"] { font-size:1.1rem; padding:12px 18px; }
-
       /* ── Modales ── */
       .modal-overlay { padding:12px; }
       .modal-box { padding:26px 18px; }
       .modal-titulo { font-size:2rem; }
       .modal-codigo { font-size:1.4rem; letter-spacing:4px; padding:12px; }
       .btn-cerrar { font-size:1.1rem; padding:13px 28px; width:100%; }
-
       /* ── Llama: tamaño reducido en móvil ── */
       #llama-saludo svg { width:85px !important; height:108px !important; }
       #llama-burbuja, #llama-burbuja2 { font-size:clamp(.6rem,2.5vw,.85rem); padding:6px 10px; white-space:normal; max-width:145px; text-align:center; word-break:break-word; }
-
       /* ── Footer ── */
       footer { padding:18px 14px 16px; }
       .footer-copy { font-size:.7rem; }
@@ -535,7 +463,6 @@
 </head>
 <body>
   <div class="bg-pattern"></div>
-
   <!-- BANNER PROTOTIPO -->
   <div id="banner-prototipo" style="
     position:sticky; top:0; z-index:500;
@@ -550,14 +477,12 @@
   <style>
     @keyframes protoBanner { from{background-position:0 0} to{background-position:480px 0} }
   </style>
-
   <!-- HEADER -->
   <header>
     <div class="metele-tag">¡Métele sin<br>miedo, mi neto!</div>
     <div class="logo-principal">TUSUERTE.PE</div>
     <div class="logo-sub">✦ Sorteo pa la gente ✦</div>
   </header>
-
   <!-- NAV -->
   <nav>
     <a onclick="abrirPanel('panel-como')">📋 CÓMO FUNCIONA</a>
@@ -565,7 +490,6 @@
     <a onclick="abrirPanel('panel-faq')">❓ PREGUNTAS</a>
     <a onclick="abrirPanel('panel-terminos')">📜 TÉRMINOS</a>
   </nav>
-
   <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker">
@@ -581,12 +505,10 @@
       <span>Que salga lo que tenga que salir</span>
     </div>
   </div>
-
   <!-- SORTEOS -->
   <section id="sorteos">
     <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
     <div class="grid-sorteos">
-
       <div class="card-sorteo" style="border-color:var(--neon-verde)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-verde)">
           <div class="yape-logo">
@@ -618,7 +540,6 @@
           <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
       <div class="card-sorteo" style="border-color:var(--neon-celeste)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-celeste)">
           <div class="yape-logo">
@@ -650,7 +571,6 @@
           <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – 7','2')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
       <div class="card-sorteo" style="border-color:var(--neon-violeta)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-violeta)">
           <div class="yape-logo">
@@ -682,7 +602,6 @@
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
       <div class="card-sorteo" style="border-color:var(--neon-naranja)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-naranja)">
           <div class="yape-logo">
@@ -714,7 +633,6 @@
           <button class="btn-participar" style="background:var(--neon-naranja);border-bottom-color:#8a3600" onclick="abrirRegistro('Yape pal Chicle – S/2','4')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
       <div class="card-sorteo" style="border-color:var(--neon-amarillo)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-amarillo)">
           <div class="yape-logo">
@@ -746,7 +664,6 @@
           <button class="btn-participar" style="background:var(--neon-amarillo);color:#000;border-bottom-color:#7a6e00" onclick="abrirRegistro('Yape pa la Chelita – S/6','5')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
       <div class="card-sorteo" style="border-color:var(--neon-rosa)">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-rosa)">
           <div class="yape-logo">
@@ -778,83 +695,134 @@
           <button class="btn-participar" style="background:var(--neon-rosa);border-bottom-color:#7a003d" onclick="abrirRegistro('Yape pa la Quinua – S/2','6')">¡QUIERO GANAR!</button>
         </div>
       </div>
-
     </div>
   </section>
-
   <!-- CINTA LLAMA CORRIENDO -->
   <div class="cinta-llama">
     <span class="polvo polvo-izq">💨</span>
     <span class="polvo polvo-der">💨</span>
     <div class="llama-runner">
       <div class="llama-svg-wrap">
-        <svg viewBox="0 0 80 70" width="60" height="52" xmlns="http://www.w3.org/2000/svg">
-          <!-- Bandera peruana como capa en el lomo -->
-          <g class="bandera-cape" transform="translate(30,12)">
-            <rect x="0" y="-8" width="8" height="18" rx="1" fill="#d52b1e"/>
-            <rect x="8" y="-8" width="9" height="18" rx="0" fill="#fff"/>
-            <rect x="17" y="-8" width="8" height="18" rx="1" fill="#d52b1e"/>
+        <svg viewBox="0 0 120 65" width="90" height="52" xmlns="http://www.w3.org/2000/svg">
+          <g class="combi-body-shake">
+            <!-- Bandera peruana en el techo -->
+            <g class="combi-bandera" transform="translate(55,2)">
+              <rect x="0" y="0" width="2" height="14" fill="#666"/>
+              <rect x="2" y="0" width="7" height="12" fill="#d52b1e"/>
+              <rect x="9" y="0" width="8" height="12" fill="#fff"/>
+              <rect x="17" y="0" width="7" height="12" fill="#d52b1e"/>
+            </g>
+            <!-- Cuerpo principal combi -->
+            <rect x="8" y="16" width="95" height="32" rx="6" fill="#e8c020"/>
+            <rect x="10" y="18" width="91" height="28" rx="4" fill="#f0d030"/>
+            <!-- Franja roja abajo -->
+            <rect x="8" y="38" width="95" height="10" rx="3" fill="#d52b1e"/>
+            <!-- Franja blanca en medio -->
+            <rect x="8" y="33" width="95" height="7" fill="#fff"/>
+            <!-- Techo -->
+            <rect x="12" y="14" width="88" height="6" rx="3" fill="#c8a818"/>
+            <rect x="20" y="12" width="70" height="5" rx="2.5" fill="#b89818"/>
+            <!-- Parabrisas grande (frente) -->
+            <rect x="12" y="19" width="28" height="17" rx="3" fill="#aadcf0"/>
+            <rect x="13" y="20" width="26" height="15" rx="2" fill="#c8eeff"/>
+            <!-- Ventanas laterales -->
+            <rect x="44" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
+            <rect x="61" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
+            <rect x="78" y="19" width="14" height="13" rx="2" fill="#aadcf0"/>
+            <!-- Divisiones ventanas -->
+            <rect x="43" y="18" width="1.5" height="15" fill="#c8a818"/>
+            <rect x="59.5" y="18" width="1.5" height="15" fill="#c8a818"/>
+            <rect x="76.5" y="18" width="1.5" height="15" fill="#c8a818"/>
+            <rect x="93" y="18" width="1.5" height="15" fill="#c8a818"/>
+            <!-- Ojos normales en parabrisas -->
+            <g class="combi-ojos-normal">
+              <circle cx="20" cy="26" r="3" fill="#222"/>
+              <circle cx="33" cy="26" r="3" fill="#222"/>
+              <circle cx="21" cy="25" r="1" fill="#fff"/>
+              <circle cx="34" cy="25" r="1" fill="#fff"/>
+            </g>
+            <!-- Ojos enojados en parabrisas -->
+            <g class="combi-ojos-angry">
+              <circle cx="20" cy="27" r="3.5" fill="#222"/>
+              <circle cx="33" cy="27" r="3.5" fill="#222"/>
+              <circle cx="21" cy="26" r="0.8" fill="#f44"/>
+              <circle cx="34" cy="26" r="0.8" fill="#f44"/>
+              <!-- Cejas enojadas -->
+              <line x1="15" y1="22" x2="23" y2="23.5" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+              <line x1="38" y1="22" x2="30" y2="23.5" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <!-- Parachoques delantero -->
+            <rect x="5" y="46" width="100" height="4" rx="2" fill="#888"/>
+            <rect x="6" y="47" width="98" height="2" rx="1" fill="#aaa"/>
+            <!-- Faros delanteros -->
+            <circle cx="12" cy="42" r="3.5" fill="#fff8a0"/>
+            <circle cx="12" cy="42" r="2" fill="#ffe040"/>
+            <!-- Faros traseros -->
+            <circle cx="98" cy="42" r="3" fill="#ff3030"/>
+            <circle cx="98" cy="42" r="1.5" fill="#ff6060"/>
+            <!-- Puerta -->
+            <rect x="44" y="26" width="12" height="17" rx="1" fill="none" stroke="#c8a818" stroke-width="1"/>
+            <circle cx="54" cy="35" r="1" fill="#888"/>
+            <!-- Letrero ruta en techo -->
+            <rect x="30" y="12" width="50" height="5" rx="1.5" fill="#111"/>
+            <text x="55" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="3.5" fill="#ffe600" font-weight="bold">TUSUERTE.PE</text>
+            <!-- Humo del escape -->
+            <g class="combi-humo">
+              <circle cx="106" cy="44" r="2" fill="#aaa" opacity="0.5"/>
+              <circle cx="110" cy="41" r="2.5" fill="#999" opacity="0.4"/>
+              <circle cx="114" cy="38" r="2" fill="#888" opacity="0.3"/>
+            </g>
           </g>
-          <!-- Cuerpo -->
-          <ellipse cx="35" cy="32" rx="18" ry="12" fill="#f5e6c8"/>
-          <ellipse cx="35" cy="30" rx="16" ry="10" fill="#faf0dc"/>
-          <!-- Cuello -->
-          <rect x="14" y="8" width="10" height="24" rx="5" fill="#f5e6c8"/>
-          <rect x="15" y="9" width="8" height="22" rx="4" fill="#faf0dc"/>
-          <!-- Cabeza -->
-          <ellipse cx="19" cy="9" rx="10" ry="8" fill="#faf0dc"/>
-          <ellipse cx="19" cy="10" rx="9" ry="7" fill="#f5e6c8"/>
-          <!-- Orejas -->
-          <ellipse cx="12" cy="3" rx="2.5" ry="5" transform="rotate(-15,12,3)" fill="#faf0dc"/>
-          <ellipse cx="25" cy="2" rx="2.5" ry="5" transform="rotate(15,25,2)" fill="#faf0dc"/>
-          <ellipse cx="12" cy="3" rx="1.5" ry="3.5" transform="rotate(-15,12,3)" fill="#f0c8a0"/>
-          <ellipse cx="25" cy="2" rx="1.5" ry="3.5" transform="rotate(15,25,2)" fill="#f0c8a0"/>
-          <!-- Ojos normales -->
-          <g class="llama-ojos-normal">
-            <circle cx="14" cy="9" r="2" fill="#222"/>
-            <circle cx="23" cy="9" r="2" fill="#222"/>
-            <circle cx="14.6" cy="8.4" r="0.7" fill="#fff"/>
-            <circle cx="23.6" cy="8.4" r="0.7" fill="#fff"/>
+          <!-- Rueda delantera -->
+          <g class="combi-rueda" style="transform-origin:24px 52px">
+            <circle cx="24" cy="52" r="7" fill="#333"/>
+            <circle cx="24" cy="52" r="5" fill="#555"/>
+            <circle cx="24" cy="52" r="2" fill="#888"/>
+            <line x1="24" y1="46" x2="24" y2="48" stroke="#777" stroke-width="1"/>
+            <line x1="24" y1="56" x2="24" y2="58" stroke="#777" stroke-width="1"/>
+            <line x1="18" y1="52" x2="20" y2="52" stroke="#777" stroke-width="1"/>
+            <line x1="28" y1="52" x2="30" y2="52" stroke="#777" stroke-width="1"/>
           </g>
-          <!-- Ojos enojados -->
-          <g class="llama-ojos-angry">
-            <circle cx="14" cy="10" r="2.2" fill="#222"/>
-            <circle cx="23" cy="10" r="2.2" fill="#222"/>
-            <circle cx="14.7" cy="9.3" r="0.6" fill="#f44"/>
-            <circle cx="23.7" cy="9.3" r="0.6" fill="#f44"/>
-            <!-- Cejas enojadas -->
-            <line x1="11" y1="6" x2="16" y2="7.5" stroke="#222" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="26" y1="6" x2="21" y2="7.5" stroke="#222" stroke-width="1.5" stroke-linecap="round"/>
-            <!-- Boca molesta -->
-            <path d="M15 14 Q19 12 23 14" stroke="#222" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <!-- Rueda trasera -->
+          <g class="combi-rueda" style="transform-origin:86px 52px">
+            <circle cx="86" cy="52" r="7" fill="#333"/>
+            <circle cx="86" cy="52" r="5" fill="#555"/>
+            <circle cx="86" cy="52" r="2" fill="#888"/>
+            <line x1="86" y1="46" x2="86" y2="48" stroke="#777" stroke-width="1"/>
+            <line x1="86" y1="56" x2="86" y2="58" stroke="#777" stroke-width="1"/>
+            <line x1="80" y1="52" x2="82" y2="52" stroke="#777" stroke-width="1"/>
+            <line x1="90" y1="52" x2="92" y2="52" stroke="#777" stroke-width="1"/>
           </g>
-          <!-- Hocico -->
-          <ellipse cx="19" cy="13" rx="4" ry="2.5" fill="#e8d5b8"/>
-          <ellipse cx="17.5" cy="12.5" rx="0.8" ry="0.6" fill="#333"/>
-          <ellipse cx="20.5" cy="12.5" rx="0.8" ry="0.6" fill="#333"/>
-          <!-- Patas delanteras -->
-          <g class="llama-pata-del">
-            <rect x="22" y="40" width="4" height="18" rx="2" fill="#e8d5b8"/>
-            <rect x="28" y="40" width="4" height="18" rx="2" fill="#f5e6c8"/>
-            <ellipse cx="24" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
-            <ellipse cx="30" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
-          </g>
-          <!-- Patas traseras -->
-          <g class="llama-pata-tra">
-            <rect x="38" y="40" width="4" height="18" rx="2" fill="#e8d5b8"/>
-            <rect x="44" y="40" width="4" height="18" rx="2" fill="#f5e6c8"/>
-            <ellipse cx="40" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
-            <ellipse cx="46" cy="58" rx="3" ry="1.5" fill="#d4b896"/>
-          </g>
-          <!-- Cola -->
-          <path d="M52 26 Q60 20 56 14" stroke="#f5e6c8" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <circle cx="56" cy="14" r="3" fill="#faf0dc"/>
         </svg>
       </div>
       <span class="bocadillo-cinta">tsss sanaso</span>
     </div>
   </div>
-
+  <!-- APP COMING SOON -->
+  <div class="app-coming-soon">
+    <p>pronto se vienen cositas</p>
+    <div class="app-badges">
+      <!-- App Store badge -->
+      <svg width="110" height="32" viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
+        <rect width="120" height="36" rx="6" fill="#111"/>
+        <rect x="0.5" y="0.5" width="119" height="35" rx="5.5" fill="none" stroke="#aaa" stroke-width="0.8"/>
+        <path d="M24.8 17.6c0-2.7 2.2-4 2.3-4.1-1.3-1.8-3.2-2.1-3.9-2.1-1.6-.2-3.2 1-4 1s-2.1-1-3.5-1c-1.8 0-3.4 1-4.3 2.6-1.9 3.2-.5 8 1.3 10.7.9 1.3 2 2.7 3.4 2.6 1.4-.1 1.9-.9 3.5-.9s2.1.9 3.5.8c1.5 0 2.3-1.3 3.2-2.5 1-1.5 1.4-2.9 1.4-2.9C27.7 21.7 24.8 20.8 24.8 17.6z M22.3 9.8c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.2C20.5 11.4 21.5 10.7 22.3 9.8z" fill="#fff"/>
+        <text x="36" y="12" font-family="Arial,Helvetica,sans-serif" font-size="5.5" fill="#aaa">Disponible en</text>
+        <text x="36" y="24" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#fff" font-weight="bold">App Store</text>
+      </svg>
+      <!-- Google Play badge -->
+      <svg width="120" height="32" viewBox="0 0 130 36" xmlns="http://www.w3.org/2000/svg">
+        <rect width="130" height="36" rx="6" fill="#111"/>
+        <rect x="0.5" y="0.5" width="129" height="35" rx="5.5" fill="none" stroke="#aaa" stroke-width="0.8"/>
+        <path d="M13 7.5L24.2 18 13 28.5V7.5z" fill="#4285f4"/>
+        <path d="M13 7.5l15.3 8.8-4.1 3.7L13 7.5z" fill="#34a853"/>
+        <path d="M13 28.5l11.2-8.5 4.1 3.7L13 28.5z" fill="#ea4335"/>
+        <path d="M28.3 16.3L24.2 18l4.1 3.7 3.2-1.8c.9-.5.9-1.3 0-1.8l-3.2-1.8z" fill="#fbbc04"/>
+        <text x="38" y="12" font-family="Arial,Helvetica,sans-serif" font-size="5" fill="#aaa">DISPONIBLE EN</text>
+        <text x="38" y="24" font-family="Arial,Helvetica,sans-serif" font-size="9.5" fill="#fff" font-weight="bold">Google Play</text>
+      </svg>
+    </div>
+  </div>
   <!-- FOOTER -->
   <footer>
     <div style="margin-bottom:16px;">
@@ -868,7 +836,6 @@
       Sorteos solo para peruanos 🇵🇪
     </div>
   </footer>
-
   <!-- PANEL REGISTRO -->
   <!-- NETLIFY: form fantasma para que Netlify detecte los campos en build -->
   <form name="registro-sorteo" netlify netlify-honeypot="bot-field" hidden>
@@ -881,7 +848,6 @@
     <input name="distrito"/>
     <input name="tiktok"/>
   </form>
-
   <div class="panel-overlay" id="panel-registro" onclick="cerrarPanelFuera(event,'panel-registro')">
     <div class="panel-box" style="max-width:600px;border:3px solid var(--neon-verde)">
       <div class="panel-header" style="background:#001a0d;border-bottom:3px solid var(--neon-verde)">
@@ -890,7 +856,6 @@
       </div>
       <div class="panel-body">
         <div style="background:var(--neon-verde);color:#000;font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:2px;padding:8px 16px;text-align:center;margin-bottom:20px;border-radius:3px;" id="registro-sorteo-label">SORTEO SELECCIONADO</div>
-
         <!-- ── PASO 1: TikTok ── -->
         <div id="paso-tiktok">
           <div style="text-align:center;padding:10px 0 20px;">
@@ -913,7 +878,6 @@
           </button>
           <p style="text-align:center;font-size:.75rem;color:#555;margin-top:10px;">El botón se activa al hacer clic en "IR A TIKTOK"</p>
         </div>
-
         <!-- ── PASO 2: Formulario ── -->
         <div id="paso-formulario" style="display:none;">
           <form id="form-registro" name="registro-sorteo" data-netlify="true" netlify-honeypot="bot-field" onsubmit="enviarRegistro(event)" style="border:none;padding:0;box-shadow:none;background:transparent;">
@@ -1025,11 +989,9 @@
             <p class="form-nota">Al registrarte aceptas nuestros <a onclick="cerrarPanel('panel-registro');abrirPanel('panel-terminos')" style="color:var(--neon-celeste);cursor:pointer;">términos y condiciones</a>.<br>Tus datos solo se usan para el sorteo. No se cobra nada.</p>
           </form>
         </div>
-
       </div>
     </div>
   </div>
-
   <!-- PANEL COMO FUNCIONA -->
   <div class="panel-overlay" id="panel-como" onclick="cerrarPanelFuera(event,'panel-como')">
     <div class="panel-box">
@@ -1073,7 +1035,6 @@
       </div>
     </div>
   </div>
-
   <!-- PANEL GANADORES -->
   <div class="panel-overlay" id="panel-ganadores" onclick="cerrarPanelFuera(event,'panel-ganadores')">
     <div class="panel-box">
@@ -1096,7 +1057,6 @@
       </div>
     </div>
   </div>
-
   <!-- PANEL FAQ -->
   <div class="panel-overlay" id="panel-faq" onclick="cerrarPanelFuera(event,'panel-faq')">
     <div class="panel-box">
@@ -1128,7 +1088,6 @@
       </div>
     </div>
   </div>
-
   <!-- PANEL TERMINOS -->
   <div class="panel-overlay" id="panel-terminos" onclick="cerrarPanelFuera(event,'panel-terminos')">
     <div class="panel-box">
@@ -1138,7 +1097,6 @@
       </div>
       <div class="panel-body">
         <div class="terminos-wrap">
-
           <div class="termino-bloque">
             <h3><span class="termino-num">1</span> PARTICIPACIÓN</h3>
             <ul>
@@ -1150,7 +1108,6 @@
               <li>tusuerte.pe se reserva el derecho de rechazar o anular inscripciones que no cumplan con los requisitos establecidos.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">2</span> REALIZACIÓN DEL SORTEO</h3>
             <ul>
@@ -1160,7 +1117,6 @@
               <li>tusuerte.pe podrá cancelar o reprogramar un sorteo con al menos 24 horas de anticipación, sin que ello genere obligación de compensación alguna hacia los participantes.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">3</span> CÓMO SABER SI GANASTE</h3>
             <ul>
@@ -1168,7 +1124,6 @@
               <li>Es responsabilidad exclusiva del participante revisar la página y el TikTok para verificar si resultó ganador. tusuerte.pe no garantiza la recepción de notificaciones por canales externos.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">4</span> RECLAMACIÓN DEL PREMIO</h3>
             <ul>
@@ -1178,7 +1133,6 @@
               <li>tusuerte.pe no se hace responsable por premios no reclamados dentro del plazo establecido.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">5</span> ENTREGA DE PREMIOS</h3>
             <ul>
@@ -1191,7 +1145,6 @@
               <li><strong style="color:var(--neon-rosa)">📸 OBLIGATORIO:</strong> Como constancia de entrega, el ganador deberá tomarse una fotografía con el premio recibido. Dicha foto será publicada en la sección Ganadores de tusuerte.pe y en el <strong style="color:var(--neon-rosa)">TikTok oficial @tusuerte.pe.oficial</strong>. Sin el cumplimiento de este requisito, la entrega no se considerará válida.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">6</span> PREMIOS Y ARTÍCULOS</h3>
             <ul>
@@ -1201,7 +1154,6 @@
               <li>tusuerte.pe actúa como organizador del sorteo y no como vendedor. No asume responsabilidad por defectos o daños producidos con posterioridad a la entrega del premio.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">7</span> DATOS PERSONALES</h3>
             <ul>
@@ -1210,7 +1162,6 @@
               <li>Al registrarse, el participante autoriza a tusuerte.pe a publicar su nombre en la lista de ganadores con fines de transparencia.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">8</span> RESPONSABILIDAD Y LIMITACIONES</h3>
             <ul>
@@ -1220,7 +1171,6 @@
               <li>La participación en cualquier sorteo implica la aceptación íntegra de los presentes términos y condiciones.</li>
             </ul>
           </div>
-
           <div class="termino-bloque">
             <h3><span class="termino-num">9</span> CANALES OFICIALES</h3>
             <ul>
@@ -1229,18 +1179,15 @@
               <li>tusuerte.pe jamás solicitará pagos, datos bancarios, contraseñas ni información sensible por ningún medio.</li>
             </ul>
           </div>
-
           <div class="terminos-aviso">
             📅 Última actualización: Marzo 2026<br>
             Al participar en cualquier sorteo de <strong style="color:var(--neon-celeste)">tusuerte.pe</strong>, aceptas de forma íntegra todos los términos y condiciones descritos en este documento.<br>
             Ante cualquier consulta, contáctanos a través de nuestros canales oficiales.
           </div>
-
         </div>
       </div>
     </div>
   </div>
-
   <!-- MODAL EXITO -->
   <div class="modal-overlay" id="modal-exito">
     <div class="modal-box">
@@ -1251,7 +1198,6 @@
       <button class="btn-cerrar" onclick="cerrarModal()">¡CHEVERE! 🤙</button>
     </div>
   </div>
-
   <!-- MODAL YA REGISTRADO -->
   <div class="modal-overlay" id="modal-ya-registrado" onclick="cerrarModalYaReg()">
     <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
@@ -1261,7 +1207,6 @@
       <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="cerrarModalYaReg()">YA FUE</button>
     </div>
   </div>
-
   <script>
     // ═══════════════════════════════════════════════════════════════
     // CONFIGURACIÓN DE SORTEOS — edita las fechas aquí cuando cambien
@@ -1279,10 +1224,8 @@
     Object.keys(SORTEOS_CFG).forEach(function(id) {
       SORTEOS_CFG[id].ts = new Date(SORTEOS_CFG[id].fechaISO).getTime();
     });
-
     // ── Utilidad: ms restantes hasta un timestamp ──
     function msHasta(ts) { return Math.max(0, ts - Date.now()); }
-
     // ── Descomponer ms en d/h/m/s ──
     function descomponerMs(ms) {
       return {
@@ -1293,7 +1236,6 @@
       };
     }
     function pad(n) { return String(n).padStart(2,'0'); }
-
     // ── Fecha de cada sorteo para la tarjeta ──
     var MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     var DIAS_SEM = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -1310,7 +1252,6 @@
         }
       }
     });
-
     // ── Contadores: solo mini por sorteo (hero eliminado) ──
     function actualizarContadores() {
       // Mini-contadores por sorteo
@@ -1336,7 +1277,6 @@
     }
     actualizarContadores();
     setInterval(actualizarContadores, 1000);
-
     // PANELES
     var _panelAbierto = false;
     function abrirPanel(id) {
@@ -1370,15 +1310,12 @@
         ['panel-como','panel-ganadores','panel-faq','panel-terminos','panel-registro'].forEach(cerrarPanel);
       }
     });
-
     // CONTADORES POR SORTEO
     const contadores = { '1':0, '2':0, '3':0, '4':0, '5':0, '6':0 };
-
     function cerrarModalYaReg() {
       document.getElementById('modal-ya-registrado').classList.remove('activo');
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
-
     function abrirRegistro(nombreSorteo, sorteoId) {
       // Limpiar registro si ya pasó la fecha del sorteo en que se inscribió
       var reg = localStorage.getItem('tsp_registrado');
@@ -1416,7 +1353,6 @@
       btnConfirmar.style.borderBottomColor = '#333';
       abrirPanel('panel-registro');
     }
-
     function activarConfirmacion() {
       setTimeout(function() {
         const btn = document.getElementById('btn-confirmar-tiktok');
@@ -1427,26 +1363,21 @@
         btn.style.borderBottomColor = '#1a7a0a';
       }, 1500);
     }
-
     function irAlFormulario() {
       document.getElementById('paso-tiktok').style.display = 'none';
       document.getElementById('paso-formulario').style.display = 'block';
       document.getElementById('panel-reg-titulo').textContent = '📝 COMPLETA TUS DATOS';
     }
-
     // ══════════════════════════════════════════════════════
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
     var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw5tGnCgi9gNN9amIqS8MC4bBmp8i9y_--mkGBxoA4SfOzRi_INKdGVZmyW0WFQDMsx/exec';
-
     function enviarRegistro(e) {
       e.preventDefault();
       const form = e.target;
-
       // Generar código de participación
       const cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
-
       // Recopilar datos del formulario
       const datos = {
         sorteo: document.getElementById('registro-sorteo-label').textContent.replace('🍀 ', '').trim(),
@@ -1459,7 +1390,6 @@
         tiktok: (form.tiktok ? form.tiktok.value.trim() : ''),
         codigo: cod
       };
-
       // ── Enviar a Google Sheets (si la URL está configurada) ──
       if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
         fetch(GOOGLE_SHEETS_URL, {
@@ -1471,14 +1401,12 @@
           console.warn('Error al guardar en Google Sheets:', err);
         });
       }
-
       // ── Actualizar contador visual ──
       const id = document.getElementById('sorteo-id').value;
       contadores[id]++;
       document.getElementById('inscritos-' + id).textContent = contadores[id];
       const pct = Math.max(5, Math.min(contadores[id], 100));
       document.getElementById('barra-' + id).style.width = pct + '%';
-
       // ── Guardar en localStorage — vence en la fecha del sorteo específico ──
       localStorage.setItem('tsp_registrado', JSON.stringify({
         tiktok: datos.tiktok,
@@ -1487,21 +1415,18 @@
         codigo: cod,
         fecha: new Date().toISOString()
       }));
-
       // ── Mostrar código y modal de éxito ──
       document.getElementById('codigo-participacion').textContent = cod;
       cerrarPanel('panel-registro');
       document.getElementById('modal-exito').classList.add('activo');
       form.reset();
     }
-
     function cerrarModal() {
       document.getElementById('modal-exito').classList.remove('activo');
     }
     document.getElementById('modal-exito').addEventListener('click', function(e) {
       if (e.target === this) cerrarModal();
     });
-
     // FAQ
     function toggleFaq(btn) {
       const item = btn.parentElement;
@@ -1509,7 +1434,6 @@
       document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('activo'));
       if (!activo) item.classList.add('activo');
     }
-
     // BARRAS ANIMADAS
     window.addEventListener('DOMContentLoaded', () => {
       const observer = new IntersectionObserver((entries) => {
@@ -1525,7 +1449,6 @@
       document.querySelectorAll('.barra-fill').forEach(b => observer.observe(b));
     });
   </script>
-
   <!-- ══════════════ MÚSICA PERUANA ══════════════ -->
   <style>
     #btn-musica {
@@ -1570,12 +1493,10 @@
   </style>
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
-
   <!-- Audios silbido llama (3 archivos) -->
   <audio id="audio-silbido-1" src="./silbido_1.mp3" preload="auto"></audio>
   <audio id="audio-silbido-2" src="./silbido_2.mp3" preload="auto"></audio>
   <audio id="audio-silbido-3" src="./silbido_3.mp3" preload="auto"></audio>
-
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     #llama-saludo {
@@ -1706,7 +1627,6 @@
       100% { opacity:0; }
     }
   </style>
-
   <div id="llama-saludo">
     <div id="llama-burbuja2">¡APÚNTATE AL TOQUE!</div>
     <div id="llama-burbuja">¡OE CHOLO MÉTELE!</div>
@@ -1770,7 +1690,6 @@
       <circle cx="108" cy="112" r="5" fill="#00e5ff" filter="url(#sg-glow)"/>
     </svg>
   </div>
-
   <script>
     /* ─── LLAMA ─── */
     (function() {
@@ -1791,7 +1710,6 @@
       var burbuja = document.getElementById('llama-burbuja');
       var DUR     = 9000;
       var CLASES  = ['animando','lado-izq','lado-derecho','lado-bottom','lado-top'];
-
       // Oculta la llama completamente — visibility:hidden garantiza invisibilidad
       function resetLlama() {
         CLASES.forEach(function(c) { el.classList.remove(c); });
@@ -1803,17 +1721,12 @@
         el.style.top    = 'auto';
         el.style.bottom = '30%';
       }
-
       resetLlama(); // estado inicial
-
       function mostrarLlama() {
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
-
         burbuja.textContent = frases[Math.floor(Math.random() * frases.length)];
-
         // 1) Reset completo
         resetLlama();
-
         // 2) Posicionar en el borde elegido (aún invisible por visibility:hidden)
         var lado = Math.floor(Math.random() * 4);
         switch(lado) {
@@ -1846,12 +1759,10 @@
             el.classList.add('lado-top');
             break;
         }
-
         // 3) Hacer visible y forzar reflow; la animación arranca desde el keyframe 0%
         el.style.visibility = 'visible';
         void el.offsetWidth;
         el.classList.add('animando');
-
         // Silbido suave encima de la música (sin tocar el volumen de la música)
         setTimeout(function() {
           if (document.hidden) return;
@@ -1859,21 +1770,17 @@
           var snd = document.getElementById('audio-silbido-' + num);
           if (snd) { snd.volume = 0.25; snd.currentTime = 0; snd.play().catch(function(){}); }
         }, 1000);
-
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
       }
-
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
     var musica = (function() {
       var ctx, master, playing = false, step = 0, nextTime = 0, timer = null;
       var BPM = 118;
       function sDur() { return 60 / BPM / 2; } // corcheas
-
       // Escala pentatónica andina en La menor
       var N = {
         '_':0,
@@ -1882,7 +1789,6 @@
         'A4':440,'C5':523.25,'D5':587.33,'E5':659.25,
         'G5':783.99,'A5':880
       };
-
       // Patrones de 8 pasos (1 compás de corcheas)
       var MEL  = ['A4','C5','E5','D5','A4','G4','C5','E5'];
       var MEL2 = ['E5','D5','C5','A4','G4','A4','D5','E5'];
@@ -1892,7 +1798,6 @@
       var HIHT = [1,1,1,1,1,1,1,1];
       var COWB = [0,0,1,0,0,0,1,0];
       var bar  = 0;
-
       function noise(dur) {
         var len = Math.ceil(ctx.sampleRate * dur);
         var buf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -1902,7 +1807,6 @@
         src.buffer = buf;
         return src;
       }
-
       function distCurve(amount) {
         var c = new Float32Array(256);
         for (var i = 0; i < 256; i++) {
@@ -1911,7 +1815,6 @@
         }
         return c;
       }
-
       function kick(t) {
         var o = ctx.createOscillator(), g = ctx.createGain();
         o.connect(g); g.connect(master);
@@ -1921,7 +1824,6 @@
         g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
         o.start(t); o.stop(t + 0.3);
       }
-
       function snare(t) {
         var src = noise(0.18);
         var bp = ctx.createBiquadFilter();
@@ -1932,7 +1834,6 @@
         g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
         src.start(t); src.stop(t + 0.2);
       }
-
       function hihat(t) {
         var src = noise(0.06);
         var hp = ctx.createBiquadFilter();
@@ -1943,7 +1844,6 @@
         g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
         src.start(t); src.stop(t + 0.07);
       }
-
       function cowbell(t) {
         [540, 800].forEach(function(f) {
           var o = ctx.createOscillator(), g = ctx.createGain();
@@ -1956,7 +1856,6 @@
           o.start(t); o.stop(t + 0.16);
         });
       }
-
       function bass(freq, t) {
         if (!freq) return;
         var o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1969,7 +1868,6 @@
         g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.7);
         o.start(t); o.stop(t + d * 2);
       }
-
       function melody(freq, t) {
         if (!freq) return;
         var o = ctx.createOscillator();
@@ -1986,7 +1884,6 @@
         g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.1);
         o.start(t); o.stop(t + d * 1.2);
       }
-
       function schedule() {
         var d = sDur();
         while (nextTime < ctx.currentTime + 0.18) {
@@ -2004,7 +1901,6 @@
         }
         timer = setTimeout(schedule, 18);
       }
-
       return {
         start: function() {
           if (ctx && ctx.state === 'running' && playing) return; // ya suena
@@ -2052,14 +1948,12 @@
         }
       };
     })();
-
     function iniciarMusica() {
       var btn = document.getElementById('btn-musica');
       musica.start();
       btn.textContent = '🔊';
       btn.classList.add('sonando');
     }
-
     function toggleMusica() {
       var btn = document.getElementById('btn-musica');
       if (musica.isPlaying()) {
@@ -2070,12 +1964,10 @@
         iniciarMusica();
       }
     }
-
     // Escritorio: intento de autoplay al cargar
     window.addEventListener('load', function() {
       try { iniciarMusica(); } catch(e) {}
     });
-
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
     // Primero arranca la música, luego desbloquea los silbidos.
     // Los listeners se mantienen hasta confirmar que la música está corriendo.
@@ -2084,7 +1976,6 @@
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-
       // 2) Desbloquear <audio> de silbido después de la música
       ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
         var snd = document.getElementById(id);
@@ -2098,7 +1989,6 @@
           snd.pause(); snd.currentTime = 0; snd.muted = false;
         }
       });
-
       // Eliminar listeners solo cuando la música esté confirmada como activa
       if (musica.isPlaying()) {
         document.removeEventListener('click',      arrancarEnInteraccion);
@@ -2107,7 +1997,6 @@
     }
     document.addEventListener('click',      arrancarEnInteraccion);
     document.addEventListener('touchstart', arrancarEnInteraccion);
-
     // Pausar todo cuando el móvil se bloquea o cambia de app (Page Visibility API)
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
