@@ -258,6 +258,76 @@
     .btn-cerrar { background:var(--neon-verde); color:#000; border:none; font-family:'Bangers',cursive;
       font-size:1.3rem; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-bottom:4px solid #1a7a0a; }
 
+    /* CINTA LLAMA CORRIENDO */
+    .cinta-llama {
+      position:relative; overflow:hidden; background:linear-gradient(90deg,#1a0a00,#2a1000,#1a0a00);
+      border-top:3px solid var(--neon-amarillo); border-bottom:3px solid var(--neon-amarillo);
+      height:64px; width:100%;
+      box-shadow:0 0 20px rgba(255,230,0,.15);
+    }
+    .cinta-llama::before {
+      content:''; position:absolute; inset:0;
+      background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,230,0,.04) 40px,rgba(255,230,0,.04) 80px);
+    }
+    .llama-runner {
+      position:absolute; top:50%; transform:translateY(-50%);
+      white-space:nowrap; font-size:1.6rem;
+      animation: llamaRun 12s linear infinite;
+    }
+    .llama-runner .bandera { display:inline; }
+    .llama-runner .llamita { display:inline; }
+    .llama-runner .bocadillo {
+      display:inline-block; opacity:0; font-family:'Bangers',cursive;
+      color:var(--neon-verde); font-size:1rem; letter-spacing:2px;
+      text-shadow:0 0 8px var(--neon-verde); vertical-align:middle;
+      margin-left:6px;
+      animation: bocadilloShow 12s linear infinite;
+    }
+    @keyframes llamaRun {
+      0%   { left:-15%; }
+      38%  { left:45%; }
+      42%  { left:45%; }
+      44%  { left:45%; }
+      48%  { left:45%; }
+      100% { left:110%; }
+    }
+    @keyframes bocadilloShow {
+      0%,40%   { opacity:0; transform:translateY(-50%) scale(0.5); }
+      43%      { opacity:1; transform:translateY(-50%) scale(1.15); }
+      44%      { opacity:1; transform:translateY(-50%) scale(1); }
+      48%      { opacity:1; transform:translateY(-50%) scale(1); }
+      50%      { opacity:0; transform:translateY(-50%) scale(0.5); }
+      100%     { opacity:0; }
+    }
+    .llama-runner .frenada {
+      display:inline-block;
+      animation: frenar 12s linear infinite;
+    }
+    @keyframes frenar {
+      0%,37%   { transform:scaleX(1); }
+      38%,39%  { transform:scaleX(1) rotate(-8deg); }
+      40%,48%  { transform:scaleX(-1); }
+      50%,100% { transform:scaleX(1); }
+    }
+    .polvo {
+      position:absolute; top:50%; transform:translateY(-50%);
+      font-size:1rem; opacity:0; pointer-events:none;
+      animation: polvoShow 12s linear infinite;
+    }
+    .polvo.izq { animation-name: polvoIzq; }
+    @keyframes polvoShow {
+      0%,37%  { opacity:0; left:44%; }
+      38%,40% { opacity:.7; left:43%; }
+      42%     { opacity:0; left:41%; }
+      100%    { opacity:0; }
+    }
+    @keyframes polvoIzq {
+      0%,37%  { opacity:0; left:49%; }
+      38%,40% { opacity:.7; left:50%; }
+      42%     { opacity:0; left:52%; }
+      100%    { opacity:0; }
+    }
+
     /* FOOTER */
     footer { background:#050505; border-top:4px solid var(--neon-rosa); padding:30px 20px 20px; text-align:center; }
     .footer-copy { color:#444; font-size:.76rem; line-height:1.6; }
@@ -608,6 +678,17 @@
 
     </div>
   </section>
+
+  <!-- CINTA LLAMA CORRIENDO -->
+  <div class="cinta-llama">
+    <span class="polvo">💨</span>
+    <span class="polvo izq">💨</span>
+    <div class="llama-runner">
+      <span class="bandera">🇵🇪</span>
+      <span class="frenada">🦙</span>
+      <span class="bocadillo">tsss sano 🤙</span>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -1606,18 +1687,12 @@
         void el.offsetWidth;
         el.classList.add('animando');
 
-        // Bajar un poco la música y silbido sutil encima
-        if (typeof musica !== 'undefined' && musica.isPlaying()) {
-          musica.setVolume(0.08);
-          setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
-        }
-
-        // Silbido 1 segundo después — sutil sobre la música
+        // Silbido suave encima de la música (sin tocar el volumen de la música)
         setTimeout(function() {
           if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) { snd.volume = 0.4; snd.currentTime = 0; snd.play().catch(function(){}); }
+          if (snd) { snd.volume = 0.25; snd.currentTime = 0; snd.play().catch(function(){}); }
         }, 1000);
 
         // Al terminar: reset limpio fuera de pantalla
