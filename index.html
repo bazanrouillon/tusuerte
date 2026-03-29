@@ -1252,6 +1252,13 @@
       };
     })();
 
+    function iniciarMusica() {
+      var btn = document.getElementById('btn-musica');
+      musica.start();
+      btn.textContent = '🔊';
+      btn.classList.add('sonando');
+    }
+
     function toggleMusica() {
       var btn = document.getElementById('btn-musica');
       if (musica.isPlaying()) {
@@ -1259,11 +1266,31 @@
         btn.textContent = '🎵';
         btn.classList.remove('sonando');
       } else {
-        musica.start();
-        btn.textContent = '🔊';
-        btn.classList.add('sonando');
+        iniciarMusica();
       }
     }
+
+    // Intento autoplay al cargar
+    window.addEventListener('load', function() {
+      try {
+        iniciarMusica();
+      } catch(e) {}
+    });
+
+    // Si el navegador bloquea el autoplay, arranca en el primer toque del usuario
+    function arrancarEnInteraccion() {
+      if (!musica.isPlaying()) {
+        iniciarMusica();
+      }
+      document.removeEventListener('click', arrancarEnInteraccion);
+      document.removeEventListener('touchstart', arrancarEnInteraccion);
+      document.removeEventListener('keydown', arrancarEnInteraccion);
+      document.removeEventListener('scroll', arrancarEnInteraccion);
+    }
+    document.addEventListener('click',      arrancarEnInteraccion);
+    document.addEventListener('touchstart', arrancarEnInteraccion);
+    document.addEventListener('keydown',    arrancarEnInteraccion);
+    document.addEventListener('scroll',     arrancarEnInteraccion);
   </script>
 </body>
 </html>
