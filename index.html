@@ -105,23 +105,6 @@
     .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 100px; }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-    /* HERO */
-    .hero-banner { background:linear-gradient(135deg,#110022 0%,#000 50%,#001100 100%);
-      border-bottom:4px solid var(--neon-amarillo); text-align:center; padding:40px 20px; }
-    .hero-grid { display:flex; justify-content:center; gap:24px; max-width:500px; margin:0 auto 28px; }
-    @media(max-width:480px){.hero-grid{grid-template-columns:1fr;}}
-    .hero-stat { padding:18px; border:2px solid #333; border-radius:4px; }
-    .hero-stat-num { font-family:'Bangers',cursive; font-size:2.8rem; line-height:1; }
-    .hero-stat-lbl { font-family:'Righteous',cursive; font-size:.8rem; letter-spacing:2px; color:#888; }
-    .prox-sorteo-label { font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px;
-      color:var(--neon-celeste); text-shadow:0 0 10px var(--neon-celeste); text-align:center; margin-bottom:4px; }
-    .prox-sorteo-fecha { font-family:'Permanent Marker',cursive; font-size:1.1rem;
-      color:var(--neon-verde); text-align:center; margin-bottom:14px; text-shadow:0 0 8px var(--neon-verde); }
-    .contador-wrap { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
-    .contador-bloque { background:#111; border:2px solid var(--neon-rosa); border-radius:4px; padding:12px 20px; text-align:center; min-width:74px; }
-    .contador-num { font-family:'Bangers',cursive; font-size:2.3rem; color:var(--neon-amarillo); text-shadow:0 0 10px var(--neon-amarillo); line-height:1; }
-    .contador-lbl { font-family:'Righteous',cursive; font-size:.65rem; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:4px; }
-
     /* SORTEOS */
     #sorteos { padding:50px 20px; max-width:1200px; margin:0 auto; }
     .seccion-titulo { font-family:'Bangers',cursive; font-size:clamp(2.2rem,6vw,4rem);
@@ -151,13 +134,15 @@
     .barra-wrap { background:#222; border-radius:2px; height:8px; margin-bottom:16px; }
     .barra-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--neon-verde),var(--neon-amarillo)); box-shadow:0 0 8px var(--neon-verde); transition:width 1s ease; }
     /* Mini-contador por sorteo */
-    .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:14px; background:#0a0a1a; border-radius:4px; padding:8px 6px; border:1px solid #333; }
+    .mini-cnt-wrap { margin-bottom:14px; background:#0a0a1a; border-radius:4px; border:1px solid #333; overflow:hidden; }
+    .mc-fecha-lbl { font-family:'Righteous',cursive; font-size:.72rem; letter-spacing:2px; color:var(--neon-celeste); text-align:center; padding:5px 6px 3px; border-bottom:1px solid #1a1a2e; text-transform:uppercase; }
+    .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; padding:7px 6px 8px; }
     .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:34px; }
     .mc-num { font-family:'Bangers',cursive; font-size:1.4rem; line-height:1; color:var(--neon-amarillo); text-shadow:0 0 8px var(--neon-amarillo); }
     .mc-lbl { font-family:'Righteous',cursive; font-size:.52rem; color:#666; letter-spacing:1px; text-transform:uppercase; }
     .mc-sep { font-family:'Bangers',cursive; font-size:1.2rem; color:#444; margin-bottom:10px; }
     .mini-contador.vencido .mc-num { color:var(--neon-rosa); text-shadow:0 0 8px var(--neon-rosa); }
-    .mini-contador.vencido::after { content:'SORTEO CERRADO'; font-family:'Bangers',cursive; font-size:.9rem; letter-spacing:2px; color:var(--neon-rosa); }
+    .mini-cnt-wrap.vencido .mc-fecha-lbl { color:var(--neon-rosa); }
     .btn-participar { display:block; width:100%; background:var(--neon-rosa); color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
       cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase; }
@@ -316,15 +301,6 @@
       /* ── Ticker ── */
       .ticker span { font-size:.95rem; padding:0 55px; }
 
-      /* ── Hero / Contador ── */
-      .hero-banner { padding:22px 12px; }
-      .prox-sorteo-label { font-size:1.05rem; letter-spacing:2px; }
-      .prox-sorteo-fecha { font-size:.9rem; margin-bottom:12px; }
-      .contador-wrap { gap:7px; }
-      .contador-bloque { padding:9px 12px; min-width:56px; }
-      .contador-num { font-size:1.7rem; }
-      .contador-lbl { font-size:.52rem; }
-
       /* ── Sorteos ── */
       #sorteos { padding:28px 12px; }
       .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
@@ -435,18 +411,6 @@
     </div>
   </div>
 
-  <!-- HERO -->
-  <div class="hero-banner">
-    <div class="prox-sorteo-label">⏳ PRÓXIMO SORTEO EN:</div>
-    <div class="prox-sorteo-fecha" id="prox-sorteo-fecha">📅 Cargando...</div>
-    <div class="contador-wrap">
-      <div class="contador-bloque"><div class="contador-num" id="dias">00</div><div class="contador-lbl">Días</div></div>
-      <div class="contador-bloque"><div class="contador-num" id="horas">00</div><div class="contador-lbl">Horas</div></div>
-      <div class="contador-bloque"><div class="contador-num" id="minutos">00</div><div class="contador-lbl">Min</div></div>
-      <div class="contador-bloque"><div class="contador-num" id="segundos">00</div><div class="contador-lbl">Seg</div></div>
-    </div>
-  </div>
-
   <!-- SORTEOS -->
   <section id="sorteos">
     <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
@@ -469,14 +433,17 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
-          <div class="mini-contador" id="mini-cnt-1">
-            <div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-1">
+            <div class="mc-fecha-lbl" id="mc1-fecha">📅 ...</div>
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
           </div>
           <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
         </div>
@@ -499,14 +466,17 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
-          <div class="mini-contador" id="mini-cnt-2">
-            <div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-2">
+            <div class="mc-fecha-lbl" id="mc2-fecha">📅 ...</div>
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
           </div>
           <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – S/7','2')">¡QUIERO GANAR!</button>
         </div>
@@ -529,14 +499,17 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
-          <div class="mini-contador" id="mini-cnt-3">
-            <div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div>
-            <div class="mc-sep">:</div>
-            <div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div>
+          <div class="mini-cnt-wrap" id="mini-cnt-3">
+            <div class="mc-fecha-lbl" id="mc3-fecha">📅 ...</div>
+            <div class="mini-contador">
+              <div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div>
+              <div class="mc-sep">:</div>
+              <div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div>
+            </div>
           </div>
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
         </div>
@@ -974,79 +947,41 @@
     }
     function pad(n) { return String(n).padStart(2,'0'); }
 
-    // ── Mostrar fecha en tarjetas ──
+    // ── Fecha de cada sorteo para el label del mini-contador y tarjeta ──
     var MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     var DIAS_SEM = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
     Object.keys(SORTEOS_CFG).forEach(function(id) {
-      var d = new Date(SORTEOS_CFG[id].ts);
-      var etiqueta = DIAS_SEM[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + MESES[d.getUTCMonth()];
-      // Ajustar a Lima (UTC-5): restar 5h para display correcto
-      var dLima = new Date(SORTEOS_CFG[id].ts - 5*3600000);
-      etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
-      var card = document.querySelector('#mini-cnt-' + id);
-      if (card) {
-        var meta = card.closest('.card-body');
-        if (meta) {
-          var fechaSpan = meta.querySelector('.proxfecha');
-          if (fechaSpan) fechaSpan.textContent = '📅 ' + etiqueta;
-        }
+      var dLima = new Date(SORTEOS_CFG[id].ts - 5*3600000); // ajuste UTC-5
+      var hh = String(dLima.getUTCHours()).padStart(2,'0');
+      var mm = String(dLima.getUTCMinutes()).padStart(2,'0');
+      var etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()] + ' · ' + hh + ':' + mm + ' PM';
+      SORTEOS_CFG[id].etiqueta = etiqueta;
+      // Label fecha dentro del mini-contador
+      var lbl = document.getElementById('mc' + id + '-fecha');
+      if (lbl) lbl.textContent = '📅 ' + etiqueta;
+      // Fecha en la tarjeta (.proxfecha)
+      var wrap = document.getElementById('mini-cnt-' + id);
+      if (wrap) {
+        var fechaSpan = wrap.closest('.card-body') && wrap.closest('.card-body').querySelector('.proxfecha');
+        if (fechaSpan) fechaSpan.textContent = '📅 ' + DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
       }
     });
 
-    // ── Hero: muestra el sorteo más próximo que aún no ha vencido ──
-    (function() {
-      var ahora = Date.now();
-      var proxId = null, proxTs = Infinity;
-      Object.keys(SORTEOS_CFG).forEach(function(id) {
-        var ts = SORTEOS_CFG[id].ts;
-        if (ts > ahora && ts < proxTs) { proxTs = ts; proxId = id; }
-      });
-      if (!proxId) {
-        // Todos vencidos
-        document.getElementById('prox-sorteo-fecha').textContent = '— Próximos sorteos en camino —';
-        return;
-      }
-      var dLima = new Date(SORTEOS_CFG[proxId].ts - 5*3600000);
-      var etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
-      document.getElementById('prox-sorteo-fecha').textContent = '📅 ' + etiqueta + ' — 10:00 PM';
-    })();
-
-    // ── Contadores (hero = más próximo; mini = cada sorteo) ──
+    // ── Contadores: solo mini por sorteo (hero eliminado) ──
     function actualizarContadores() {
-      var ahora = Date.now();
-
-      // Hero: sorteo más próximo no vencido
-      var proxId = null, proxTs = Infinity;
-      Object.keys(SORTEOS_CFG).forEach(function(id) {
-        if (SORTEOS_CFG[id].ts > ahora && SORTEOS_CFG[id].ts < proxTs) {
-          proxTs = SORTEOS_CFG[id].ts; proxId = id;
-        }
-      });
-      if (proxId) {
-        var t = descomponerMs(msHasta(proxTs));
-        document.getElementById('dias').textContent     = pad(t.d);
-        document.getElementById('horas').textContent    = pad(t.h);
-        document.getElementById('minutos').textContent  = pad(t.m);
-        document.getElementById('segundos').textContent = pad(t.s);
-      } else {
-        ['dias','horas','minutos','segundos'].forEach(function(id) {
-          document.getElementById(id).textContent = '00';
-        });
-      }
-
       // Mini-contadores por sorteo
       Object.keys(SORTEOS_CFG).forEach(function(id) {
         var ms = msHasta(SORTEOS_CFG[id].ts);
-        var cnt = document.getElementById('mini-cnt-' + id);
-        if (!cnt) return;
+        var wrap = document.getElementById('mini-cnt-' + id);
+        if (!wrap) return;
         if (ms <= 0) {
-          cnt.classList.add('vencido');
+          wrap.classList.add('vencido');
           ['d','h','m','s'].forEach(function(p) {
             var el = document.getElementById('mc' + id + p);
             if (el) el.textContent = '00';
           });
         } else {
-          cnt.classList.remove('vencido');
+          wrap.classList.remove('vencido');
           var t = descomponerMs(ms);
           document.getElementById('mc'+id+'d').textContent = pad(t.d);
           document.getElementById('mc'+id+'h').textContent = pad(t.h);
@@ -1573,8 +1508,9 @@
         void el.offsetWidth;
         el.classList.add('animando');
 
-        // Silbido 1 segundo después
+        // Silbido 1 segundo después — solo si la app está visible
         setTimeout(function() {
+          if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
           if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
