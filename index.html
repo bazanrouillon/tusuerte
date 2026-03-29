@@ -1010,8 +1010,8 @@
   <div class="modal-overlay" id="modal-ya-registrado" onclick="cerrarModalYaReg()">
     <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
       <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 ¡ESPERA!</div>
-      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Solo puedes participar en un sorteo a la vez. ¡te toca esperar mi soli!</p>
-      <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo por semana. ¡Espera el próximo domingo pe!</p>
+      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en otro sorteo.</p>
+      <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo a la vez. ¡Ten paciencia mi soli!</p>
       <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="cerrarModalYaReg()">YA FUE</button>
     </div>
   </div>
@@ -1602,19 +1602,23 @@
         void el.offsetWidth;
         el.classList.add('animando');
 
+        // Silenciar música y reproducir solo silbido limpio
+        if (typeof musica !== 'undefined' && musica.isPlaying()) {
+          musica.setVolume(0);
+        }
+
         // Silbido 1 segundo después — solo si la app está visible
         setTimeout(function() {
           if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) { snd.volume = 0.35; snd.currentTime = 0; snd.play().catch(function(){}); }
+          if (snd) { snd.volume = 0.7; snd.currentTime = 0; snd.play().catch(function(){}); }
         }, 1000);
 
-        // Atenuar música
-        if (typeof musica !== 'undefined' && musica.isPlaying()) {
-          musica.setVolume(0.06);
-          setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
-        }
+        // Restaurar música después de la animación
+        setTimeout(function() {
+          if (typeof musica !== 'undefined' && musica.isPlaying()) musica.setVolume(0.18);
+        }, DUR - 500);
 
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
