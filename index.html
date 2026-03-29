@@ -66,7 +66,7 @@
     /* TICKER */
     .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
     .ticker { display:flex; width:max-content; animation:ticker 30s linear infinite; }
-    .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 40px; }
+    .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 100px; }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
     /* HERO */
@@ -236,12 +236,109 @@
     .footer-copy { color:#444; font-size:.76rem; line-height:1.6; }
     .footer-copy strong { color:#666; }
 
-    @media(max-width:480px){
-      .form-doble{grid-template-columns:1fr;}
-      nav a{font-size:1rem; padding:12px 10px;}
-      .metele-tag{font-size:.85rem; top:10px; left:10px;}
-      .panel-body{padding:10px 16px 24px;}
-      .panel-header{padding:14px 16px;}
+    /* ══════════════════════════════════════════
+       VERSIÓN MÓVIL — max 640px
+    ══════════════════════════════════════════ */
+    @media(max-width:640px){
+
+      /* ── Banner prototipo ── */
+      #banner-prototipo { padding:6px 10px; }
+      #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
+
+      /* ── Header ── */
+      header { padding:18px 14px 14px; }
+      .metele-tag { font-size:.72rem; top:8px; left:10px; line-height:1.2; }
+      .header-decoracion { gap:5px; margin-bottom:4px; }
+      .estrella { font-size:.9rem; }
+      .logo-sub { font-size:.7rem; letter-spacing:3px; }
+
+      /* ── Nav: scroll horizontal sin saltos ── */
+      nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      nav::-webkit-scrollbar { display:none; }
+      nav a {
+        font-size: .9rem;
+        padding: 11px 14px;
+        white-space: nowrap;
+        border-right: 1px solid #2a2a2a;
+        flex-shrink: 0;
+      }
+
+      /* ── Ticker ── */
+      .ticker span { font-size:.95rem; padding:0 55px; }
+
+      /* ── Hero / Contador ── */
+      .hero-banner { padding:22px 12px; }
+      .prox-sorteo-label { font-size:1.05rem; letter-spacing:2px; }
+      .prox-sorteo-fecha { font-size:.9rem; margin-bottom:12px; }
+      .contador-wrap { gap:7px; }
+      .contador-bloque { padding:9px 12px; min-width:56px; }
+      .contador-num { font-size:1.7rem; }
+      .contador-lbl { font-size:.52rem; }
+
+      /* ── Sorteos ── */
+      #sorteos { padding:28px 12px; }
+      .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
+      .grid-sorteos { grid-template-columns:1fr; gap:16px; }
+      .card-img { height:140px; font-size:3.8rem; }
+      .card-titulo { font-size:1.35rem; }
+      .card-desc { font-size:.82rem; }
+      .btn-participar { font-size:1.2rem; padding:14px; }
+
+      /* ── Paneles: sheet desde abajo ── */
+      .panel-overlay { padding:0; align-items:flex-end; }
+      .panel-box {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 18px 18px 0 0;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+      }
+      .panel-header { padding:14px 18px; }
+      .panel-titulo { font-size:1.4rem; letter-spacing:2px; }
+      .panel-body { padding:10px 14px 36px; }
+
+      /* ── Pasos cómo funciona ── */
+      .pasos { grid-template-columns:1fr; gap:12px; }
+      .paso { padding:16px 14px; }
+      .paso-num { font-size:2.4rem; }
+      .paso h3 { font-size:1.2rem; }
+
+      /* ── FAQ ── */
+      .faq-item.activo .faq-resp { max-height:300px; }
+      .faq-preg { font-size:.85rem; padding:14px 16px; }
+
+      /* ── Formulario registro ── */
+      .form-doble { grid-template-columns:1fr; }
+      .form-grupo { margin-bottom:16px; }
+      .form-grupo label { font-size:.92rem; }
+      .form-grupo input,
+      .form-grupo select { font-size:1rem; padding:13px 12px; }
+      .btn-registro { font-size:1.4rem; letter-spacing:2px; padding:16px; }
+
+      /* ── Panel registro: paso TikTok ── */
+      #paso-tiktok a[href*="tiktok"] { font-size:1.1rem; padding:12px 18px; }
+
+      /* ── Modales ── */
+      .modal-overlay { padding:12px; }
+      .modal-box { padding:26px 18px; }
+      .modal-titulo { font-size:2rem; }
+      .modal-codigo { font-size:1.4rem; letter-spacing:4px; padding:12px; }
+      .btn-cerrar { font-size:1.1rem; padding:13px 28px; width:100%; }
+
+      /* ── Llama: tamaño reducido en móvil ── */
+      #llama-saludo svg { width:85px !important; height:108px !important; }
+      #llama-burbuja, #llama-burbuja2 { font-size:.95rem; padding:7px 13px; white-space:normal; max-width:160px; text-align:center; }
+
+      /* ── Footer ── */
+      footer { padding:18px 14px 16px; }
+      .footer-copy { font-size:.7rem; }
     }
   </style>
 </head>
@@ -1274,7 +1371,7 @@
       var el      = document.getElementById('llama-saludo');
       var burbuja = document.getElementById('llama-burbuja');
       var burbuja2= document.getElementById('llama-burbuja2');
-      var DUR     = 13000;
+      var DUR     = 15000;
 
       // 4 esquinas: [dirClass, topOrBottom]
       var esquinas = [
@@ -1307,10 +1404,12 @@
         if (vertClass) el.classList.add(vertClass);
         el.classList.add('animando');
 
-        // Silbido aleatorio (1, 2 o 3)
-        var num = Math.ceil(Math.random() * 3);
-        var snd = document.getElementById('audio-silbido-' + num);
-        if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
+        // Silbido aleatorio 1 segundo después de aparecer
+        setTimeout(function() {
+          var num = Math.ceil(Math.random() * 3);
+          var snd = document.getElementById('audio-silbido-' + num);
+          if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
+        }, 1000);
 
         // Atenuar música
         if (typeof musica !== 'undefined' && musica.isPlaying()) {
@@ -1323,7 +1422,7 @@
       }
 
       setTimeout(mostrarLlama, 2000);
-      setInterval(mostrarLlama, 10000);
+      setInterval(mostrarLlama, 20000);
     })();
 
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
