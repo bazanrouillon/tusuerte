@@ -150,6 +150,14 @@
     .card-fecha { font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-naranja); }
     .barra-wrap { background:#222; border-radius:2px; height:8px; margin-bottom:16px; }
     .barra-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--neon-verde),var(--neon-amarillo)); box-shadow:0 0 8px var(--neon-verde); transition:width 1s ease; }
+    /* Mini-contador por sorteo */
+    .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:14px; background:#0a0a1a; border-radius:4px; padding:8px 6px; border:1px solid #333; }
+    .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:34px; }
+    .mc-num { font-family:'Bangers',cursive; font-size:1.4rem; line-height:1; color:var(--neon-amarillo); text-shadow:0 0 8px var(--neon-amarillo); }
+    .mc-lbl { font-family:'Righteous',cursive; font-size:.52rem; color:#666; letter-spacing:1px; text-transform:uppercase; }
+    .mc-sep { font-family:'Bangers',cursive; font-size:1.2rem; color:#444; margin-bottom:10px; }
+    .mini-contador.vencido .mc-num { color:var(--neon-rosa); text-shadow:0 0 8px var(--neon-rosa); }
+    .mini-contador.vencido::after { content:'SORTEO CERRADO'; font-family:'Bangers',cursive; font-size:.9rem; letter-spacing:2px; color:var(--neon-rosa); }
     .btn-participar { display:block; width:100%; background:var(--neon-rosa); color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
       cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase; }
@@ -461,6 +469,15 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
+          <div class="mini-contador" id="mini-cnt-1">
+            <div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div>
+          </div>
           <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
         </div>
       </div>
@@ -482,6 +499,15 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
+          <div class="mini-contador" id="mini-cnt-2">
+            <div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div>
+          </div>
           <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – S/7','2')">¡QUIERO GANAR!</button>
         </div>
       </div>
@@ -503,6 +529,15 @@
             <span class="card-fecha proxfecha">📅 ...</span>
           </div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
+          <div class="mini-contador" id="mini-cnt-3">
+            <div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div>
+            <div class="mc-sep">:</div>
+            <div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div>
+          </div>
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
         </div>
       </div>
@@ -911,70 +946,117 @@
   </div>
 
   <script>
-    // ── Utilidad: fecha actual en Lima (UTC-5, sin DST) ──
-    function ahoraLima() {
-      return new Date(Date.now() - new Date().getTimezoneOffset() * 60000 + (-5 * 3600000) - (new Date().getTimezoneOffset() !== 300 ? (new Date().getTimezoneOffset() - (-5*60)) * 60000 : 0));
+    // ═══════════════════════════════════════════════════════════════
+    // CONFIGURACIÓN DE SORTEOS — edita las fechas aquí cuando cambien
+    // Formato ISO 8601 con zona Lima (UTC-5): 'YYYY-MM-DDTHH:MM:00-05:00'
+    // ═══════════════════════════════════════════════════════════════
+    var SORTEOS_CFG = {
+      '1': { fechaISO: '2026-04-05T22:00:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
+      '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – S/7' },
+      '3': { fechaISO: '2026-04-19T22:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' }
+    };
+    // Pre-calcular timestamps en ms para cada sorteo
+    Object.keys(SORTEOS_CFG).forEach(function(id) {
+      SORTEOS_CFG[id].ts = new Date(SORTEOS_CFG[id].fechaISO).getTime();
+    });
+
+    // ── Utilidad: ms restantes hasta un timestamp ──
+    function msHasta(ts) { return Math.max(0, ts - Date.now()); }
+
+    // ── Descomponer ms en d/h/m/s ──
+    function descomponerMs(ms) {
+      return {
+        d: Math.floor(ms / 86400000),
+        h: Math.floor((ms % 86400000) / 3600000),
+        m: Math.floor((ms % 3600000) / 60000),
+        s: Math.floor((ms % 60000) / 1000)
+      };
     }
-    function proximoDomingo10pm() {
-      // Trabajar todo en UTC pero pensando en Lima (UTC-5)
-      var utcAhora = Date.now();
-      var limaAhora = new Date(utcAhora);
-      // Forzar hora Lima desplazando el timezone
-      var offsetLima = -5 * 60; // minutos
-      var offsetLocal = limaAhora.getTimezoneOffset(); // minutos (positivo = detrás de UTC)
-      var limaNow = new Date(utcAhora + (offsetLocal - (-offsetLima)) * 60000);
+    function pad(n) { return String(n).padStart(2,'0'); }
 
-      var diaSemana = limaNow.getDay(); // 0=domingo
-      var diff = (7 - diaSemana) % 7;
-
-      var target = new Date(limaNow);
-      target.setHours(22, 0, 0, 0); // 10pm Lima
-
-      if (diff === 0) {
-        // Hoy es domingo: si ya pasaron las 10pm, ir al próximo
-        if (limaNow >= target) target.setDate(target.getDate() + 7);
-      } else {
-        target.setDate(target.getDate() + diff);
+    // ── Mostrar fecha en tarjetas ──
+    var MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    var DIAS_SEM = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    Object.keys(SORTEOS_CFG).forEach(function(id) {
+      var d = new Date(SORTEOS_CFG[id].ts);
+      var etiqueta = DIAS_SEM[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + MESES[d.getUTCMonth()];
+      // Ajustar a Lima (UTC-5): restar 5h para display correcto
+      var dLima = new Date(SORTEOS_CFG[id].ts - 5*3600000);
+      etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
+      var card = document.querySelector('#mini-cnt-' + id);
+      if (card) {
+        var meta = card.closest('.card-body');
+        if (meta) {
+          var fechaSpan = meta.querySelector('.proxfecha');
+          if (fechaSpan) fechaSpan.textContent = '📅 ' + etiqueta;
+        }
       }
-      // Devolver la diferencia en ms (entre ahora real y el target en tiempo Lima)
-      return target - limaNow;
-    }
+    });
 
-    // FECHA DINÁMICA — PRÓXIMO DOMINGO
+    // ── Hero: muestra el sorteo más próximo que aún no ha vencido ──
     (function() {
-      var meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-      var utcAhora = Date.now();
-      var offsetLocal = new Date().getTimezoneOffset();
-      var limaNow = new Date(utcAhora + (offsetLocal - 300) * 60000);
-      var diaSemana = limaNow.getDay();
-      var diff = (7 - diaSemana) % 7;
-      var dom = new Date(limaNow);
-      dom.setHours(22, 0, 0, 0);
-      if (diff === 0 && limaNow >= dom) { diff = 7; }
-      if (diff > 0) dom.setDate(dom.getDate() + diff);
-      var etiqueta = 'Dom ' + dom.getDate() + ' ' + meses[dom.getMonth()];
-      var fechaEl = document.getElementById('prox-sorteo-fecha');
-      if (fechaEl) fechaEl.textContent = '📅 ' + etiqueta + ' — 10:00 PM';
-      document.querySelectorAll('.proxfecha').forEach(function(el) {
-        el.textContent = '📅 ' + etiqueta;
+      var ahora = Date.now();
+      var proxId = null, proxTs = Infinity;
+      Object.keys(SORTEOS_CFG).forEach(function(id) {
+        var ts = SORTEOS_CFG[id].ts;
+        if (ts > ahora && ts < proxTs) { proxTs = ts; proxId = id; }
       });
+      if (!proxId) {
+        // Todos vencidos
+        document.getElementById('prox-sorteo-fecha').textContent = '— Próximos sorteos en camino —';
+        return;
+      }
+      var dLima = new Date(SORTEOS_CFG[proxId].ts - 5*3600000);
+      var etiqueta = DIAS_SEM[dLima.getUTCDay()] + ' ' + dLima.getUTCDate() + ' ' + MESES[dLima.getUTCMonth()];
+      document.getElementById('prox-sorteo-fecha').textContent = '📅 ' + etiqueta + ' — 10:00 PM';
     })();
 
-    // CONTADOR – PRÓXIMO DOMINGO 10PM (Lima)
-    function actualizarContador() {
-      var ms = proximoDomingo10pm();
-      if (ms <= 0) ms = 0;
-      var d = Math.floor(ms / 86400000);
-      var h = Math.floor((ms % 86400000) / 3600000);
-      var m = Math.floor((ms % 3600000) / 60000);
-      var s = Math.floor((ms % 60000) / 1000);
-      document.getElementById('dias').textContent     = String(d).padStart(2,'0');
-      document.getElementById('horas').textContent    = String(h).padStart(2,'0');
-      document.getElementById('minutos').textContent  = String(m).padStart(2,'0');
-      document.getElementById('segundos').textContent = String(s).padStart(2,'0');
+    // ── Contadores (hero = más próximo; mini = cada sorteo) ──
+    function actualizarContadores() {
+      var ahora = Date.now();
+
+      // Hero: sorteo más próximo no vencido
+      var proxId = null, proxTs = Infinity;
+      Object.keys(SORTEOS_CFG).forEach(function(id) {
+        if (SORTEOS_CFG[id].ts > ahora && SORTEOS_CFG[id].ts < proxTs) {
+          proxTs = SORTEOS_CFG[id].ts; proxId = id;
+        }
+      });
+      if (proxId) {
+        var t = descomponerMs(msHasta(proxTs));
+        document.getElementById('dias').textContent     = pad(t.d);
+        document.getElementById('horas').textContent    = pad(t.h);
+        document.getElementById('minutos').textContent  = pad(t.m);
+        document.getElementById('segundos').textContent = pad(t.s);
+      } else {
+        ['dias','horas','minutos','segundos'].forEach(function(id) {
+          document.getElementById(id).textContent = '00';
+        });
+      }
+
+      // Mini-contadores por sorteo
+      Object.keys(SORTEOS_CFG).forEach(function(id) {
+        var ms = msHasta(SORTEOS_CFG[id].ts);
+        var cnt = document.getElementById('mini-cnt-' + id);
+        if (!cnt) return;
+        if (ms <= 0) {
+          cnt.classList.add('vencido');
+          ['d','h','m','s'].forEach(function(p) {
+            var el = document.getElementById('mc' + id + p);
+            if (el) el.textContent = '00';
+          });
+        } else {
+          cnt.classList.remove('vencido');
+          var t = descomponerMs(ms);
+          document.getElementById('mc'+id+'d').textContent = pad(t.d);
+          document.getElementById('mc'+id+'h').textContent = pad(t.h);
+          document.getElementById('mc'+id+'m').textContent = pad(t.m);
+          document.getElementById('mc'+id+'s').textContent = pad(t.s);
+        }
+      });
     }
-    actualizarContador();
-    setInterval(actualizarContador, 1000);
+    actualizarContadores();
+    setInterval(actualizarContadores, 1000);
 
     // PANELES
     var _panelAbierto = false;
@@ -1019,26 +1101,15 @@
     }
 
     function abrirRegistro(nombreSorteo, sorteoId) {
-      // Limpiar registro si ya pasó el domingo 10pm Lima desde que se registró
+      // Limpiar registro si ya pasó la fecha del sorteo en que se inscribió
       var reg = localStorage.getItem('tsp_registrado');
       if (reg) {
         try {
-          var offsetLocal = new Date().getTimezoneOffset(); // minutos detrás de UTC
-          var ahoraLima = new Date(Date.now() + (offsetLocal - 300) * 60000);
           var regObj = JSON.parse(reg);
-          var regDate = new Date(regObj.fecha);
-          var regLima = new Date(regDate.getTime() + (offsetLocal - 300) * 60000);
-          // Calcular el domingo 10pm Lima siguiente al momento del registro
-          var diasHastaDOM = (7 - regLima.getDay()) % 7; // días hasta próximo domingo
-          var sorteoPasado = new Date(regLima);
-          sorteoPasado.setDate(sorteoPasado.getDate() + diasHastaDOM);
-          sorteoPasado.setHours(22, 0, 0, 0); // 10pm Lima
-          // Si el registro fue un domingo antes de las 10pm, el sorteo es ese mismo domingo
-          if (regLima.getDay() === 0 && regLima.getHours() < 22) {
-            sorteoPasado.setDate(regLima.getDate());
-          }
-          // Si ya pasó el sorteo, liberar el bloqueo
-          if (ahoraLima >= sorteoPasado) {
+          var regSorteoId = regObj.sorteoId;
+          var fechaSorteo = SORTEOS_CFG[regSorteoId] ? SORTEOS_CFG[regSorteoId].ts : null;
+          // Si la fecha del sorteo ya pasó, liberar el bloqueo
+          if (!fechaSorteo || Date.now() > fechaSorteo) {
             localStorage.removeItem('tsp_registrado');
             reg = null;
           }
@@ -1129,10 +1200,11 @@
       const pct = Math.max(5, Math.min(contadores[id], 100));
       document.getElementById('barra-' + id).style.width = pct + '%';
 
-      // ── Guardar en localStorage para bloquear otro registro esta semana ──
+      // ── Guardar en localStorage — vence en la fecha del sorteo específico ──
       localStorage.setItem('tsp_registrado', JSON.stringify({
         tiktok: datos.tiktok,
         sorteo: datos.sorteo,
+        sorteoId: id,          // para calcular la fecha de vencimiento
         codigo: cod,
         fecha: new Date().toISOString()
       }));
