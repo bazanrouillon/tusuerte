@@ -768,12 +768,12 @@
   </div>
 
   <!-- MODAL YA REGISTRADO -->
-  <div class="modal-overlay" id="modal-ya-registrado" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">
+  <div class="modal-overlay" id="modal-ya-registrado" onclick="cerrarModalYaReg()">
     <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
       <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 NO SEAS HÁBIL</div>
       <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en otro sorteo.</p>
       <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes participar en un sorteo por semana. ¡Espera el próximo domingo pe!</p>
-      <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="document.getElementById('modal-ya-registrado').classList.remove('activo')">YA FUE</button>
+      <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="cerrarModalYaReg()">YA FUE</button>
     </div>
   </div>
 
@@ -881,10 +881,18 @@
     // CONTADORES POR SORTEO
     const contadores = { '1':0, '2':0, '3':0 };
 
+    function cerrarModalYaReg() {
+      document.getElementById('modal-ya-registrado').classList.remove('activo');
+      var llama = document.getElementById('llama-saludo');
+      if (llama) llama.style.visibility = 'visible';
+    }
+
     function abrirRegistro(nombreSorteo, sorteoId) {
       // Bloquear si ya está registrado esta semana
       if (localStorage.getItem('tsp_registrado')) {
         document.getElementById('modal-ya-registrado').classList.add('activo');
+        var llama = document.getElementById('llama-saludo');
+        if (llama) llama.style.visibility = 'hidden';
         return;
       }
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
@@ -1056,8 +1064,10 @@
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
 
-  <!-- Audio silbido llama -->
-  <audio id="audio-silbido" src="./silbido_corto.mp3" preload="auto"></audio>
+  <!-- Audios silbido llama (3 archivos) -->
+  <audio id="audio-silbido-1" src="./silbido_1.mp3" preload="auto"></audio>
+  <audio id="audio-silbido-2" src="./silbido_2.mp3" preload="auto"></audio>
+  <audio id="audio-silbido-3" src="./silbido_3.mp3" preload="auto"></audio>
 
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
@@ -1072,9 +1082,25 @@
       pointer-events: none;
       transition: none;
     }
-    #llama-saludo.animando {
-      animation: llamaSlide 13s ease-in-out forwards;
+    /* Esquinas superiores: llama aparece arriba, burbuja debajo */
+    #llama-saludo.top-corner {
+      bottom: auto;
+      top: 0;
+      flex-direction: column-reverse;
     }
+    #llama-saludo.top-corner #llama-burbuja::after,
+    #llama-saludo.top-corner #llama-burbuja2::after {
+      bottom: auto;
+      top: -13px;
+      border-top-color: transparent;
+    }
+    #llama-saludo.top-corner #llama-burbuja::after  { border-bottom-color: var(--neon-amarillo); }
+    #llama-saludo.top-corner #llama-burbuja2::after { border-bottom-color: var(--neon-celeste); }
+    /* Llama espejada (va de derecha a izquierda) */
+    #llama-saludo.dir-rl svg { transform: scaleX(-1); }
+    /* Animaciones */
+    #llama-saludo.animando.dir-lr { animation: llamaDirLR 13s ease-in-out forwards; }
+    #llama-saludo.animando.dir-rl { animation: llamaDirRL 13s ease-in-out forwards; }
     /* Estilos compartidos para ambas burbujas */
     #llama-burbuja, #llama-burbuja2 {
       position: relative;
@@ -1116,26 +1142,35 @@
     #llama-saludo.animando #llama-burbuja2 {
       animation: burbuja2Anim 13s ease forwards;
     }
-    /* Llama cruza toda la pantalla de izquierda a derecha */
-    @keyframes llamaSlide {
-      0%   { left: -220px;                    transform: translateY(0); }
-      8%   { left: 20px;                      transform: translateY(0); }
-      /* pequeño rebote al entrar */
-      12%  { left: 20px;                      transform: translateY(-14px); }
-      16%  { left: 20px;                      transform: translateY(0); }
-      20%  { left: 20px;                      transform: translateY(-8px); }
-      24%  { left: 20px;                      transform: translateY(0); }
-      /* pausa breve mostrando cartel 1, luego empieza a cruzar */
-      30%  { left: 20px;                      transform: translateY(0); }
-      /* cruce lento de toda la pantalla */
-      78%  { left: calc(100vw - 200px);       transform: translateY(0); }
-      /* pequeño rebote antes de salir */
-      82%  { left: calc(100vw - 200px);       transform: translateY(-8px); }
-      86%  { left: calc(100vw - 200px);       transform: translateY(0); }
-      /* sale por la derecha */
-      100% { left: calc(100vw + 230px);       transform: translateY(0); }
+    /* Izquierda → Derecha */
+    @keyframes llamaDirLR {
+      0%   { left: -220px; }
+      8%   { left: 20px;                transform: translateY(0); }
+      13%  { left: 20px;                transform: translateY(-14px); }
+      17%  { left: 20px;                transform: translateY(0); }
+      21%  { left: 20px;                transform: translateY(-8px); }
+      25%  { left: 20px;                transform: translateY(0); }
+      30%  { left: 20px;                transform: translateY(0); }
+      78%  { left: calc(100vw - 200px); transform: translateY(0); }
+      82%  { left: calc(100vw - 200px); transform: translateY(-8px); }
+      86%  { left: calc(100vw - 200px); transform: translateY(0); }
+      100% { left: calc(100vw + 230px); transform: translateY(0); }
     }
-    /* Cartel 1: aparece al entrar, desaparece a mitad del cruce */
+    /* Derecha → Izquierda */
+    @keyframes llamaDirRL {
+      0%   { left: calc(100vw + 220px); }
+      8%   { left: calc(100vw - 180px); transform: translateY(0); }
+      13%  { left: calc(100vw - 180px); transform: translateY(-14px); }
+      17%  { left: calc(100vw - 180px); transform: translateY(0); }
+      21%  { left: calc(100vw - 180px); transform: translateY(-8px); }
+      25%  { left: calc(100vw - 180px); transform: translateY(0); }
+      30%  { left: calc(100vw - 180px); transform: translateY(0); }
+      78%  { left: 200px;               transform: translateY(0); }
+      82%  { left: 200px;               transform: translateY(-8px); }
+      86%  { left: 200px;               transform: translateY(0); }
+      100% { left: -230px;              transform: translateY(0); }
+    }
+    /* Cartel 1 */
     @keyframes burbuja1Anim {
       0%   { opacity:0; transform: scale(0.3); }
       8%   { opacity:0; transform: scale(0.3); }
@@ -1146,7 +1181,7 @@
       54%  { opacity:0; transform: scale(0.2); }
       100% { opacity:0; }
     }
-    /* Cartel 2: aparece en la mitad del cruce, antes de salir */
+    /* Cartel 2 */
     @keyframes burbuja2Anim {
       0%   { opacity:0; transform: scale(0.3); }
       58%  { opacity:0; transform: scale(0.3); }
@@ -1226,50 +1261,65 @@
   <script>
     /* ─── LLAMA ─── */
     (function() {
-      // Frases para el cartel 1 (al entrar)
-      var frases1 = [
-        '¡OE CHOLO MÉTELE! 🔥',
-        '¡NO ARRUGUES CAUSA! 💪',
-        '¡NO SEAS SALAO! 🎯',
-        '¡SU RICO CHINCHIN! 🥂',
-        '¡APÚNTATE YA PE! 🍀',
-        '¡DALE SIN MIEDO! 🔥'
-      ];
-      // Frases para el cartel 2 (al salir)
-      var frases2 = [
-        '¡APÚNTATE AL TOQUE! 🍀',
-        '¡UN SENCILLO LO HOUSTON! 🎉',
-        '¡ES GRATIS PE! 💸',
-        '¡SUERTE CAUSA! 🤙',
-        '¡MÉTELE QUE HAY! 🎯',
-        '¡TU SUERTE ESTÁ ACÁ! ⭐'
+      var frases = [
+        'Habla, causa',
+        'No seas palta',
+        'Que fue!',
+        'La hiciste linda',
+        'Ponte pilas',
+        'Estas misio?',
+        'Poco floro'
       ];
       var idx = 0;
-      var el = document.getElementById('llama-saludo');
+      var el      = document.getElementById('llama-saludo');
       var burbuja = document.getElementById('llama-burbuja');
-      var burbuja2 = document.getElementById('llama-burbuja2');
-      var DUR = 13000; // ms que dura la animación completa
+      var burbuja2= document.getElementById('llama-burbuja2');
+      var DUR     = 13000;
+
+      // 4 esquinas: [dirClass, topOrBottom]
+      var esquinas = [
+        ['dir-lr', 'bottom'],   // 0: inferior izquierda → derecha
+        ['dir-rl', 'bottom'],   // 1: inferior derecha → izquierda
+        ['dir-lr', 'top'],      // 2: superior izquierda → derecha
+        ['dir-rl', 'top']       // 3: superior derecha → izquierda
+      ];
 
       function mostrarLlama() {
-        // No mostrar ni silbar si hay un panel abierto
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
-        burbuja.textContent  = frases1[idx % frases1.length];
-        burbuja2.textContent = frases2[idx % frases2.length];
-        idx++;
-        el.classList.remove('animando');
+
+        // Frase aleatoria para cartel 1, diferente para cartel 2
+        var i1 = Math.floor(Math.random() * frases.length);
+        var i2; do { i2 = Math.floor(Math.random() * frases.length); } while (i2 === i1);
+        burbuja.textContent  = frases[i1];
+        burbuja2.textContent = frases[i2];
+
+        // Esquina aleatoria
+        var esq = esquinas[Math.floor(Math.random() * 4)];
+        var dirClass  = esq[0];
+        var vertClass = esq[1] === 'top' ? 'top-corner' : '';
+
+        // Limpiar clases anteriores y aplicar nuevas
+        el.classList.remove('animando','dir-lr','dir-rl','top-corner');
+        el.style.bottom = esq[1] === 'bottom' ? '0' : 'auto';
+        el.style.top    = esq[1] === 'top'    ? '0' : 'auto';
         void el.offsetWidth;
+        el.classList.add(dirClass);
+        if (vertClass) el.classList.add(vertClass);
         el.classList.add('animando');
-        // Silbido al aparecer
-        var snd = document.getElementById('audio-silbido');
+
+        // Silbido aleatorio (1, 2 o 3)
+        var num = Math.ceil(Math.random() * 3);
+        var snd = document.getElementById('audio-silbido-' + num);
         if (snd) { snd.currentTime = 0; snd.play().catch(function(){}); }
-        // Atenuar música mientras la llama está visible
+
+        // Atenuar música
         if (typeof musica !== 'undefined' && musica.isPlaying()) {
           musica.setVolume(0.06);
-          setTimeout(function() {
-            if (musica.isPlaying()) musica.setVolume(0.18);
-          }, DUR - 500);
+          setTimeout(function() { if (musica.isPlaying()) musica.setVolume(0.18); }, DUR - 500);
         }
-        setTimeout(function() { el.classList.remove('animando'); }, DUR + 100);
+        setTimeout(function() {
+          el.classList.remove('animando','dir-lr','dir-rl','top-corner');
+        }, DUR + 100);
       }
 
       setTimeout(mostrarLlama, 2000);
