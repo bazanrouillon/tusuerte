@@ -1681,7 +1681,7 @@
           clearTimeout(timer);
           if (ctx) { ctx.close(); ctx = null; }
         },
-        isPlaying: function() { return playing && !!ctx; },
+        isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
         setVolume: function(v) {
           if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
         },
