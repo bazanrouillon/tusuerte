@@ -1659,27 +1659,25 @@
         timer = setTimeout(schedule, 18);
       }
 
-      function crearCtx() {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
-        master = ctx.createGain();
-        master.gain.value = 0.18;
-        master.connect(ctx.destination);
-        playing = true; step = 0; bar = 0;
-        nextTime = ctx.currentTime + 0.08;
-        schedule();
-      }
-
       return {
-        // start() solo debe llamarse DESDE un gesto de usuario (o botón)
         start: function() {
-          if (playing && ctx && ctx.state === 'running') return; // ya suena
-          if (ctx) { clearTimeout(timer); ctx.close(); ctx = null; playing = false; }
-          crearCtx(); // crea AudioContext fresco dentro del gesto = funciona en iOS
+          if (ctx && ctx.state === 'running' && playing) return; // ya suena
+          // Abandonar ctx previo (puede estar suspended si se llamó fuera de gesto)
+          clearTimeout(timer);
+          ctx = null; master = null; playing = false;
+          // Crear contexto fresco — debe ejecutarse dentro de un gesto de usuario
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          master = ctx.createGain();
+          master.gain.value = 0.18;
+          master.connect(ctx.destination);
+          playing = true; step = 0; bar = 0;
+          nextTime = ctx.currentTime + 0.08;
+          schedule();
         },
         stop: function() {
           playing = false;
           clearTimeout(timer);
-          if (ctx) { ctx.close(); ctx = null; }
+          if (ctx) { ctx.close(); ctx = null; master = null; }
         },
         isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
         setVolume: function(v) {
@@ -1709,48 +1707,43 @@
       }
     }
 
-    // Escritorio: intento de autoplay al cargar (bloqueado en móvil — no importa)
+    // Escritorio: intento de autoplay al cargar
     window.addEventListener('load', function() {
       try { iniciarMusica(); } catch(e) {}
     });
 
-    // Móvil: el AudioContext SOLO funciona si se crea dentro de un gesto del usuario.
-    // Este handler espera el primer toque y arranca todo desde cero.
-    var _audioDesbloqueado = false;
+    // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
+    // NO usamos scroll ni keydown — iOS no los acepta como gesto de audio.
+    // Los listeners se mantienen hasta confirmar que la música está corriendo.
     function arrancarEnInteraccion() {
-      if (_audioDesbloqueado) return;
-      _audioDesbloqueado = true;
+      // Intentar iniciar música en cada gesto hasta que realmente funcione
+      if (!musica.isPlaying()) {
+        iniciarMusica();
+      }
 
-      // Crear AudioContext fresco dentro del gesto (requerido por iOS/Android)
-      if (!musica.isPlaying()) iniciarMusica();
-
-      // Desbloquear <audio> del silbido en iOS/Android:
-      // hay que llamar .play() sincrónicamente dentro del handler del gesto
+      // Desbloquear <audio> de silbido (una sola vez es suficiente,
+      // pero repetirlo es inocuo — play+pause no se escucha)
       ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
         var snd = document.getElementById(id);
         if (!snd) return;
-        snd.muted = true;          // silencioso para que no se escuche el desbloqueo
+        snd.muted = true;
         var p = snd.play();
         if (p && p.then) {
-          p.then(function() {
-            snd.pause();
-            snd.currentTime = 0;
-            snd.muted = false;     // restaurar volumen para uso real
-          }).catch(function() { snd.muted = false; });
+          p.then(function() { snd.pause(); snd.currentTime = 0; snd.muted = false; })
+           .catch(function() { snd.muted = false; });
         } else {
           snd.pause(); snd.currentTime = 0; snd.muted = false;
         }
       });
 
-      document.removeEventListener('click',      arrancarEnInteraccion);
-      document.removeEventListener('touchstart', arrancarEnInteraccion);
-      document.removeEventListener('keydown',    arrancarEnInteraccion);
-      document.removeEventListener('scroll',     arrancarEnInteraccion);
+      // Eliminar listeners solo cuando la música esté confirmada como activa
+      if (musica.isPlaying()) {
+        document.removeEventListener('click',      arrancarEnInteraccion);
+        document.removeEventListener('touchstart', arrancarEnInteraccion);
+      }
     }
     document.addEventListener('click',      arrancarEnInteraccion);
     document.addEventListener('touchstart', arrancarEnInteraccion);
-    document.addEventListener('keydown',    arrancarEnInteraccion);
-    document.addEventListener('scroll',     arrancarEnInteraccion);
   </script>
 </body>
 </html>
