@@ -3,7 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TUSUERTE.PE – Sorteos Gratis</title>
+  <title>TUSUERTE.PE – Sorteos Gratis en Perú | Participa Cada Domingo</title>
+
+  <!-- SEO básico -->
+  <meta name="description" content="Participa gratis en los sorteos semanales de tusuerte.pe. Cada domingo en TikTok @tusuerte.pe.oficial. ¡Regístrate, no pierdas nada y gana de una!"/>
+  <meta name="keywords" content="sorteos gratis peru, sorteo online peru, ganar premios peru, tusuerte, sorteo tiktok peru, concursos gratis peru"/>
+  <meta name="author" content="tusuerte.pe"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://tusuerte.pe/"/>
+
+  <!-- Open Graph (WhatsApp, Facebook, etc.) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://tusuerte.pe/"/>
+  <meta property="og:title" content="TUSUERTE.PE – Sorteos Gratis en Perú"/>
+  <meta property="og:description" content="Participa gratis cada semana. Sorteo en vivo todos los domingos en TikTok @tusuerte.pe.oficial. ¡Regístrate ya pe!"/>
+  <meta property="og:locale" content="es_PE"/>
+
+  <!-- Twitter/X Card -->
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:title" content="TUSUERTE.PE – Sorteos Gratis en Perú"/>
+  <meta name="twitter:description" content="Participa gratis cada semana. Sorteo en vivo todos los domingos en TikTok @tusuerte.pe.oficial."/>
+
+  <!-- Schema.org: evento de sorteo (ayuda a Google a entender el sitio) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "tusuerte.pe",
+    "url": "https://tusuerte.pe/",
+    "description": "Sorteos gratuitos semanales en Perú. Participa cada domingo.",
+    "inLanguage": "es-PE",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://tusuerte.pe/"
+    }
+  }
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bangers&family=Righteous&family=Paytone+One&family=Permanent+Marker&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -461,7 +497,7 @@
         <div class="card-body">
           <div class="card-categoria">Dinero • Yape</div>
           <div class="card-titulo">YAPE PA LA GASEOSA</div>
-          <div class="card-desc">5 lukitas directo a tu número pa que tomes tu gaseosa heladita. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
+          <div class="card-desc">5 lukitas directo a tu número pa que te tomes tu gaseosa bien helada. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
           <div class="card-meta">
             <span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span>
             <span class="card-fecha proxfecha">📅 ...</span>
@@ -983,8 +1019,33 @@
     }
 
     function abrirRegistro(nombreSorteo, sorteoId) {
-      // Bloquear si ya está registrado esta semana
-      if (localStorage.getItem('tsp_registrado')) {
+      // Limpiar registro si ya pasó el domingo 10pm Lima desde que se registró
+      var reg = localStorage.getItem('tsp_registrado');
+      if (reg) {
+        try {
+          var offsetLocal = new Date().getTimezoneOffset(); // minutos detrás de UTC
+          var ahoraLima = new Date(Date.now() + (offsetLocal - 300) * 60000);
+          var regObj = JSON.parse(reg);
+          var regDate = new Date(regObj.fecha);
+          var regLima = new Date(regDate.getTime() + (offsetLocal - 300) * 60000);
+          // Calcular el domingo 10pm Lima siguiente al momento del registro
+          var diasHastaDOM = (7 - regLima.getDay()) % 7; // días hasta próximo domingo
+          var sorteoPasado = new Date(regLima);
+          sorteoPasado.setDate(sorteoPasado.getDate() + diasHastaDOM);
+          sorteoPasado.setHours(22, 0, 0, 0); // 10pm Lima
+          // Si el registro fue un domingo antes de las 10pm, el sorteo es ese mismo domingo
+          if (regLima.getDay() === 0 && regLima.getHours() < 22) {
+            sorteoPasado.setDate(regLima.getDate());
+          }
+          // Si ya pasó el sorteo, liberar el bloqueo
+          if (ahoraLima >= sorteoPasado) {
+            localStorage.removeItem('tsp_registrado');
+            reg = null;
+          }
+        } catch(e) { localStorage.removeItem('tsp_registrado'); reg = null; }
+      }
+      // Bloquear si aún está registrado esta semana
+      if (reg) {
         document.getElementById('modal-ya-registrado').classList.add('activo');
         var llama = document.getElementById('llama-saludo');
         if (llama) llama.style.visibility = 'hidden';
@@ -1621,6 +1682,12 @@
         },
         getVolume: function() {
           return master ? master.gain.value : 0.18;
+        },
+        // Reactiva el AudioContext si quedó suspendido (iOS/Android tras gesto)
+        resumeCtx: function() {
+          if (ctx && ctx.state === 'suspended') {
+            ctx.resume();
+          }
         }
       };
     })();
@@ -1643,19 +1710,22 @@
       }
     }
 
-    // Intento autoplay al cargar
+    // Intento autoplay al cargar (funciona en escritorio, bloqueado en móvil)
     window.addEventListener('load', function() {
-      try {
-        iniciarMusica();
-      } catch(e) {}
+      try { iniciarMusica(); } catch(e) {}
     });
 
-    // Si el navegador bloquea el autoplay, arranca en el primer toque del usuario
+    // En móvil el AudioContext nace en estado "suspended" hasta el primer gesto.
+    // Este handler lo reactiva y desbloquea los audios de silbido.
     function arrancarEnInteraccion() {
+      // Reanudar AudioContext si está suspended (iOS/Android)
+      if (typeof musica !== 'undefined') {
+        musica.resumeCtx(); // reactiva ctx.resume() si hace falta
+      }
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // Desbloquear audios de silbido en móvil (requieren gesto de usuario)
+      // Desbloquear elementos <audio> del silbido en móvil
       ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
         var snd = document.getElementById(id);
         if (snd) {
@@ -1663,10 +1733,10 @@
           if (p && p.then) p.then(function(){ snd.pause(); snd.currentTime = 0; }).catch(function(){});
         }
       });
-      document.removeEventListener('click', arrancarEnInteraccion);
+      document.removeEventListener('click',      arrancarEnInteraccion);
       document.removeEventListener('touchstart', arrancarEnInteraccion);
-      document.removeEventListener('keydown', arrancarEnInteraccion);
-      document.removeEventListener('scroll', arrancarEnInteraccion);
+      document.removeEventListener('keydown',    arrancarEnInteraccion);
+      document.removeEventListener('scroll',     arrancarEnInteraccion);
     }
     document.addEventListener('click',      arrancarEnInteraccion);
     document.addEventListener('touchstart', arrancarEnInteraccion);
