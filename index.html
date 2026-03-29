@@ -72,7 +72,7 @@
     /* HERO */
     .hero-banner { background:linear-gradient(135deg,#110022 0%,#000 50%,#001100 100%);
       border-bottom:4px solid var(--neon-amarillo); text-align:center; padding:40px 20px; }
-    .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:500px; margin:0 auto 28px; }
+    .hero-grid { display:flex; justify-content:center; gap:24px; max-width:500px; margin:0 auto 28px; }
     @media(max-width:480px){.hero-grid{grid-template-columns:1fr;}}
     .hero-stat { padding:18px; border:2px solid #333; border-radius:4px; }
     .hero-stat-num { font-family:'Bangers',cursive; font-size:2.8rem; line-height:1; }
@@ -871,6 +871,389 @@
       }, { threshold: 0.3 });
       document.querySelectorAll('.barra-fill').forEach(b => observer.observe(b));
     });
+  </script>
+
+  <!-- ══════════════ MÚSICA PERUANA ══════════════ -->
+  <style>
+    #btn-musica {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      z-index: 9998;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: #0d0d1f;
+      border: 3px solid var(--neon-verde);
+      color: var(--neon-verde);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 14px rgba(57,255,20,.35);
+      transition: box-shadow .2s, transform .15s;
+    }
+    #btn-musica:hover { transform: scale(1.1); box-shadow: 0 0 28px var(--neon-verde); }
+    #btn-musica.sonando {
+      border-color: var(--neon-rosa);
+      color: var(--neon-rosa);
+      box-shadow: 0 0 18px var(--neon-rosa);
+      animation: musicPulse 1s ease-in-out infinite alternate;
+    }
+    @keyframes musicPulse {
+      from { box-shadow: 0 0 12px var(--neon-rosa); }
+      to   { box-shadow: 0 0 32px var(--neon-rosa), 0 0 60px rgba(255,0,128,.3); }
+    }
+    #musica-label {
+      position: fixed;
+      bottom: 80px;
+      left: 14px;
+      z-index: 9998;
+      font-family: 'Righteous', cursive;
+      font-size: .65rem;
+      letter-spacing: 1px;
+      color: #555;
+      text-align: center;
+      width: 70px;
+    }
+  </style>
+  <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()">🎵</button>
+  <div id="musica-label">MÚSICA<br>SUERTE</div>
+
+  <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
+  <style>
+    #llama-saludo {
+      position: fixed;
+      bottom: 0;
+      right: -220px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      transition: none;
+    }
+    #llama-saludo.animando {
+      animation: llamaShow 7.5s cubic-bezier(.22,.68,0,1.1) forwards;
+    }
+    #llama-burbuja {
+      position: relative;
+      background: #fff;
+      color: #0d0d1f;
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      padding: 10px 20px;
+      border-radius: 18px;
+      border: 3px solid var(--neon-amarillo);
+      box-shadow: 0 0 20px var(--neon-amarillo), 0 0 6px #000;
+      margin-bottom: 6px;
+      text-align: center;
+      white-space: nowrap;
+      opacity: 0;
+      transform: scale(0.4) rotate(-8deg);
+    }
+    #llama-burbuja::after {
+      content: '';
+      position: absolute;
+      bottom: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 7px solid transparent;
+      border-top-color: var(--neon-amarillo);
+    }
+    #llama-saludo.animando #llama-burbuja {
+      animation: burbujaViva 7.5s ease forwards;
+    }
+    /* Llama: entra suave, rebota, se queda, sale despacio */
+    @keyframes llamaShow {
+      0%   { right: -220px; }
+      18%  { right: 16px; }
+      /* rebotes suaves sin girar */
+      26%  { right: 16px; transform: translateY(-16px); }
+      32%  { right: 16px; transform: translateY(0); }
+      38%  { right: 16px; transform: translateY(-12px); }
+      44%  { right: 16px; transform: translateY(0); }
+      50%  { right: 16px; transform: translateY(-8px); }
+      56%  { right: 16px; transform: translateY(0); }
+      /* pausa tranquila */
+      72%  { right: 16px; transform: translateY(0); }
+      /* salida lenta */
+      100% { right: 110%; transform: translateY(0); }
+    }
+    @keyframes burbujaViva {
+      0%   { opacity:0; transform: scale(0.3); }
+      20%  { opacity:0; transform: scale(0.3); }
+      26%  { opacity:1; transform: scale(1.12); }
+      30%  { opacity:1; transform: scale(0.96); }
+      32%  { opacity:1; transform: scale(1); }
+      /* pulso suave */
+      45%  { opacity:1; transform: scale(1.05); }
+      55%  { opacity:1; transform: scale(0.98); }
+      65%  { opacity:1; transform: scale(1); }
+      70%  { opacity:1; transform: scale(1); }
+      76%  { opacity:0; transform: scale(0.3); }
+      100% { opacity:0; }
+    }
+  </style>
+
+  <div id="llama-saludo">
+    <div id="llama-burbuja">¡OE CHOLO MÉTELE!</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" width="145" height="185">
+      <defs>
+        <radialGradient id="sg-body" cx="45%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#f2ecd5"/><stop offset="100%" stop-color="#c8b87a"/>
+        </radialGradient>
+        <filter id="sg-glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <ellipse cx="90" cy="226" rx="48" ry="6" fill="#111" opacity=".4"/>
+      <rect x="38" y="168" width="22" height="54" rx="8" fill="#c8b87a"/>
+      <rect x="38" y="204" width="22" height="14" rx="5" fill="#3a2008"/>
+      <rect x="118" y="168" width="22" height="54" rx="8" fill="#c8b87a"/>
+      <rect x="118" y="204" width="22" height="14" rx="5" fill="#3a2008"/>
+      <ellipse cx="90" cy="162" rx="52" ry="46" fill="url(#sg-body)"/>
+      <ellipse cx="90" cy="144" rx="50" ry="28" fill="#ede5c8"/>
+      <rect x="52" y="180" width="20" height="46" rx="8" fill="#ccba80"/>
+      <rect x="52" y="210" width="20" height="14" rx="5" fill="#3a2008"/>
+      <rect x="106" y="180" width="20" height="46" rx="8" fill="#ccba80"/>
+      <rect x="106" y="210" width="20" height="14" rx="5" fill="#3a2008"/>
+      <ellipse cx="142" cy="148" rx="12" ry="20" fill="#ece7d0" transform="rotate(25 142 148)"/>
+      <path d="M70 170 Q66 122 72 96 Q76 82 90 78 Q104 82 108 96 Q114 122 110 170Z" fill="#d4c48a"/>
+      <path d="M73 168 Q70 128 75 104 Q79 90 90 86 Q101 90 105 104 Q110 128 107 168Z" fill="#ede5c8" opacity=".5"/>
+      <ellipse cx="90" cy="66" rx="30" ry="34" fill="url(#sg-body)"/>
+      <ellipse cx="64" cy="76" rx="10" ry="8" fill="#ede5c2" opacity=".7"/>
+      <ellipse cx="116" cy="76" rx="10" ry="8" fill="#ede5c2" opacity=".7"/>
+      <ellipse cx="66" cy="43" rx="8" ry="19" fill="#ccba80" transform="rotate(-10 66 43)"/>
+      <ellipse cx="66" cy="43" rx="5" ry="13" fill="#f0a0a0" transform="rotate(-10 66 43)"/>
+      <ellipse cx="114" cy="43" rx="8" ry="19" fill="#ccba80" transform="rotate(10 114 43)"/>
+      <ellipse cx="114" cy="43" rx="5" ry="13" fill="#f0a0a0" transform="rotate(10 114 43)"/>
+      <ellipse cx="90" cy="84" rx="16" ry="12" fill="#c0aa70"/>
+      <ellipse cx="84" cy="86" rx="3" ry="2.5" fill="#8a6a38"/>
+      <ellipse cx="96" cy="86" rx="3" ry="2.5" fill="#8a6a38"/>
+      <path d="M82 93 Q90 99 98 93" stroke="#8a6a38" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="61" y="58" width="24" height="15" rx="7" fill="#0a0a14" stroke="#ffe600" stroke-width="2" filter="url(#sg-glow)"/>
+      <rect x="93" y="58" width="24" height="15" rx="7" fill="#0a0a14" stroke="#ffe600" stroke-width="2" filter="url(#sg-glow)"/>
+      <rect x="84" y="63" width="10" height="2.5" rx="1" fill="#ffe600"/>
+      <rect x="49" y="63" width="13" height="2.5" rx="1" fill="#ffe600"/>
+      <rect x="117" y="63" width="13" height="2.5" rx="1" fill="#ffe600"/>
+      <ellipse cx="70" cy="63" rx="5" ry="3" fill="#ff0080" opacity=".4"/>
+      <ellipse cx="102" cy="63" rx="5" ry="3" fill="#39ff14" opacity=".4"/>
+      <path d="M62 50 Q64 22 90 12 Q116 22 118 50 Q108 44 90 46 Q72 44 62 50Z" fill="#cc0000"/>
+      <path d="M64 47 Q68 30 90 20 Q112 30 116 47 Q108 41 90 43 Q72 41 64 47Z" fill="#ff6600"/>
+      <path d="M68 41 Q74 28 90 22 Q106 28 112 41 Q105 36 90 38 Q75 36 68 41Z" fill="#ffe600"/>
+      <path d="M73 35 Q79 26 90 23 Q101 26 107 35 Q101 31 90 33 Q79 31 73 35Z" fill="#39ff14"/>
+      <path d="M79 29 Q84 23 90 21 Q96 23 101 29 Q96 27 90 28 Q84 27 79 29Z" fill="#00e5ff"/>
+      <ellipse cx="90" cy="14" rx="14" ry="9" fill="#cc0000"/>
+      <path d="M62 50 Q54 52 50 62 Q49 70 54 73 Q58 68 61 58Z" fill="#cc0000"/>
+      <line x1="50" y1="72" x2="46" y2="82" stroke="#ffe600" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="54" y1="74" x2="51" y2="84" stroke="#ff0080" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M118 50 Q126 52 130 62 Q131 70 126 73 Q122 68 119 58Z" fill="#cc0000"/>
+      <line x1="130" y1="72" x2="134" y2="82" stroke="#ffe600" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="126" y1="74" x2="129" y2="84" stroke="#ff0080" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="90" cy="8" r="9" fill="#ff0080" filter="url(#sg-glow)"/>
+      <circle cx="86" cy="5" r="3.5" fill="#ff80c0" opacity=".7"/>
+      <circle cx="72" cy="112" r="5" fill="#ff0080" filter="url(#sg-glow)"/>
+      <circle cx="82" cy="118" r="5" fill="#ffe600" filter="url(#sg-glow)"/>
+      <circle cx="90" cy="120" r="5" fill="#39ff14" filter="url(#sg-glow)"/>
+      <circle cx="98" cy="118" r="5" fill="#ff6600" filter="url(#sg-glow)"/>
+      <circle cx="108" cy="112" r="5" fill="#00e5ff" filter="url(#sg-glow)"/>
+    </svg>
+  </div>
+
+  <script>
+    /* ─── LLAMA ─── */
+    (function() {
+      var frases = [
+        '¡OE CHOLO MÉTELE! 🔥',
+        '¡NO ARRUGUES CAUSA! 💪',
+        '¡APÚNTATE AL TOQUE! 🍀',
+        '¡NO SEAS SALAO! 🎉',
+        '¡SU RICO CHINCHIN! 🥂',
+        '¡UN SENCILLO LO HOUSTON! 🔥'
+      ];
+      var idx = 0;
+      var el = document.getElementById('llama-saludo');
+      var burbuja = document.getElementById('llama-burbuja');
+      var DUR = 7500; // ms que dura la animación
+
+      function mostrarLlama() {
+        burbuja.textContent = frases[idx % frases.length];
+        idx++;
+        el.classList.remove('animando');
+        void el.offsetWidth;
+        el.style.animationDuration = (DUR / 1000) + 's';
+        el.classList.add('animando');
+        setTimeout(function() { el.classList.remove('animando'); }, DUR + 100);
+      }
+
+      setTimeout(mostrarLlama, 2000);
+      setInterval(mostrarLlama, 10000);
+    })();
+
+    /* ─── MÚSICA PERUANA (Web Audio API) ─── */
+    var musica = (function() {
+      var ctx, playing = false, step = 0, nextTime = 0, timer = null;
+      var BPM = 118;
+      function sDur() { return 60 / BPM / 2; } // corcheas
+
+      // Escala pentatónica andina en La menor
+      var N = {
+        '_':0,
+        'A2':110,'E3':164.81,'G3':196,'A3':220,
+        'C4':261.63,'D4':293.66,'E4':329.63,'G4':392,
+        'A4':440,'C5':523.25,'D5':587.33,'E5':659.25,
+        'G5':783.99,'A5':880
+      };
+
+      // Patrones de 8 pasos (1 compás de corcheas)
+      var MEL  = ['A4','C5','E5','D5','A4','G4','C5','E5'];
+      var MEL2 = ['E5','D5','C5','A4','G4','A4','D5','E5'];
+      var BASS = ['A2','_','A3','_','G2','_','A3','_'];
+      var KICK = [1,0,1,0,1,0,1,0];
+      var SNAR = [0,1,0,1,0,1,0,1];
+      var HIHT = [1,1,1,1,1,1,1,1];
+      var COWB = [0,0,1,0,0,0,1,0];
+      var bar  = 0;
+
+      function noise(dur) {
+        var len = Math.ceil(ctx.sampleRate * dur);
+        var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        var d = buf.getChannelData(0);
+        for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        var src = ctx.createBufferSource();
+        src.buffer = buf;
+        return src;
+      }
+
+      function distCurve(amount) {
+        var c = new Float32Array(256);
+        for (var i = 0; i < 256; i++) {
+          var x = i * 2 / 256 - 1;
+          c[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+        }
+        return c;
+      }
+
+      function kick(t) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.setValueAtTime(160, t);
+        o.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+        g.gain.setValueAtTime(1.6, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+        o.start(t); o.stop(t + 0.3);
+      }
+
+      function snare(t) {
+        var src = noise(0.18);
+        var bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.7;
+        var g = ctx.createGain();
+        src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(0.8, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+        src.start(t); src.stop(t + 0.2);
+      }
+
+      function hihat(t) {
+        var src = noise(0.06);
+        var hp = ctx.createBiquadFilter();
+        hp.type = 'highpass'; hp.frequency.value = 9000;
+        var g = ctx.createGain();
+        src.connect(hp); hp.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(0.25, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+        src.start(t); src.stop(t + 0.07);
+      }
+
+      function cowbell(t) {
+        [540, 800].forEach(function(f) {
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = 'square'; o.frequency.value = f;
+          var bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass'; bp.frequency.value = 680;
+          o.connect(bp); bp.connect(g); g.connect(ctx.destination);
+          g.gain.setValueAtTime(0.22, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+          o.start(t); o.stop(t + 0.16);
+        });
+      }
+
+      function bass(freq, t) {
+        if (!freq) return;
+        var o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+        o.type = 'sawtooth'; o.frequency.value = freq;
+        lp.type = 'lowpass'; lp.frequency.value = 380;
+        o.connect(lp); lp.connect(g); g.connect(ctx.destination);
+        var d = sDur();
+        g.gain.setValueAtTime(0.55, t);
+        g.gain.setValueAtTime(0.35, t + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.7);
+        o.start(t); o.stop(t + d * 2);
+      }
+
+      function melody(freq, t) {
+        if (!freq) return;
+        var o = ctx.createOscillator();
+        var ws = ctx.createWaveShaper(); ws.curve = distCurve(60);
+        var bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass'; bp.frequency.value = freq * 2.5; bp.Q.value = 1.8;
+        var g = ctx.createGain();
+        o.type = 'sawtooth'; o.frequency.value = freq;
+        o.connect(ws); ws.connect(bp); bp.connect(g); g.connect(ctx.destination);
+        var d = sDur();
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.2, t + 0.012);
+        g.gain.setValueAtTime(0.16, t + d * 0.65);
+        g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.1);
+        o.start(t); o.stop(t + d * 1.2);
+      }
+
+      function schedule() {
+        var d = sDur();
+        while (nextTime < ctx.currentTime + 0.18) {
+          var s = step % 8;
+          if (s === 0) bar++;
+          var mel = (bar % 2 === 0) ? MEL : MEL2;
+          if (KICK[s]) kick(nextTime);
+          if (SNAR[s]) snare(nextTime);
+          if (HIHT[s]) hihat(nextTime);
+          if (COWB[s]) cowbell(nextTime);
+          bass(N[BASS[s]], nextTime);
+          melody(N[mel[s]], nextTime);
+          nextTime += d;
+          step++;
+        }
+        timer = setTimeout(schedule, 18);
+      }
+
+      return {
+        start: function() {
+          if (playing) return;
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          playing = true; step = 0; bar = 0;
+          nextTime = ctx.currentTime + 0.08;
+          schedule();
+        },
+        stop: function() {
+          playing = false;
+          clearTimeout(timer);
+          if (ctx) { ctx.close(); ctx = null; }
+        },
+        isPlaying: function() { return playing; }
+      };
+    })();
+
+    function toggleMusica() {
+      var btn = document.getElementById('btn-musica');
+      if (musica.isPlaying()) {
+        musica.stop();
+        btn.textContent = '🎵';
+        btn.classList.remove('sonando');
+      } else {
+        musica.start();
+        btn.textContent = '🔊';
+        btn.classList.add('sonando');
+      }
+    }
   </script>
 </body>
 </html>
