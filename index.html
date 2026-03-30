@@ -1438,8 +1438,7 @@
           <div class="ganadores-empty-icono">🏆</div>
           <p class="ganadores-empty-txt">
             ¡Aún no hay ganadores pe!<br>
-            El primer sorteo es este <strong style="color:var(--neon-amarillo)">Domingo</strong>.<br>
-            Los ganadores se publicarán aquí y en el <strong style="color:var(--neon-rosa)">TikTok oficial @tusuerte.pe.oficial</strong>.
+            Los ganadores se publicarán a medida que se van dando los sorteos.
           </p>
           <a class="btn-fotos-ganadores" href="https://github.com/tusuerte-pe/ganadores" target="_blank" rel="noopener">
             📸 VER FOTOS DE GANADORES
@@ -2567,23 +2566,33 @@
     /* ─── SILBIDOS (tus mp3 cargados via fetch + Web Audio API) ─── */
     var silbidoBuffers = [];
     var silbidoCtx = null;
-    // Pre-cargar los 3 silbidos como AudioBuffer
-    (function() {
-      var archivos = ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'];
-      try {
-        silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
-      } catch(e) { return; }
-      archivos.forEach(function(url, i) {
+    var silbidoArchivos = ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'];
+    var silbidosCargados = false;
+    function cargarSilbidos() {
+      if (silbidosCargados || !silbidoCtx) return;
+      silbidosCargados = true;
+      silbidoArchivos.forEach(function(url, i) {
         fetch(url)
           .then(function(r) { return r.arrayBuffer(); })
           .then(function(buf) { return silbidoCtx.decodeAudioData(buf); })
-          .then(function(decoded) { silbidoBuffers[i] = decoded; })
+          .then(function(decoded) { silbidoBuffers[i] = decoded; console.log('Silbido ' + (i+1) + ' cargado OK'); })
           .catch(function(e) { console.log('Error cargando ' + url, e); });
       });
-    })();
+    }
+    // Crear AudioContext en la primera interacción del usuario
+    function iniciarSilbidoCtx() {
+      if (silbidoCtx) return;
+      try {
+        silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
+        cargarSilbidos();
+      } catch(e) { console.log('No se pudo crear AudioContext para silbidos:', e); }
+    }
+    document.addEventListener('click', iniciarSilbidoCtx, { once: false });
+    document.addEventListener('touchstart', iniciarSilbidoCtx, { once: false });
+
     function tocarSilbido() {
       try {
-        if (!silbidoCtx || silbidoBuffers.length === 0) return;
+        if (!silbidoCtx) return;
         if (silbidoCtx.state === 'suspended') silbidoCtx.resume();
         var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
         if (disponibles.length === 0) return;
@@ -2798,7 +2807,8 @@
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // 2) Desbloquear AudioContext de silbido con el gesto del usuario
+      // 2) Crear y desbloquear AudioContext de silbido dentro del gesto
+      iniciarSilbidoCtx();
       if (silbidoCtx && silbidoCtx.state === 'suspended') silbidoCtx.resume();
       // Eliminar listeners cuando la música esté activa
       if (musica.isPlaying()) {
