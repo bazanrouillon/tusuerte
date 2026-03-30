@@ -1591,7 +1591,7 @@
       <div class="modal-titulo">¡QUEDA!</div>
       <p class="modal-texto">Estás dentro del sorteo. Guarda tu código:</p>
       <div class="modal-codigo" id="codigo-participacion">TSP-00000</div>
-      <p class="modal-texto">El sorteo será de acuerdo a la <strong style="color:var(--neon-amarillo)">fecha y hora</strong> que indica cada sorteo, directo en la web <strong style="color:var(--neon-celeste)">tusuerte.pe</strong>. ¡Estate mosca causa!</p>
+      <p class="modal-texto">El sorteo será de acuerdo a la <strong style="color:var(--neon-amarillo)">fecha y hora</strong> que indica cada sorteo, directo en la web <strong style="color:var(--neon-celeste)">tusuerte.pe</strong>. ¡Tienes que estar mosca!</p>
       <button class="btn-cerrar" onclick="cerrarModal()">¡CHEVERE! 🤙</button>
     </div>
   </div>
@@ -1683,8 +1683,10 @@
       // Ocultar llama y silenciar silbido
       var llama = document.getElementById('llama-saludo');
       if (llama) llama.style.visibility = 'hidden';
-      var snd = document.getElementById('audio-silbido');
-      if (snd) { snd.pause(); snd.currentTime = 0; }
+      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
+        var snd = document.getElementById(id);
+        if (snd && !snd.paused) { snd.pause(); snd.currentTime = 0; }
+      });
     }
     function cerrarPanel(id) {
       document.getElementById(id).classList.remove('activo');
@@ -2564,7 +2566,12 @@
           if (document.hidden) return;
           var num = Math.ceil(Math.random() * 3);
           var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) { snd.volume = 0.25; snd.currentTime = 0; snd.play().catch(function(){}); }
+          if (snd) {
+            snd.volume = 0.25;
+            snd.currentTime = 0;
+            var p = snd.play();
+            if (p && p.then) p.catch(function(err) { console.log('Silbido bloqueado:', err.message); });
+          }
         }, 1000);
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
@@ -2767,26 +2774,34 @@
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
     // Primero arranca la música, luego desbloquea los silbidos.
     // Los listeners se mantienen hasta confirmar que la música está corriendo.
+    var silbidosDesbloqueados = false;
+    function desbloquearSilbidos() {
+      if (silbidosDesbloqueados) return;
+      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
+        var snd = document.getElementById(id);
+        if (!snd) return;
+        snd.muted = true;
+        snd.volume = 0.01;
+        var p = snd.play();
+        if (p && p.then) {
+          p.then(function() {
+            snd.pause(); snd.currentTime = 0; snd.muted = false; snd.volume = 0.25;
+          }).catch(function() { snd.muted = false; snd.volume = 0.25; });
+        } else {
+          snd.pause(); snd.currentTime = 0; snd.muted = false; snd.volume = 0.25;
+        }
+      });
+      silbidosDesbloqueados = true;
+    }
     function arrancarEnInteraccion() {
       // 1) Música primero — dentro del gesto para que iOS/Android la permita
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // 2) Desbloquear <audio> de silbido después de la música
-      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
-        var snd = document.getElementById(id);
-        if (!snd) return;
-        snd.muted = true;
-        var p = snd.play();
-        if (p && p.then) {
-          p.then(function() { snd.pause(); snd.currentTime = 0; snd.muted = false; })
-           .catch(function() { snd.muted = false; });
-        } else {
-          snd.pause(); snd.currentTime = 0; snd.muted = false;
-        }
-      });
-      // Eliminar listeners solo cuando la música esté confirmada como activa
-      if (musica.isPlaying()) {
+      // 2) Desbloquear <audio> de silbido en cada interacción hasta que funcionen
+      desbloquearSilbidos();
+      // Eliminar listeners solo cuando ambos estén activos
+      if (musica.isPlaying() && silbidosDesbloqueados) {
         document.removeEventListener('click',      arrancarEnInteraccion);
         document.removeEventListener('touchstart', arrancarEnInteraccion);
       }
