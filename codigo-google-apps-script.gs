@@ -116,6 +116,60 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ── Verificar si un DNI ya está registrado en un sorteo ──
+    if (action === 'verificardni') {
+      var dni = (e.parameter.dni || '').trim();
+      var sorteoCheck = (e.parameter.sorteo || '').trim();
+      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+      var data = sheet.getDataRange().getValues();
+      var yaRegistrado = false;
+
+      for (var i = 1; i < data.length; i++) {
+        var dniCell = String(data[i][4] || '').trim();
+        var sorteoCell = String(data[i][1] || '').trim();
+        if (dni && dniCell === dni && sorteoCheck && sorteoCell.toLowerCase().indexOf(sorteoCheck.toLowerCase()) !== -1) {
+          yaRegistrado = true;
+          break;
+        }
+      }
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          status: 'ok',
+          yaRegistrado: yaRegistrado
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Liberar: el admin marca timestamp para que todos puedan registrarse de nuevo ──
+    if (action === 'liberar') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var configSheet = ss.getSheetByName('Config');
+      if (!configSheet) {
+        configSheet = ss.insertSheet('Config');
+        configSheet.getRange('A1').setValue('LIBERACION_TIMESTAMP');
+        configSheet.getRange('A1').setFontWeight('bold');
+      }
+      var ahora = new Date().toISOString();
+      configSheet.getRange('A2').setValue(ahora);
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', liberado: ahora }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Consultar último timestamp de liberación ──
+    if (action === 'checklib') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var configSheet = ss.getSheetByName('Config');
+      var timestamp = '';
+      if (configSheet) {
+        timestamp = String(configSheet.getRange('A2').getValue() || '');
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', liberacion: timestamp }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Action no reconocida
     return ContentService
       .createTextOutput(JSON.stringify({
