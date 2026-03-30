@@ -100,12 +100,12 @@
       letter-spacing:3px; text-align:center; margin-bottom:40px; }
     .seccion-titulo::after { content:''; display:block; height:4px; width:120px; margin:8px auto 0; border-radius:2px; }
     #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 8px rgba(255,0,128,.35); }
-    #sorteos .seccion-titulo::after { background:var(--neon-rosa); }
+    #sorteos .seccion-titulo::after { display:none; }
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
     /* Contenedor 3D para flip */
     .card-sorteo-wrap { perspective:1200px; position:relative; }
-    .card-sorteo { background:#111; border:2px solid var(--neon-rosa); border-radius:4px;
-      box-shadow:0 0 12px rgba(255,0,128,.15);
+    .card-sorteo { background:#111; border:2px solid var(--neon-rosa); border-radius:14px;
+      box-shadow:0 0 12px rgba(255,0,128,.15); overflow:hidden;
       transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
       transform-style:preserve-3d; }
     .card-sorteo:hover { box-shadow:0 0 50px rgba(255,0,128,.5); }
@@ -119,7 +119,7 @@
       background:linear-gradient(135deg,#0a0a2a 0%,#0d0d1f 50%,#0a001a 100%);
       display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:16px;
-      border-radius:4px; overflow:hidden;
+      border-radius:14px; overflow:hidden;
     }
     .card-back-titulo {
       font-family:'Bangers',cursive; font-size:1.1rem; color:var(--neon-amarillo);
@@ -183,23 +183,24 @@
     .card-body { padding:18px; }
     .card-categoria { font-family:'Righteous',cursive; font-size:.75rem; letter-spacing:3px; color:var(--neon-celeste); text-transform:uppercase; margin-bottom:6px; }
     .card-titulo { font-family:'Bangers',cursive; font-size:1.6rem; letter-spacing:2px; color:var(--neon-amarillo); line-height:1.1; margin-bottom:8px; }
-    .card-desc { font-size:.85rem; color:#bbb; line-height:1.5; margin-bottom:14px; }
+    .card-desc { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.55; margin-bottom:14px; letter-spacing:0.3px; }
     .card-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
-    .card-participantes { font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-verde); }
-    .card-fecha { font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-naranja); }
+    .card-participantes { font-family:'Righteous',cursive; font-size:.82rem; color:#7dffb3; }
+    .card-fecha { font-family:'Righteous',cursive; font-size:.85rem; color:#ffb347; letter-spacing:0.5px; }
     .barra-wrap { background:#222; border-radius:2px; height:8px; margin-bottom:16px; }
     .barra-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--neon-verde),var(--neon-amarillo)); box-shadow:0 0 8px var(--neon-verde); transition:width 1s ease; }
     /* Mini-contador por sorteo */
     .mini-cnt-wrap { margin-bottom:14px; background:#0a0a1a; border-radius:4px; border:1px solid #333; overflow:hidden; }
     .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; padding:7px 6px 8px; }
     .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:34px; }
-    .mc-num { font-family:'Bangers',cursive; font-size:1.4rem; line-height:1; color:var(--neon-amarillo); text-shadow:0 0 8px var(--neon-amarillo); }
-    .mc-lbl { font-family:'Righteous',cursive; font-size:.52rem; color:#666; letter-spacing:1px; text-transform:uppercase; }
-    .mc-sep { font-family:'Bangers',cursive; font-size:1.2rem; color:#444; margin-bottom:10px; }
-    .mini-contador.vencido .mc-num { color:var(--neon-rosa); text-shadow:0 0 8px var(--neon-rosa); }
-    .btn-participar { display:block; width:100%; background:var(--neon-rosa); color:#000; border:none;
+    .mc-num { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-weight:700; font-size:1.35rem; line-height:1; color:#ffe680; text-shadow:none; letter-spacing:0.5px; }
+    .mc-lbl { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:.5rem; color:#777; letter-spacing:1px; text-transform:uppercase; font-weight:400; }
+    .mc-sep { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-weight:700; font-size:1.1rem; color:#555; margin-bottom:10px; }
+    .mini-contador.vencido .mc-num { color:#ff8a8a; text-shadow:none; }
+    .btn-participar { display:block; width:90%; margin:0 auto 12px; background:var(--neon-rosa); color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
-      cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase; }
+      cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase;
+      border-radius:10px; }
     .btn-participar:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-rosa); }
     /* LOGOS ESPECIALES */
     .petcenter-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:6px; }
@@ -234,7 +235,7 @@
     .paso-num { font-family:'Bangers',cursive; font-size:3.2rem; color:var(--neon-violeta); text-shadow:0 0 10px var(--neon-violeta); line-height:1; }
     .paso-icono { font-size:2.2rem; margin:10px 0; }
     .paso h3 { font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .paso p { font-size:.88rem; color:#ccc; line-height:1.5; }
+    .paso p { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.5; }
     /* PANEL GANADORES */
     #panel-ganadores .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
     #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 6px rgba(255,106,0,.35); }
@@ -270,7 +271,7 @@
     .faq-icon { color:var(--neon-naranja); font-size:1.2rem; transition:transform .3s; }
     .faq-item.activo .faq-icon { transform:rotate(45deg); }
     .faq-resp { max-height:0; overflow:hidden; transition:max-height .4s ease,padding .3s;
-      background:#0d0d0d; color:#bbb; font-size:.88rem; line-height:1.7; }
+      background:#0d0d0d; color:#bbb; font-family:'Righteous',cursive; font-size:.88rem; line-height:1.7; }
     .faq-item.activo .faq-resp { max-height:200px; padding:16px 20px; }
     /* PANEL TERMINOS */
     #panel-terminos .panel-header { background:#00101a; border-bottom:3px solid var(--neon-celeste); }
@@ -279,7 +280,7 @@
     .terminos-wrap { margin-top:10px; }
     .termino-bloque { background:#111; border-left:4px solid var(--neon-celeste); border-radius:0 4px 4px 0; padding:18px 20px; margin-bottom:16px; }
     .termino-bloque h3 { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .termino-bloque p, .termino-bloque li { font-size:.85rem; color:#ccc; line-height:1.8; }
+    .termino-bloque p, .termino-bloque li { font-family:'Righteous',cursive; font-size:.85rem; color:#ccc; line-height:1.8; }
     .termino-bloque ul { padding-left:18px; }
     .termino-bloque li { margin-bottom:4px; }
     .termino-num { display:inline-block; background:var(--neon-celeste); color:#000;
@@ -290,17 +291,17 @@
     /* PANEL REGISTRO */
     .form-chicha { background:#0f0f0f; border:3px solid var(--neon-verde); border-radius:4px; padding:36px 32px; box-shadow:0 0 40px rgba(57,255,20,.2); }
     .form-grupo { margin-bottom:22px; }
-    .form-grupo label { display:block; font-family:'Bangers',cursive; font-size:1.1rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .form-grupo input, .form-grupo select { width:100%; background:#1a1a1a; border:2px solid #444; border-radius:2px; color:#fff; font-family:'Paytone One',sans-serif; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
+    .form-grupo label { display:block; font-family:'Righteous',cursive; font-size:1.05rem; letter-spacing:1px; color:var(--neon-amarillo); margin-bottom:8px; }
+    .form-grupo input, .form-grupo select { width:100%; background:#1a1a1a; border:2px solid #444; border-radius:6px; color:#fff; font-family:'Righteous',cursive; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
     .form-grupo input:focus, .form-grupo select:focus { border-color:var(--neon-verde); box-shadow:0 0 10px rgba(57,255,20,.4); }
     .form-grupo select option { background:#1a1a1a; }
     .form-doble { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .btn-registro { display:block; width:100%; background:var(--neon-verde); color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.8rem; letter-spacing:4px; padding:16px;
       cursor:pointer; border-bottom:5px solid #1a7a0a; margin-top:10px; text-transform:uppercase;
-      transition:transform .15s,box-shadow .15s; }
+      transition:transform .15s,box-shadow .15s; border-radius:10px; }
     .btn-registro:hover { transform:translateY(-3px); box-shadow:0 0 30px var(--neon-verde); }
-    .form-nota { text-align:center; font-size:.78rem; color:#666; margin-top:14px; line-height:1.5; }
+    .form-nota { text-align:center; font-family:'Righteous',cursive; font-size:.78rem; color:#666; margin-top:14px; line-height:1.5; }
     /* MODAL EXITO */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
       z-index:1000; align-items:center; justify-content:center; padding:20px; }
@@ -310,7 +311,7 @@
       box-shadow:0 0 60px rgba(57,255,20,.4); animation:popin .3s cubic-bezier(.34,1.56,.64,1); }
     .modal-icono { font-size:4rem; margin-bottom:16px; }
     .modal-titulo { font-family:'Bangers',cursive; font-size:2.5rem; color:var(--neon-verde); text-shadow:0 0 20px var(--neon-verde); letter-spacing:3px; margin-bottom:12px; }
-    .modal-texto { color:#ccc; font-size:.9rem; line-height:1.6; margin-bottom:20px; }
+    .modal-texto { font-family:'Righteous',cursive; color:#ccc; font-size:.9rem; line-height:1.6; margin-bottom:20px; }
     .modal-codigo { background:#1a1a1a; border:2px dashed var(--neon-verde); border-radius:2px;
       font-family:'Bangers',cursive; font-size:2rem; letter-spacing:8px;
       color:var(--neon-amarillo); text-shadow:0 0 10px var(--neon-amarillo); padding:14px; margin-bottom:20px; }
@@ -809,10 +810,10 @@
       /* ── Sorteos ── */
       #sorteos { padding:28px 12px; }
       .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
-      .grid-sorteos { grid-template-columns:1fr; gap:16px; }
+      .grid-sorteos { grid-template-columns:1fr; gap:24px; max-width:92%; margin:0 auto; }
       .card-img { height:140px; font-size:3.8rem; }
       .card-titulo { font-size:1.35rem; }
-      .card-desc { font-size:.82rem; }
+      .card-desc { font-size:.84rem; line-height:1.5; }
       .btn-participar { font-size:1.2rem; padding:14px; }
       /* ── Paneles: sheet desde abajo ── */
       .panel-overlay { padding:0; align-items:flex-end; }
@@ -900,7 +901,7 @@
   </div>
   <!-- SORTEOS -->
   <section id="sorteos">
-    <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
+    <h2 class="seccion-titulo"><span>ESCOGE Y APÚNTATE A UNO DE ESTOS SORTEOS</span></h2>
     <div class="grid-sorteos">
       <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-1" style="border-color:var(--neon-naranja)">
         <div class="card-front">
@@ -910,7 +911,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL CHICLE</div>
-          <div class="card-desc">1 lukita directo a tu número pa que te compres tu chicle favorito. ¡Chiquitito pero es tuyo causa!</div>
+          <div class="card-desc">¡GÁNATE 1 lukita directo a tu número pa que te compres tu chicle favorito. Chiquitito pero es tuyo causa!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-1">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-naranja),var(--neon-amarillo))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-1"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -933,7 +934,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA QUINUA</div>
-          <div class="card-desc">2 lukitas pa tu vaso de quinua del mercado. ¡Nutritivo y ganado con pura suerte causa!</div>
+          <div class="card-desc">¡GÁNATE 2 lukitas pa tu vaso de quinua del mercado. Nutritivo y ganado con pura suerte causa!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-rosa),var(--neon-violeta))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-2"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -956,7 +957,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA GASEOSA</div>
-          <div class="card-desc">5 lukitas directo a tu número pa la gaseosa heladita. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
+          <div class="card-desc">¡GÁNATE 5 lukitas directo a tu número pa la gaseosa heladita. Pequeño pero seguro causa!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-3"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -979,7 +980,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA CHELITA</div>
-          <div class="card-desc">6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. ¡Te lo mereces causa!</div>
+          <div class="card-desc">¡GÁNATE 6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. Te lo mereces causa!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-4">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-4" style="width:5%;background:linear-gradient(90deg,var(--neon-amarillo),var(--neon-verde))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-4"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc4d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -1002,7 +1003,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
-          <div class="card-desc">7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
+          <div class="card-desc">¡GÁNATE 7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. Sin cola ni nada pe!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-5">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-5" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-5"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc5d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -1025,7 +1026,7 @@
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL POLLITO</div>
-          <div class="card-desc">20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. ¡Come rico papi!</div>
+          <div class="card-desc">¡GÁNATE 20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. Come rico papi!</div>
           <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-6">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-6" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
           <div class="mini-cnt-wrap" id="mini-cnt-6"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc6d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6s">--</div><div class="mc-lbl">Seg</div></div></div></div>
@@ -2538,6 +2539,7 @@
       setInterval(mostrarLlama, 20000);
     })();
     /* ─── SILBIDOS (tus mp3 originales, usando el ctx de la música) ─── */
+    var audioMuteado = false;
     var silbidoBuffers = [null, null, null];
     var silbidosCargados = false;
     function cargarSilbidosMp3() {
@@ -2752,10 +2754,12 @@
       btn.classList.add('sonando');
       btn.title = 'Silenciar sonido';
     }
-    var audioMuteado = false;
     function toggleMusica() {
       var btn = document.getElementById('btn-musica');
-      if (!audioMuteado) {
+      var ctx = musica.getCtx();
+      var estaSonando = ctx && ctx.state === 'running';
+
+      if (estaSonando && !audioMuteado) {
         // MUTE: pausar música y silbidos
         audioMuteado = true;
         musica.pausar();
@@ -2763,12 +2767,16 @@
         btn.classList.remove('sonando');
         btn.title = 'Activar sonido';
       } else {
-        // UNMUTE: reanudar música y silbidos
+        // UNMUTE o INICIAR: reanudar o arrancar música
         audioMuteado = false;
-        if (musica.isPlaying && musica.getCtx()) {
+        if (ctx && ctx.state === 'suspended') {
           musica.reanudar();
         } else {
           iniciarMusica();
+        }
+        // Cargar silbidos si aún no se cargaron
+        if (musica.getCtx() && !silbidosCargados) {
+          cargarSilbidosMp3();
         }
         btn.textContent = '🔊';
         btn.classList.add('sonando');
@@ -2777,7 +2785,18 @@
     }
     // Escritorio: intento de autoplay al cargar
     window.addEventListener('load', function() {
-      try { iniciarMusica(); } catch(e) {}
+      try {
+        iniciarMusica();
+      } catch(e) {}
+      // Si no arrancó (móvil), mostrar botón como apagado
+      setTimeout(function() {
+        var btn = document.getElementById('btn-musica');
+        if (!musica.isPlaying()) {
+          btn.textContent = '🔇';
+          btn.classList.remove('sonando');
+          btn.title = 'Activar sonido';
+        }
+      }, 300);
     });
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
     // Primero arranca la música, luego desbloquea los silbidos.
@@ -2800,13 +2819,12 @@
     // Pausar todo cuando el móvil se bloquea o cambia de app (Page Visibility API)
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
-        // En segundo plano: suspender música y cortar cualquier silbido activo
         musica.pausar();
-        // Silbidos usan el mismo ctx de la música, se suspenden juntos
       } else {
-        // Vuelve al frente: reanudar música y silbidos
-        musica.reanudar();
-        // Silbidos se reanudan con la música automáticamente
+        // Solo reanudar si NO está muteado por el usuario
+        if (!audioMuteado) {
+          musica.reanudar();
+        }
       }
     });
   </script>
