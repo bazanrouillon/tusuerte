@@ -1602,7 +1602,7 @@
     var SORTEOS_CFG = {
       '1': { fechaISO: '2026-03-29T18:52:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
       '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – 7' },
-      '3': { fechaISO: '2026-03-29T18:59:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
+      '3': { fechaISO: '2026-03-29T19:10:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
       '4': { fechaISO: '2026-04-26T22:00:00-05:00', nombre: 'Yape pal Chicle – S/2' },
       '5': { fechaISO: '2026-05-03T22:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
       '6': { fechaISO: '2026-05-10T22:00:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
@@ -1759,7 +1759,7 @@
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw5tGnCgi9gNN9amIqS8MC4bBmp8i9y_--mkGBxoA4SfOzRi_INKdGVZmyW0WFQDMsx/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzUwj6HggHYSanMOb2hEnVb5w2T9lrYBbuxUCnk2s7Sa8lOgItXS26fCuysLfxpnGk4/exec';
     function enviarRegistro(e) {
       e.preventDefault();
       const form = e.target;
@@ -1993,9 +1993,18 @@
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
       var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
 
-      fetch(url)
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
+      fetch(url, { redirect: 'follow' })
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+        .then(function(txt) {
+          var data;
+          try { data = JSON.parse(txt); }
+          catch(e) {
+            console.error('Respuesta no es JSON:', txt.substring(0, 200));
+            throw new Error('El Apps Script no devuelve JSON. ¿Desplegaste la nueva versión con doGet?');
+          }
           if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
             document.getElementById('ruleta-estado').textContent = 'No hay participantes registrados para este sorteo.';
             document.getElementById('ruleta-btn-cerrar').classList.add('visible');
@@ -2078,7 +2087,7 @@
         })
         .catch(function(err) {
           console.error('Error cargando participantes:', err);
-          document.getElementById('ruleta-estado').textContent = 'Error al cargar participantes. Intenta de nuevo.';
+          document.getElementById('ruleta-estado').innerHTML = 'Error: ' + err.message + '<br><span style="font-size:.75em;color:#ff6a00;">Verifica que desplegaste la nueva versión del Apps Script con doGet</span>';
           document.getElementById('ruleta-btn-cerrar').classList.add('visible');
           ruletaActiva = false;
         });
