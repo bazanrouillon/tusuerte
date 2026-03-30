@@ -2286,6 +2286,9 @@
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
   <!-- Silbidos cargados via fetch + Web Audio API desde silbido_1/2/3.mp3 -->
+  <audio id="snd-silbido-1" src="./silbido_1.mp3" preload="auto"></audio>
+  <audio id="snd-silbido-2" src="./silbido_2.mp3" preload="auto"></audio>
+  <audio id="snd-silbido-3" src="./silbido_3.mp3" preload="auto"></audio>
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     #llama-saludo {
@@ -2563,36 +2566,43 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-    /* ─── SILBIDOS (tus mp3 usando el MISMO AudioContext de la música) ─── */
-    var silbidoBuffers = [];
-    var silbidosCargados = false;
-    function cargarSilbidos() {
-      var ctx = musica.getCtx();
-      if (silbidosCargados || !ctx) return;
-      silbidosCargados = true;
-      ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'].forEach(function(url, i) {
-        fetch(url)
-          .then(function(r) { return r.arrayBuffer(); })
-          .then(function(buf) { return ctx.decodeAudioData(buf); })
-          .then(function(decoded) { silbidoBuffers[i] = decoded; })
-          .catch(function() {});
-      });
-    }
+    /* ─── SILBIDOS ─── */
     function tocarSilbido() {
+      var num = Math.ceil(Math.random() * 3);
+      // Método 1: <audio> tag directo
+      var snd = document.getElementById('snd-silbido-' + num);
+      if (snd) {
+        snd.volume = 0.4;
+        snd.currentTime = 0;
+        var p = snd.play();
+        if (p && p.then) {
+          p.then(function() { /* OK */ })
+           .catch(function() {
+             // Método 2: Web Audio API como respaldo
+             tocarSilbidoWebAudio(num);
+           });
+        }
+        return;
+      }
+      tocarSilbidoWebAudio(num);
+    }
+    function tocarSilbidoWebAudio(num) {
       try {
         var ctx = musica.getCtx();
         if (!ctx) return;
-        if (!silbidosCargados) cargarSilbidos();
-        var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
-        if (disponibles.length === 0) return;
-        var buf = disponibles[Math.floor(Math.random() * disponibles.length)];
-        var source = ctx.createBufferSource();
-        var gain = ctx.createGain();
-        source.buffer = buf;
-        gain.gain.value = 0.35;
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        source.start(0);
+        fetch('./silbido_' + num + '.mp3')
+          .then(function(r) { return r.arrayBuffer(); })
+          .then(function(buf) { return ctx.decodeAudioData(buf); })
+          .then(function(decoded) {
+            var source = ctx.createBufferSource();
+            var gain = ctx.createGain();
+            source.buffer = decoded;
+            gain.gain.value = 0.4;
+            source.connect(gain);
+            gain.connect(ctx.destination);
+            source.start(0);
+          })
+          .catch(function() {});
       } catch(e) {}
     }
 
@@ -2792,14 +2802,24 @@
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
     // Primero arranca la música, luego desbloquea los silbidos.
     // Los listeners se mantienen hasta confirmar que la música está corriendo.
+    var silbidosDesbloqueados = false;
     function arrancarEnInteraccion() {
       // 1) Música primero — dentro del gesto para que iOS/Android la permita
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // 2) Cargar silbidos usando el mismo AudioContext de la música
-      if (musica.getCtx() && !silbidosCargados) {
-        cargarSilbidos();
+      // 2) Desbloquear <audio> de silbidos con el gesto del usuario
+      if (!silbidosDesbloqueados) {
+        [1,2,3].forEach(function(n) {
+          var snd = document.getElementById('snd-silbido-' + n);
+          if (snd) {
+            snd.muted = true;
+            snd.play().then(function() {
+              snd.pause(); snd.currentTime = 0; snd.muted = false;
+            }).catch(function() { snd.muted = false; });
+          }
+        });
+        silbidosDesbloqueados = true;
       }
       // Eliminar listeners cuando la música esté activa
       if (musica.isPlaying()) {
