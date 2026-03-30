@@ -2288,7 +2288,7 @@
   </style>
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
-  <!-- Silbidos ahora generados con Web Audio API -->
+  <!-- Silbidos cargados via fetch + Web Audio API desde silbido_1/2/3.mp3 -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     #llama-saludo {
@@ -2566,65 +2566,37 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-    /* ─── SILBIDO CON WEB AUDIO API ─── */
+    /* ─── SILBIDOS (tus mp3 cargados via fetch + Web Audio API) ─── */
+    var silbidoBuffers = [];
     var silbidoCtx = null;
-    var silbidoPatrones = [
-      // Patrón 1: silbido corto ascendente-descendente (tipo "fiu-fiu")
-      function(ctx, t) {
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, t);
-        osc.frequency.linearRampToValueAtTime(1400, t + 0.15);
-        osc.frequency.linearRampToValueAtTime(700, t + 0.4);
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
-        gain.gain.setValueAtTime(0.12, t + 0.3);
-        gain.gain.linearRampToValueAtTime(0, t + 0.45);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(t); osc.stop(t + 0.5);
-      },
-      // Patrón 2: doble silbido rápido (tipo "fiu fiu!")
-      function(ctx, t) {
-        for (var i = 0; i < 2; i++) {
-          var osc = ctx.createOscillator();
-          var gain = ctx.createGain();
-          var off = i * 0.25;
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(900, t + off);
-          osc.frequency.linearRampToValueAtTime(1300, t + off + 0.1);
-          osc.frequency.linearRampToValueAtTime(800, t + off + 0.2);
-          gain.gain.setValueAtTime(0, t + off);
-          gain.gain.linearRampToValueAtTime(0.1, t + off + 0.03);
-          gain.gain.setValueAtTime(0.1, t + off + 0.15);
-          gain.gain.linearRampToValueAtTime(0, t + off + 0.22);
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.start(t + off); osc.stop(t + off + 0.25);
-        }
-      },
-      // Patrón 3: silbido largo descendente (tipo "fiuuuu")
-      function(ctx, t) {
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1200, t);
-        osc.frequency.exponentialRampToValueAtTime(600, t + 0.6);
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
-        gain.gain.setValueAtTime(0.1, t + 0.4);
-        gain.gain.linearRampToValueAtTime(0, t + 0.65);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(t); osc.stop(t + 0.7);
-      }
-    ];
+    // Pre-cargar los 3 silbidos como AudioBuffer
+    (function() {
+      var archivos = ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'];
+      try {
+        silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) { return; }
+      archivos.forEach(function(url, i) {
+        fetch(url)
+          .then(function(r) { return r.arrayBuffer(); })
+          .then(function(buf) { return silbidoCtx.decodeAudioData(buf); })
+          .then(function(decoded) { silbidoBuffers[i] = decoded; })
+          .catch(function(e) { console.log('Error cargando ' + url, e); });
+      });
+    })();
     function tocarSilbido() {
       try {
-        if (!silbidoCtx) {
-          silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        if (!silbidoCtx || silbidoBuffers.length === 0) return;
         if (silbidoCtx.state === 'suspended') silbidoCtx.resume();
-        var idx = Math.floor(Math.random() * silbidoPatrones.length);
-        silbidoPatrones[idx](silbidoCtx, silbidoCtx.currentTime);
+        var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
+        if (disponibles.length === 0) return;
+        var buf = disponibles[Math.floor(Math.random() * disponibles.length)];
+        var source = silbidoCtx.createBufferSource();
+        var gain = silbidoCtx.createGain();
+        source.buffer = buf;
+        gain.gain.value = 0.35;
+        source.connect(gain);
+        gain.connect(silbidoCtx.destination);
+        source.start(0);
       } catch(e) { console.log('Silbido error:', e.message); }
     }
 
