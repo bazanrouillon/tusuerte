@@ -2563,48 +2563,37 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-    /* ─── SILBIDOS (tus mp3 cargados via fetch + Web Audio API) ─── */
+    /* ─── SILBIDOS (tus mp3 usando el MISMO AudioContext de la música) ─── */
     var silbidoBuffers = [];
-    var silbidoCtx = null;
-    var silbidoArchivos = ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'];
     var silbidosCargados = false;
     function cargarSilbidos() {
-      if (silbidosCargados || !silbidoCtx) return;
+      var ctx = musica.getCtx();
+      if (silbidosCargados || !ctx) return;
       silbidosCargados = true;
-      silbidoArchivos.forEach(function(url, i) {
+      ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'].forEach(function(url, i) {
         fetch(url)
           .then(function(r) { return r.arrayBuffer(); })
-          .then(function(buf) { return silbidoCtx.decodeAudioData(buf); })
-          .then(function(decoded) { silbidoBuffers[i] = decoded; console.log('Silbido ' + (i+1) + ' cargado OK'); })
-          .catch(function(e) { console.log('Error cargando ' + url, e); });
+          .then(function(buf) { return ctx.decodeAudioData(buf); })
+          .then(function(decoded) { silbidoBuffers[i] = decoded; })
+          .catch(function() {});
       });
     }
-    // Crear AudioContext en la primera interacción del usuario
-    function iniciarSilbidoCtx() {
-      if (silbidoCtx) return;
-      try {
-        silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
-        cargarSilbidos();
-      } catch(e) { console.log('No se pudo crear AudioContext para silbidos:', e); }
-    }
-    document.addEventListener('click', iniciarSilbidoCtx, { once: false });
-    document.addEventListener('touchstart', iniciarSilbidoCtx, { once: false });
-
     function tocarSilbido() {
       try {
-        if (!silbidoCtx) return;
-        if (silbidoCtx.state === 'suspended') silbidoCtx.resume();
+        var ctx = musica.getCtx();
+        if (!ctx) return;
+        if (!silbidosCargados) cargarSilbidos();
         var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
         if (disponibles.length === 0) return;
         var buf = disponibles[Math.floor(Math.random() * disponibles.length)];
-        var source = silbidoCtx.createBufferSource();
-        var gain = silbidoCtx.createGain();
+        var source = ctx.createBufferSource();
+        var gain = ctx.createGain();
         source.buffer = buf;
         gain.gain.value = 0.35;
         source.connect(gain);
-        gain.connect(silbidoCtx.destination);
+        gain.connect(ctx.destination);
         source.start(0);
-      } catch(e) { console.log('Silbido error:', e.message); }
+      } catch(e) {}
     }
 
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
@@ -2753,6 +2742,7 @@
           if (ctx) { ctx.close(); ctx = null; master = null; }
         },
         isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
+        getCtx: function() { return ctx; },
         setVolume: function(v) {
           if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
         },
@@ -2807,9 +2797,10 @@
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // 2) Crear y desbloquear AudioContext de silbido dentro del gesto
-      iniciarSilbidoCtx();
-      if (silbidoCtx && silbidoCtx.state === 'suspended') silbidoCtx.resume();
+      // 2) Cargar silbidos usando el mismo AudioContext de la música
+      if (musica.getCtx() && !silbidosCargados) {
+        cargarSilbidos();
+      }
       // Eliminar listeners cuando la música esté activa
       if (musica.isPlaying()) {
         document.removeEventListener('click',      arrancarEnInteraccion);
@@ -2823,12 +2814,11 @@
       if (document.hidden) {
         // En segundo plano: suspender música y cortar cualquier silbido activo
         musica.pausar();
-        // Suspender silbido Web Audio API
-        if (silbidoCtx && silbidoCtx.state === 'running') silbidoCtx.suspend();
+        // Silbidos usan el mismo ctx de la música, se suspenden juntos
       } else {
         // Vuelve al frente: reanudar música y silbidos
         musica.reanudar();
-        if (silbidoCtx && silbidoCtx.state === 'suspended') silbidoCtx.resume();
+        // Silbidos se reanudan con la música automáticamente
       }
     });
   </script>
