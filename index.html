@@ -877,7 +877,7 @@
   <!-- HEADER -->
   <header>
     <div class="metele-tag">¡Métele sin<br>miedo, mi neto!</div>
-    <div class="logo-principal">TUSUERTE.PE</div>
+    <div class="logo-principal" id="logo-admin">TUSUERTE.PE</div>
     <div class="logo-sub">✦ Sorteo pa la gente ✦</div>
   </header>
   <!-- NAV -->
@@ -1894,6 +1894,28 @@
       });
     }
     renderGanadores();
+
+    // ── Botón admin oculto: 5 clics rápidos en el logo limpia localStorage ──
+    (function() {
+      var logoAdmin = document.getElementById('logo-admin');
+      var clicks = 0;
+      var timer = null;
+      if (logoAdmin) {
+        logoAdmin.style.cursor = 'pointer';
+        logoAdmin.addEventListener('click', function() {
+          clicks++;
+          clearTimeout(timer);
+          timer = setTimeout(function() { clicks = 0; }, 1500);
+          if (clicks >= 5) {
+            clicks = 0;
+            localStorage.removeItem('tsp_registrado');
+            localStorage.removeItem('tsp_ganadores');
+            alert('Admin: localStorage limpiado (registros y ganadores)');
+            location.reload();
+          }
+        });
+      }
+    })();
 
     // ── Dibujar la ruleta en un canvas específico ──
     function dibujarRuleta(canvasId, participantes, anguloActual) {
