@@ -102,10 +102,75 @@
     #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 20px var(--neon-rosa); }
     #sorteos .seccion-titulo::after { background:var(--neon-rosa); }
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
+    /* Contenedor 3D para flip */
+    .card-sorteo-wrap { perspective:1200px; }
     .card-sorteo { background:#111; border:3px solid var(--neon-rosa); border-radius:4px;
       overflow:hidden; box-shadow:0 0 25px rgba(255,0,128,.25);
-      transition:transform .25s,box-shadow .25s; position:relative; }
-    .card-sorteo:hover { transform:translateY(-8px); box-shadow:0 0 50px rgba(255,0,128,.5); }
+      transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
+      transform-style:preserve-3d; }
+    .card-sorteo:hover { box-shadow:0 0 50px rgba(255,0,128,.5); }
+    .card-sorteo:not(.flipped):hover { transform:translateY(-8px); }
+    .card-sorteo.flipped { transform:rotateY(180deg); }
+    .card-front, .card-back { backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+    .card-front { position:relative; }
+    .card-back {
+      position:absolute; inset:0; transform:rotateY(180deg);
+      background:#0a0a1a; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; padding:16px;
+    }
+    .card-back-titulo {
+      font-family:'Bangers',cursive; font-size:1.1rem; color:var(--neon-amarillo);
+      letter-spacing:2px; text-shadow:0 0 10px var(--neon-amarillo);
+      margin-bottom:6px; text-align:center;
+    }
+    .card-back-estado {
+      font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-verde);
+      text-shadow:0 0 8px var(--neon-verde); margin-bottom:10px;
+      text-align:center; min-height:1.4em;
+    }
+    .card-ruleta-container { position:relative; width:180px; height:180px; margin:0 auto; }
+    .card-ruleta-canvas { width:100%; height:100%; border-radius:50%;
+      border:3px solid var(--neon-amarillo);
+      box-shadow:0 0 18px var(--neon-amarillo),inset 0 0 20px rgba(0,0,0,.5); }
+    .card-ruleta-flecha {
+      position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+      width:0; height:0;
+      border-left:10px solid transparent; border-right:10px solid transparent;
+      border-top:18px solid var(--neon-rosa);
+      filter:drop-shadow(0 0 6px var(--neon-rosa)); z-index:2;
+    }
+    .card-ruleta-centro {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:32px; height:32px; border-radius:50%;
+      background:radial-gradient(circle,var(--neon-amarillo),#ff8c00);
+      box-shadow:0 0 10px var(--neon-naranja);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Bangers',cursive; font-size:.7rem; color:#000; z-index:2;
+    }
+    .card-ganador-result {
+      margin-top:10px; text-align:center; display:none;
+    }
+    .card-ganador-result.visible { display:block; }
+    .card-ganador-nombre {
+      font-family:'Bangers',cursive; font-size:1.2rem; color:var(--neon-amarillo);
+      letter-spacing:2px; text-shadow:0 0 10px var(--neon-amarillo);
+    }
+    .card-ganador-dni {
+      font-family:'Righteous',cursive; font-size:.75rem; color:var(--neon-celeste); margin-top:3px;
+    }
+    /* Sello CERRADO */
+    .sello-cerrado {
+      display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-15deg);
+      font-family:'Bangers',cursive; font-size:clamp(2rem,6vw,3.5rem); letter-spacing:6px;
+      color:#ff2020; border:5px solid #ff2020; padding:8px 24px; border-radius:8px;
+      text-shadow:0 0 10px rgba(255,0,0,.5);
+      box-shadow:0 0 20px rgba(255,0,0,.3);
+      background:rgba(0,0,0,.7); z-index:5;
+      pointer-events:none;
+    }
+    .card-sorteo.cerrado .sello-cerrado { display:block; }
+    .card-sorteo.cerrado .card-front { opacity:.5; }
+    .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.4; }
     .badge-gratis { position:absolute; top:12px; right:-8px;
       background:var(--neon-verde); color:#000; font-family:'Bangers',cursive;
       font-size:1rem; letter-spacing:2px; padding:4px 18px 4px 14px;
@@ -838,192 +903,144 @@
   <section id="sorteos">
     <h2 class="seccion-titulo"><span>🍀 SORTEOS ACTIVOS 🍀</span></h2>
     <div class="grid-sorteos">
-      <div class="card-sorteo" style="border-color:var(--neon-verde)">
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-1" style="border-color:var(--neon-verde)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-verde)">
-          <div class="yape-logo">
-            <span class="yape-icon">🍗</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pal pollito 🔥</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">🍗</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pal pollito 🔥</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL POLLITO</div>
           <div class="card-desc">20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. ¡Come rico papi!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-1">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-1">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-1">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-1"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','1')">¡QUIERO GANAR!</button>
         </div>
-      </div>
-      <div class="card-sorteo" style="border-color:var(--neon-celeste)">
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-1">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-1" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-1"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-1"></div><div class="card-ganador-dni" id="card-ganador-dni-1"></div></div>
+        </div>
+      </div></div>
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-2" style="border-color:var(--neon-celeste)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-celeste)">
-          <div class="yape-logo">
-            <span class="yape-icon">🚌</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pa la recarga 🚌</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">🚌</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la recarga 🚌</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
           <div class="card-desc">7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. ¡Sin cola ni nada pe!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-2">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-2"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – 7','2')">¡QUIERO GANAR!</button>
         </div>
-      </div>
-      <div class="card-sorteo" style="border-color:var(--neon-violeta)">
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-2">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-2" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-2"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-2"></div><div class="card-ganador-dni" id="card-ganador-dni-2"></div></div>
+        </div>
+      </div></div>
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-3" style="border-color:var(--neon-violeta)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-violeta)">
-          <div class="yape-logo">
-            <span class="yape-icon">💸</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pa la gaseosa 🥤</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">💸</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la gaseosa 🥤</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA GASEOSA</div>
           <div class="card-desc">5 lukitas directo a tu número pa la gaseosa heladita. Pequeño pero seguro causa. ¡Lo que importa es participar!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-3">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-3"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡QUIERO GANAR!</button>
         </div>
-      </div>
-      <div class="card-sorteo" style="border-color:var(--neon-naranja)">
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-3">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-3" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-3"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-3"></div><div class="card-ganador-dni" id="card-ganador-dni-3"></div></div>
+        </div>
+      </div></div>
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-4" style="border-color:var(--neon-naranja)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-naranja)">
-          <div class="yape-logo">
-            <span class="yape-icon">🍬</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pal chicle 😜</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">🍬</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pal chicle 😜</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PAL CHICLE</div>
           <div class="card-desc">2 lukitas directo a tu número pa que te compres tu chicle favorito. ¡Chiquitito pero es tuyo causa!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-4">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-4">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-4" style="width:5%;background:linear-gradient(90deg,var(--neon-naranja),var(--neon-amarillo))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-4">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc4d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc4h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc4m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc4s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-4"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc4d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-naranja);border-bottom-color:#8a3600" onclick="abrirRegistro('Yape pal Chicle – S/2','4')">¡QUIERO GANAR!</button>
         </div>
-      </div>
-      <div class="card-sorteo" style="border-color:var(--neon-amarillo)">
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-4">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-4" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-4"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-4"></div><div class="card-ganador-dni" id="card-ganador-dni-4"></div></div>
+        </div>
+      </div></div>
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-5" style="border-color:var(--neon-amarillo)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-amarillo)">
-          <div class="yape-logo">
-            <span class="yape-icon">🍺</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pa la chelita 🍻</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">🍺</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la chelita 🍻</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA CHELITA</div>
           <div class="card-desc">6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. ¡Te lo mereces causa!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-5">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-5">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-5" style="width:5%;background:linear-gradient(90deg,var(--neon-amarillo),var(--neon-verde))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-5">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc5d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc5h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc5m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc5s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-5"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc5d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-amarillo);color:#000;border-bottom-color:#7a6e00" onclick="abrirRegistro('Yape pa la Chelita – S/6','5')">¡QUIERO GANAR!</button>
         </div>
-      </div>
-      <div class="card-sorteo" style="border-color:var(--neon-rosa)">
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-5">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-5" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-5"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-5"></div><div class="card-ganador-dni" id="card-ganador-dni-5"></div></div>
+        </div>
+      </div></div>
+      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-6" style="border-color:var(--neon-rosa)">
+        <div class="card-front">
         <div class="card-img" style="padding:0;border-bottom-color:var(--neon-rosa)">
-          <div class="yape-logo">
-            <span class="yape-icon">🌾</span>
-            <div class="yape-nombre">YAPE</div>
-            <div class="yape-sub">Pa la quinua 💪</div>
-          </div>
+          <div class="yape-logo"><span class="yape-icon">🌾</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la quinua 💪</div></div>
         </div>
         <div class="card-body">
           <div class="card-categoria"></div>
           <div class="card-titulo">YAPE PA LA QUINUA</div>
           <div class="card-desc">2 lukitas pa tu vaso de quinua del mercado. ¡Nutritivo y ganado con pura suerte causa!</div>
-          <div class="card-meta">
-            <span class="card-participantes" style="display:none">👥 <span id="inscritos-6">0</span> inscritos</span>
-            <span class="card-fecha proxfecha">📅 ...</span>
-          </div>
+          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-6">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
           <div class="barra-wrap"><div class="barra-fill" id="barra-6" style="width:5%;background:linear-gradient(90deg,var(--neon-rosa),var(--neon-violeta))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-6">
-            <div class="mini-contador">
-              <div class="mc-blq"><div class="mc-num" id="mc6d">--</div><div class="mc-lbl">Días</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc6h">--</div><div class="mc-lbl">Hrs</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc6m">--</div><div class="mc-lbl">Min</div></div>
-              <div class="mc-sep">:</div>
-              <div class="mc-blq"><div class="mc-num" id="mc6s">--</div><div class="mc-lbl">Seg</div></div>
-            </div>
-          </div>
+          <div class="mini-cnt-wrap" id="mini-cnt-6"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc6d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6s">--</div><div class="mc-lbl">Seg</div></div></div></div>
           <button class="btn-participar" style="background:var(--neon-rosa);border-bottom-color:#7a003d" onclick="abrirRegistro('Yape pa la Quinua – S/2','6')">¡QUIERO GANAR!</button>
         </div>
-      </div>
+        <div class="sello-cerrado">CERRADO</div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-titulo">RULETA DEL SORTEO</div>
+          <div class="card-back-estado" id="card-estado-6">Cargando...</div>
+          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-6" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
+          <div class="card-ganador-result" id="card-ganador-6"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-6"></div><div class="card-ganador-dni" id="card-ganador-dni-6"></div></div>
+        </div>
+      </div></div>
     </div>
   </section>
   <!-- CINTA LLAMA CORRIENDO -->
@@ -1166,23 +1183,7 @@
       <span class="bocadillo-cinta">tsss sanaso</span>
     </div>
   </div>
-  <!-- RULETA DIGITAL -->
-  <div class="ruleta-overlay" id="ruleta-overlay">
-    <div class="ruleta-titulo">RULETA DEL SORTEO</div>
-    <div class="ruleta-sorteo-nombre" id="ruleta-sorteo-nombre"></div>
-    <div class="ruleta-container">
-      <div class="ruleta-flecha"></div>
-      <canvas class="ruleta-canvas" id="ruleta-canvas" width="400" height="400"></canvas>
-      <div class="ruleta-centro">PE</div>
-    </div>
-    <div class="ruleta-estado" id="ruleta-estado">Cargando participantes...</div>
-    <div class="ruleta-ganador-card" id="ruleta-ganador-card">
-      <div style="font-size:2.5rem;margin-bottom:8px;">🏆</div>
-      <div class="ruleta-ganador-nombre" id="ruleta-ganador-nombre"></div>
-      <div class="ruleta-ganador-dni" id="ruleta-ganador-dni"></div>
-    </div>
-    <button class="ruleta-btn-cerrar" id="ruleta-btn-cerrar" onclick="cerrarRuleta()">CERRAR</button>
-  </div>
+  <!-- CONFETI -->
   <div class="confeti-container" id="confeti-container"></div>
   <!-- APP COMING SOON -->
   <div class="app-coming-soon">
@@ -1600,12 +1601,12 @@
     // Formato ISO 8601 con zona Lima (UTC-5): 'YYYY-MM-DDTHH:MM:00-05:00'
     // ═══════════════════════════════════════════════════════════════
     var SORTEOS_CFG = {
-      '1': { fechaISO: '2026-03-29T18:52:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
-      '2': { fechaISO: '2026-04-12T22:00:00-05:00', nombre: 'Yape pa la Recarga – 7' },
-      '3': { fechaISO: '2026-03-29T19:10:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
-      '4': { fechaISO: '2026-04-26T22:00:00-05:00', nombre: 'Yape pal Chicle – S/2' },
-      '5': { fechaISO: '2026-05-03T22:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
-      '6': { fechaISO: '2026-05-10T22:00:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
+      '1': { fechaISO: '2026-03-29T19:24:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
+      '2': { fechaISO: '2026-03-29T19:26:00-05:00', nombre: 'Yape pa la Recarga – 7' },
+      '3': { fechaISO: '2026-03-29T19:28:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
+      '4': { fechaISO: '2026-03-29T19:30:00-05:00', nombre: 'Yape pal Chicle – S/2' },
+      '5': { fechaISO: '2026-03-29T19:32:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
+      '6': { fechaISO: '2026-03-29T19:34:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
     };
     // Pre-calcular timestamps en ms para cada sorteo
     Object.keys(SORTEOS_CFG).forEach(function(id) {
@@ -1885,13 +1886,13 @@
     }
     renderGanadores();
 
-    // ── Dibujar la ruleta en el canvas ──
-    function dibujarRuleta(participantes, anguloActual) {
-      var canvas = document.getElementById('ruleta-canvas');
+    // ── Dibujar la ruleta en un canvas específico ──
+    function dibujarRuleta(canvasId, participantes, anguloActual) {
+      var canvas = document.getElementById(canvasId);
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var w = canvas.width, h = canvas.height;
-      var cx = w/2, cy = h/2, r = w/2 - 4;
+      var cx = w/2, cy = h/2, r = w/2 - 3;
       ctx.clearRect(0,0,w,h);
 
       var n = participantes.length;
@@ -1901,7 +1902,6 @@
       for (var i = 0; i < n; i++) {
         var startAngle = anguloActual + i * slice;
         var endAngle = startAngle + slice;
-        // Segmento
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, r, startAngle, endAngle);
@@ -1909,41 +1909,28 @@
         ctx.fillStyle = COLORES_RULETA[i % COLORES_RULETA.length];
         ctx.fill();
         ctx.strokeStyle = '#0d0d1f';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1;
         ctx.stroke();
-        // Nombre (solo si caben)
-        if (n <= 40) {
+        if (n <= 30) {
           ctx.save();
           ctx.translate(cx, cy);
           ctx.rotate(startAngle + slice / 2);
           ctx.textAlign = 'right';
           ctx.fillStyle = '#fff';
-          ctx.font = 'bold ' + Math.max(8, Math.min(14, 220/n)) + 'px Arial';
-          ctx.shadowColor = 'rgba(0,0,0,0.7)';
-          ctx.shadowBlur = 3;
+          ctx.font = 'bold ' + Math.max(6, Math.min(10, 120/n)) + 'px Arial';
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 2;
           var nombre = participantes[i].nombres.split(' ')[0];
-          if (nombre.length > 10) nombre = nombre.substring(0,9) + '.';
-          ctx.fillText(nombre, r - 12, 4);
+          if (nombre.length > 8) nombre = nombre.substring(0,7) + '.';
+          ctx.fillText(nombre, r - 8, 3);
           ctx.restore();
         }
       }
-      // Borde externo
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, 2*Math.PI);
       ctx.strokeStyle = 'rgba(255,230,0,0.4)';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.stroke();
-    }
-
-    // ── Obtener el índice del ganador basado en la posición de la flecha ──
-    function obtenerIndiceGanador(participantes, anguloFinal) {
-      var n = participantes.length;
-      var slice = (2 * Math.PI) / n;
-      // La flecha está arriba (270° = -PI/2). Normalizar el ángulo.
-      var flechaAngle = (3 * Math.PI / 2); // posición de la flecha
-      var relAngle = (flechaAngle - anguloFinal) % (2 * Math.PI);
-      if (relAngle < 0) relAngle += 2 * Math.PI;
-      return Math.floor(relAngle / slice) % n;
     }
 
     // ── Lanzar confeti ──
@@ -1966,145 +1953,152 @@
       setTimeout(function() { container.innerHTML = ''; }, 5000);
     }
 
-    // ── Flujo principal de la ruleta ──
-    var ruletaActiva = false;
-    var ruletaSorteoYaEjecutado = {}; // evita que un sorteo se ejecute dos veces
+    // ── Flujo principal: ruleta dentro de la tarjeta ──
+    var ruletaSorteoYaEjecutado = {};
 
     function iniciarRuleta(sorteoId) {
-      if (ruletaActiva) return;
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return;
-      // Marcar como ejecutado
       if (ruletaSorteoYaEjecutado[sorteoId]) return;
       ruletaSorteoYaEjecutado[sorteoId] = true;
 
-      ruletaActiva = true;
-      var overlay = document.getElementById('ruleta-overlay');
-      overlay.classList.add('activo');
-      document.getElementById('ruleta-sorteo-nombre').textContent = cfg.nombre;
-      document.getElementById('ruleta-estado').textContent = 'Cargando participantes...';
-      document.getElementById('ruleta-ganador-card').classList.remove('visible');
-      document.getElementById('ruleta-btn-cerrar').classList.remove('visible');
+      var card = document.getElementById('card-sorteo-' + sorteoId);
+      var estadoEl = document.getElementById('card-estado-' + sorteoId);
+      var canvasId = 'card-canvas-' + sorteoId;
+      var ganadorDiv = document.getElementById('card-ganador-' + sorteoId);
+      var ganadorNombre = document.getElementById('card-ganador-nombre-' + sorteoId);
+      var ganadorDni = document.getElementById('card-ganador-dni-' + sorteoId);
 
-      // Dibujar ruleta vacía
-      dibujarRuleta([], 0);
+      if (!card) return;
 
-      // Obtener participantes de Google Sheets
+      // Scroll a la tarjeta
+      card.scrollIntoView({ behavior:'smooth', block:'center' });
+
+      // Voltear la tarjeta
+      setTimeout(function() {
+        card.classList.add('flipped');
+        estadoEl.textContent = 'Cargando participantes...';
+        ganadorDiv.classList.remove('visible');
+      }, 300);
+
+      // Obtener participantes
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
       var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
 
-      fetch(url, { redirect: 'follow' })
-        .then(function(r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.text();
-        })
-        .then(function(txt) {
-          var data;
-          try { data = JSON.parse(txt); }
-          catch(e) {
-            console.error('Respuesta no es JSON:', txt.substring(0, 200));
-            throw new Error('El Apps Script no devuelve JSON. ¿Desplegaste la nueva versión con doGet?');
-          }
-          if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
-            document.getElementById('ruleta-estado').textContent = 'No hay participantes registrados para este sorteo.';
-            document.getElementById('ruleta-btn-cerrar').classList.add('visible');
-            ruletaActiva = false;
-            return;
-          }
-          var participantes = data.participantes;
-          document.getElementById('ruleta-estado').textContent = participantes.length + ' participantes. Girando la ruleta...';
-
-          // Dibujar ruleta con participantes
-          dibujarRuleta(participantes, 0);
-
-          // Seleccionar ganador al azar (crypto random)
-          var ganadorIdx;
-          if (window.crypto && window.crypto.getRandomValues) {
-            var arr = new Uint32Array(1);
-            window.crypto.getRandomValues(arr);
-            ganadorIdx = arr[0] % participantes.length;
-          } else {
-            ganadorIdx = Math.floor(Math.random() * participantes.length);
-          }
-
-          // Calcular ángulo final para que la flecha apunte al ganador
-          var n = participantes.length;
-          var slice = (2 * Math.PI) / n;
-          // La flecha está en 3PI/2 (arriba). El ganador debe estar ahí.
-          var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
-          // Sumar vueltas completas para dramatismo (8-12 vueltas)
-          var vueltas = 8 + Math.floor(Math.random() * 5);
-          var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
-
-          // Animar la ruleta
-          var duracion = 6000; // 6 segundos
-          var inicio = performance.now();
-          var anguloInicio = 0;
-
-          function animarRuleta(timestamp) {
-            var progreso = Math.min(1, (timestamp - inicio) / duracion);
-            // Easing: desacelera al final (ease-out cubic)
-            var eased = 1 - Math.pow(1 - progreso, 3);
-            var anguloActual = anguloInicio + anguloTotal * eased;
-
-            dibujarRuleta(participantes, anguloActual);
-
-            if (progreso < 1) {
-              requestAnimationFrame(animarRuleta);
-            } else {
-              // Sorteo terminado — mostrar ganador
-              var ganador = participantes[ganadorIdx];
-              var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
-              var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
-
-              document.getElementById('ruleta-estado').textContent = '🎉 ¡TENEMOS GANADOR!';
-              document.getElementById('ruleta-ganador-nombre').textContent = nombreCompleto.toUpperCase();
-              document.getElementById('ruleta-ganador-dni').textContent = 'DNI: ' + dniMask;
-              document.getElementById('ruleta-ganador-card').classList.add('visible');
-              document.getElementById('ruleta-btn-cerrar').classList.add('visible');
-
-              lanzarConfeti();
-
-              // Guardar ganador en localStorage
-              var ahora = new Date();
-              guardarGanador({
-                nombres: ganador.nombres,
-                apellidos: ganador.apellidos,
-                dni: ganador.dni,
-                sorteo: cfg.nombre,
-                sorteoId: sorteoId,
-                fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
-              });
-              renderGanadores();
-              ruletaActiva = false;
+      setTimeout(function() {
+        fetch(url, { redirect: 'follow' })
+          .then(function(r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.text();
+          })
+          .then(function(txt) {
+            var data;
+            try { data = JSON.parse(txt); }
+            catch(e) {
+              throw new Error('Apps Script no devuelve JSON');
             }
-          }
-          // Esperar 2s antes de girar (tensión)
-          setTimeout(function() {
-            inicio = performance.now();
-            requestAnimationFrame(animarRuleta);
-          }, 2000);
-        })
-        .catch(function(err) {
-          console.error('Error cargando participantes:', err);
-          document.getElementById('ruleta-estado').innerHTML = 'Error: ' + err.message + '<br><span style="font-size:.75em;color:#ff6a00;">Verifica que desplegaste la nueva versión del Apps Script con doGet</span>';
-          document.getElementById('ruleta-btn-cerrar').classList.add('visible');
-          ruletaActiva = false;
-        });
+            if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
+              estadoEl.textContent = 'nadie quiere el rico chinchin';
+              estadoEl.style.color = 'var(--neon-rosa)';
+              estadoEl.style.textShadow = '0 0 8px var(--neon-rosa)';
+              setTimeout(function() {
+                card.classList.remove('flipped');
+                setTimeout(function() {
+                  card.classList.add('cerrado');
+                  /* sorteo finalizado */
+                }, 900);
+              }, 5000);
+              return;
+            }
+
+            var participantes = data.participantes;
+            estadoEl.textContent = participantes.length + ' participantes...';
+            dibujarRuleta(canvasId, participantes, 0);
+
+            // Seleccionar ganador (crypto random)
+            var ganadorIdx;
+            if (window.crypto && window.crypto.getRandomValues) {
+              var arr = new Uint32Array(1);
+              window.crypto.getRandomValues(arr);
+              ganadorIdx = arr[0] % participantes.length;
+            } else {
+              ganadorIdx = Math.floor(Math.random() * participantes.length);
+            }
+
+            var n = participantes.length;
+            var slice = (2 * Math.PI) / n;
+            var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
+            var vueltas = 8 + Math.floor(Math.random() * 5);
+            var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
+            var duracion = 6000;
+
+            setTimeout(function() {
+              estadoEl.textContent = '¡Girando la ruleta!';
+              var inicio = performance.now();
+
+              function animarRuleta(timestamp) {
+                var progreso = Math.min(1, (timestamp - inicio) / duracion);
+                var eased = 1 - Math.pow(1 - progreso, 3);
+                var anguloActual = anguloTotal * eased;
+                dibujarRuleta(canvasId, participantes, anguloActual);
+
+                if (progreso < 1) {
+                  requestAnimationFrame(animarRuleta);
+                } else {
+                  // ¡Ganador!
+                  var ganador = participantes[ganadorIdx];
+                  var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
+                  var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
+
+                  estadoEl.textContent = '🎉 ¡GANADOR!';
+                  ganadorNombre.textContent = nombreCompleto.toUpperCase();
+                  ganadorDni.textContent = 'DNI: ' + dniMask;
+                  ganadorDiv.classList.add('visible');
+                  lanzarConfeti();
+
+                  // Guardar en localStorage
+                  var ahora = new Date();
+                  guardarGanador({
+                    nombres: ganador.nombres,
+                    apellidos: ganador.apellidos,
+                    dni: ganador.dni,
+                    sorteo: cfg.nombre,
+                    sorteoId: sorteoId,
+                    fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
+                  });
+                  renderGanadores();
+
+                  // Esperar 1 minuto, luego voltear de regreso con sello CERRADO
+                  setTimeout(function() {
+                    card.classList.remove('flipped');
+                    setTimeout(function() {
+                      card.classList.add('cerrado');
+                      /* sorteo finalizado */
+                    }, 900); // esperar que termine la animación de flip
+                  }, 60000); // 1 minuto
+                }
+              }
+              inicio = performance.now();
+              requestAnimationFrame(animarRuleta);
+            }, 1500);
+          })
+          .catch(function(err) {
+            console.error('Error cargando participantes:', err);
+            estadoEl.innerHTML = 'Error: ' + err.message;
+            setTimeout(function() {
+              card.classList.remove('flipped');
+              /* sorteo finalizado */
+              ruletaSorteoYaEjecutado[sorteoId] = false;
+            }, 5000);
+          });
+      }, 1200); // esperar que el flip termine
     }
 
-    function cerrarRuleta() {
-      document.getElementById('ruleta-overlay').classList.remove('activo');
-      ruletaActiva = false;
-    }
-
-    // ── Verificar si algún sorteo debe activarse AHORA ──
-    // Chequea cada 5 segundos si llegó la hora de un sorteo
+    // ── Verificar si algún sorteo debe activarse ──
     function verificarSorteosActivos() {
       var ahora = Date.now();
       Object.keys(SORTEOS_CFG).forEach(function(id) {
         var ts = SORTEOS_CFG[id].ts;
-        // Activar si estamos dentro de los 30 segundos del horario del sorteo
         var diff = ahora - ts;
         if (diff >= 0 && diff < 30000 && !ruletaSorteoYaEjecutado[id]) {
           iniciarRuleta(id);
@@ -2113,13 +2107,14 @@
     }
     setInterval(verificarSorteosActivos, 5000);
 
-    // ── Botón manual para testing: doble click en el título de un sorteo ──
-    // (Solo para pruebas — remover en producción si quieres)
+    // ── Testing: doble click en título del sorteo ──
     document.querySelectorAll('.card-titulo').forEach(function(el, idx) {
       el.addEventListener('dblclick', function() {
         var id = String(idx + 1);
         if (confirm('¿Iniciar ruleta de prueba para ' + SORTEOS_CFG[id].nombre + '?')) {
-          ruletaSorteoYaEjecutado[id] = false; // resetear para permitir prueba
+          ruletaSorteoYaEjecutado[id] = false;
+          var card = document.getElementById('card-sorteo-' + id);
+          if (card) { card.classList.remove('cerrado'); card.classList.remove('flipped'); }
           iniciarRuleta(id);
         }
       });
