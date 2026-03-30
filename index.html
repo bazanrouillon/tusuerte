@@ -1718,10 +1718,16 @@
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
-      // Marcha blanca: ir directo al formulario (sin paso TikTok)
-      document.getElementById('paso-tiktok').style.display = 'none';
-      document.getElementById('paso-formulario').style.display = 'block';
-      document.getElementById('panel-reg-titulo').textContent = '📝 COMPLETA TUS DATOS';
+      // Paso 1: TikTok primero, luego formulario
+      document.getElementById('paso-tiktok').style.display = 'block';
+      document.getElementById('paso-formulario').style.display = 'none';
+      document.getElementById('panel-reg-titulo').textContent = '✍️ ¡APÚNTATE AL TOQUE!';
+      var btnConfirmar = document.getElementById('btn-confirmar-tiktok');
+      btnConfirmar.disabled = true;
+      btnConfirmar.style.opacity = '.45';
+      btnConfirmar.style.cursor = 'not-allowed';
+      btnConfirmar.style.background = '#555';
+      btnConfirmar.style.borderBottomColor = '#333';
       abrirPanel('panel-registro');
     }
     function activarConfirmacion() {
