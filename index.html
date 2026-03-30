@@ -1683,10 +1683,7 @@
       // Ocultar llama y silenciar silbido
       var llama = document.getElementById('llama-saludo');
       if (llama) llama.style.visibility = 'hidden';
-      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
-        var snd = document.getElementById(id);
-        if (snd && !snd.paused) { snd.pause(); snd.currentTime = 0; }
-      });
+      // Silbido ahora usa Web Audio API, no necesita silenciar <audio>
     }
     function cerrarPanel(id) {
       document.getElementById(id).classList.remove('activo');
@@ -2291,10 +2288,7 @@
   </style>
   <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
   <div id="musica-label">MÚSICA<br>SUERTE</div>
-  <!-- Audios silbido llama (3 archivos) -->
-  <audio id="audio-silbido-1" src="./silbido_1.mp3" preload="auto"></audio>
-  <audio id="audio-silbido-2" src="./silbido_2.mp3" preload="auto"></audio>
-  <audio id="audio-silbido-3" src="./silbido_3.mp3" preload="auto"></audio>
+  <!-- Silbidos ahora generados con Web Audio API -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     #llama-saludo {
@@ -2561,17 +2555,10 @@
         el.style.visibility = 'visible';
         void el.offsetWidth;
         el.classList.add('animando');
-        // Silbido suave encima de la música (sin tocar el volumen de la música)
+        // Silbido generado con Web Audio API (no depende de archivos mp3)
         setTimeout(function() {
           if (document.hidden) return;
-          var num = Math.ceil(Math.random() * 3);
-          var snd = document.getElementById('audio-silbido-' + num);
-          if (snd) {
-            snd.volume = 0.25;
-            snd.currentTime = 0;
-            var p = snd.play();
-            if (p && p.then) p.catch(function(err) { console.log('Silbido bloqueado:', err.message); });
-          }
+          tocarSilbido();
         }, 1000);
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
@@ -2579,6 +2566,68 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
+    /* ─── SILBIDO CON WEB AUDIO API ─── */
+    var silbidoCtx = null;
+    var silbidoPatrones = [
+      // Patrón 1: silbido corto ascendente-descendente (tipo "fiu-fiu")
+      function(ctx, t) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, t);
+        osc.frequency.linearRampToValueAtTime(1400, t + 0.15);
+        osc.frequency.linearRampToValueAtTime(700, t + 0.4);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
+        gain.gain.setValueAtTime(0.12, t + 0.3);
+        gain.gain.linearRampToValueAtTime(0, t + 0.45);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.5);
+      },
+      // Patrón 2: doble silbido rápido (tipo "fiu fiu!")
+      function(ctx, t) {
+        for (var i = 0; i < 2; i++) {
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          var off = i * 0.25;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(900, t + off);
+          osc.frequency.linearRampToValueAtTime(1300, t + off + 0.1);
+          osc.frequency.linearRampToValueAtTime(800, t + off + 0.2);
+          gain.gain.setValueAtTime(0, t + off);
+          gain.gain.linearRampToValueAtTime(0.1, t + off + 0.03);
+          gain.gain.setValueAtTime(0.1, t + off + 0.15);
+          gain.gain.linearRampToValueAtTime(0, t + off + 0.22);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t + off); osc.stop(t + off + 0.25);
+        }
+      },
+      // Patrón 3: silbido largo descendente (tipo "fiuuuu")
+      function(ctx, t) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, t);
+        osc.frequency.exponentialRampToValueAtTime(600, t + 0.6);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
+        gain.gain.setValueAtTime(0.1, t + 0.4);
+        gain.gain.linearRampToValueAtTime(0, t + 0.65);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.7);
+      }
+    ];
+    function tocarSilbido() {
+      try {
+        if (!silbidoCtx) {
+          silbidoCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (silbidoCtx.state === 'suspended') silbidoCtx.resume();
+        var idx = Math.floor(Math.random() * silbidoPatrones.length);
+        silbidoPatrones[idx](silbidoCtx, silbidoCtx.currentTime);
+      } catch(e) { console.log('Silbido error:', e.message); }
+    }
+
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
     var musica = (function() {
       var ctx, master, playing = false, step = 0, nextTime = 0, timer = null;
@@ -2774,34 +2823,15 @@
     // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
     // Primero arranca la música, luego desbloquea los silbidos.
     // Los listeners se mantienen hasta confirmar que la música está corriendo.
-    var silbidosDesbloqueados = false;
-    function desbloquearSilbidos() {
-      if (silbidosDesbloqueados) return;
-      ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
-        var snd = document.getElementById(id);
-        if (!snd) return;
-        snd.muted = true;
-        snd.volume = 0.01;
-        var p = snd.play();
-        if (p && p.then) {
-          p.then(function() {
-            snd.pause(); snd.currentTime = 0; snd.muted = false; snd.volume = 0.25;
-          }).catch(function() { snd.muted = false; snd.volume = 0.25; });
-        } else {
-          snd.pause(); snd.currentTime = 0; snd.muted = false; snd.volume = 0.25;
-        }
-      });
-      silbidosDesbloqueados = true;
-    }
     function arrancarEnInteraccion() {
       // 1) Música primero — dentro del gesto para que iOS/Android la permita
       if (!musica.isPlaying()) {
         iniciarMusica();
       }
-      // 2) Desbloquear <audio> de silbido en cada interacción hasta que funcionen
-      desbloquearSilbidos();
-      // Eliminar listeners solo cuando ambos estén activos
-      if (musica.isPlaying() && silbidosDesbloqueados) {
+      // 2) Desbloquear AudioContext de silbido con el gesto del usuario
+      if (silbidoCtx && silbidoCtx.state === 'suspended') silbidoCtx.resume();
+      // Eliminar listeners cuando la música esté activa
+      if (musica.isPlaying()) {
         document.removeEventListener('click',      arrancarEnInteraccion);
         document.removeEventListener('touchstart', arrancarEnInteraccion);
       }
@@ -2813,13 +2843,12 @@
       if (document.hidden) {
         // En segundo plano: suspender música y cortar cualquier silbido activo
         musica.pausar();
-        ['audio-silbido-1','audio-silbido-2','audio-silbido-3'].forEach(function(id) {
-          var snd = document.getElementById(id);
-          if (snd && !snd.paused) { snd.pause(); snd.currentTime = 0; }
-        });
+        // Suspender silbido Web Audio API
+        if (silbidoCtx && silbidoCtx.state === 'running') silbidoCtx.suspend();
       } else {
-        // Vuelve al frente: reanudar música si estaba sonando
+        // Vuelve al frente: reanudar música y silbidos
         musica.reanudar();
+        if (silbidoCtx && silbidoCtx.state === 'suspended') silbidoCtx.resume();
       }
     });
   </script>
