@@ -103,20 +103,23 @@
     #sorteos .seccion-titulo::after { background:var(--neon-rosa); }
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
     /* Contenedor 3D para flip */
-    .card-sorteo-wrap { perspective:1200px; }
+    .card-sorteo-wrap { perspective:1200px; position:relative; }
     .card-sorteo { background:#111; border:3px solid var(--neon-rosa); border-radius:4px;
-      overflow:hidden; box-shadow:0 0 25px rgba(255,0,128,.25);
+      box-shadow:0 0 25px rgba(255,0,128,.25);
       transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
       transform-style:preserve-3d; }
     .card-sorteo:hover { box-shadow:0 0 50px rgba(255,0,128,.5); }
     .card-sorteo:not(.flipped):hover { transform:translateY(-8px); }
     .card-sorteo.flipped { transform:rotateY(180deg); }
-    .card-front, .card-back { backface-visibility:hidden; -webkit-backface-visibility:hidden; }
-    .card-front { position:relative; }
+    .card-front { position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; }
     .card-back {
-      position:absolute; inset:0; transform:rotateY(180deg);
-      background:#0a0a1a; display:flex; flex-direction:column;
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      transform:rotateY(180deg);
+      background:linear-gradient(135deg,#0a0a2a 0%,#0d0d1f 50%,#0a001a 100%);
+      display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:16px;
+      border-radius:4px; overflow:hidden;
     }
     .card-back-titulo {
       font-family:'Bangers',cursive; font-size:1.1rem; color:var(--neon-amarillo);
@@ -1601,12 +1604,12 @@
     // Formato ISO 8601 con zona Lima (UTC-5): 'YYYY-MM-DDTHH:MM:00-05:00'
     // ═══════════════════════════════════════════════════════════════
     var SORTEOS_CFG = {
-      '1': { fechaISO: '2026-03-29T19:24:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
-      '2': { fechaISO: '2026-03-29T19:26:00-05:00', nombre: 'Yape pa la Recarga – 7' },
-      '3': { fechaISO: '2026-03-29T19:28:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
-      '4': { fechaISO: '2026-03-29T19:30:00-05:00', nombre: 'Yape pal Chicle – S/2' },
-      '5': { fechaISO: '2026-03-29T19:32:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
-      '6': { fechaISO: '2026-03-29T19:34:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
+      '1': { fechaISO: '2026-03-29T19:34:00-05:00', nombre: 'Yape pa el Pollito – S/20' },
+      '2': { fechaISO: '2026-03-29T19:35:00-05:00', nombre: 'Yape pa la Recarga – 7' },
+      '3': { fechaISO: '2026-03-29T19:36:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
+      '4': { fechaISO: '2026-03-29T19:37:00-05:00', nombre: 'Yape pal Chicle – S/2' },
+      '5': { fechaISO: '2026-03-29T19:38:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
+      '6': { fechaISO: '2026-03-29T19:39:00-05:00', nombre: 'Yape pa la Quinua – S/2' }
     };
     // Pre-calcular timestamps en ms para cada sorteo
     Object.keys(SORTEOS_CFG).forEach(function(id) {
