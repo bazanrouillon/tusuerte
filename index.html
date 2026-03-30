@@ -1714,21 +1714,28 @@
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
-      // Limpiar registro si ya pasó la fecha del sorteo en que se inscribió
       var reg = localStorage.getItem('tsp_registrado');
       if (reg) {
         try {
           var regObj = JSON.parse(reg);
           var regSorteoId = regObj.sorteoId;
           var fechaSorteo = SORTEOS_CFG[regSorteoId] ? SORTEOS_CFG[regSorteoId].ts : null;
-          // Si la fecha del sorteo ya pasó (+2 min para que termine la ruleta), liberar el bloqueo
+          // AUTO: si el sorteo donde se registró ya se cerró (+2 min), liberar
           if (!fechaSorteo || Date.now() > fechaSorteo + 120000) {
             localStorage.removeItem('tsp_registrado');
             reg = null;
           }
+          // ADMIN: si hay una liberación más reciente que el registro, liberar
+          if (reg) {
+            var libTs = localStorage.getItem('tsp_liberacion');
+            if (libTs && regObj.fecha && new Date(libTs) > new Date(regObj.fecha)) {
+              localStorage.removeItem('tsp_registrado');
+              reg = null;
+            }
+          }
         } catch(e) { localStorage.removeItem('tsp_registrado'); reg = null; }
       }
-      // Bloquear si aún está registrado esta semana
+      // Bloquear si aún está registrado
       if (reg) {
         document.getElementById('modal-ya-registrado').classList.add('activo');
         var llama = document.getElementById('llama-saludo');
@@ -1773,8 +1780,7 @@
     function enviarRegistro(e) {
       e.preventDefault();
       const form = e.target;
-      // Generar código de participación
-      const cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
+      const btnRegistro = form.querySelector('.btn-registro');
       // Recopilar datos del formulario
       const datos = {
         sorteo: document.getElementById('registro-sorteo-label').textContent.replace('🍀 ', '').trim(),
@@ -1784,39 +1790,83 @@
         celular: form.celular.value.trim(),
         correo: form.correo.value.trim(),
         distrito: form.distrito.value,
-        tiktok: (form.tiktok ? form.tiktok.value.trim() : ''),
-        codigo: cod
+        tiktok: (form.tiktok ? form.tiktok.value.trim() : '')
       };
-      // ── Enviar a Google Sheets (si la URL está configurada) ──
-      if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
-        fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(datos)
-        }).catch(function(err) {
-          console.warn('Error al guardar en Google Sheets:', err);
+      // ── Verificar DNI duplicado contra Google Sheet ──
+      if (btnRegistro) { btnRegistro.disabled = true; btnRegistro.textContent = 'VERIFICANDO...'; }
+      var verificarUrl = GOOGLE_SHEETS_URL + '?action=verificarDni&dni=' + encodeURIComponent(datos.dni) + '&sorteo=' + encodeURIComponent(datos.sorteo);
+      fetch(verificarUrl, { redirect: 'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          try { return JSON.parse(txt); } catch(e) { return { status: 'error' }; }
+        })
+        .then(function(res) {
+          if (res.yaRegistrado) {
+            alert('¡Este DNI ya está registrado en este sorteo! No seas hábil pe causa.');
+            if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
+            return;
+          }
+          // ── DNI libre, proceder con el registro ──
+          var cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
+          datos.codigo = cod;
+          if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
+            fetch(GOOGLE_SHEETS_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos)
+            }).catch(function(err) {
+              console.warn('Error al guardar en Google Sheets:', err);
+            });
+          }
+          // ── Actualizar contador visual ──
+          var id = document.getElementById('sorteo-id').value;
+          contadores[id]++;
+          document.getElementById('inscritos-' + id).textContent = contadores[id];
+          var pct = Math.max(5, Math.min(contadores[id], 100));
+          document.getElementById('barra-' + id).style.width = pct + '%';
+          // ── Guardar en localStorage — vence en la fecha del sorteo específico ──
+          localStorage.setItem('tsp_registrado', JSON.stringify({
+            tiktok: datos.tiktok,
+            sorteo: datos.sorteo,
+            sorteoId: id,
+            dni: datos.dni,
+            codigo: cod,
+            fecha: new Date().toISOString()
+          }));
+          // ── Mostrar código y modal de éxito ──
+          document.getElementById('codigo-participacion').textContent = cod;
+          cerrarPanel('panel-registro');
+          document.getElementById('modal-exito').classList.add('activo');
+          form.reset();
+          if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
+        })
+        .catch(function(err) {
+          console.warn('Error al verificar DNI:', err);
+          // Si falla la verificación, permitir registro igual (para no bloquear)
+          var cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
+          datos.codigo = cod;
+          if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
+            fetch(GOOGLE_SHEETS_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos)
+            }).catch(function(e2) {});
+          }
+          var id = document.getElementById('sorteo-id').value;
+          contadores[id]++;
+          document.getElementById('inscritos-' + id).textContent = contadores[id];
+          localStorage.setItem('tsp_registrado', JSON.stringify({
+            tiktok: datos.tiktok, sorteo: datos.sorteo, sorteoId: id,
+            dni: datos.dni, codigo: cod, fecha: new Date().toISOString()
+          }));
+          document.getElementById('codigo-participacion').textContent = cod;
+          cerrarPanel('panel-registro');
+          document.getElementById('modal-exito').classList.add('activo');
+          form.reset();
+          if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
         });
-      }
-      // ── Actualizar contador visual ──
-      const id = document.getElementById('sorteo-id').value;
-      contadores[id]++;
-      document.getElementById('inscritos-' + id).textContent = contadores[id];
-      const pct = Math.max(5, Math.min(contadores[id], 100));
-      document.getElementById('barra-' + id).style.width = pct + '%';
-      // ── Guardar en localStorage — vence en la fecha del sorteo específico ──
-      localStorage.setItem('tsp_registrado', JSON.stringify({
-        tiktok: datos.tiktok,
-        sorteo: datos.sorteo,
-        sorteoId: id,          // para calcular la fecha de vencimiento
-        codigo: cod,
-        fecha: new Date().toISOString()
-      }));
-      // ── Mostrar código y modal de éxito ──
-      document.getElementById('codigo-participacion').textContent = cod;
-      cerrarPanel('panel-registro');
-      document.getElementById('modal-exito').classList.add('activo');
-      form.reset();
     }
     function cerrarModal() {
       document.getElementById('modal-exito').classList.remove('activo');
@@ -1895,7 +1945,18 @@
     }
     renderGanadores();
 
-    // ── Botón admin oculto: 5 clics rápidos en el logo limpia localStorage ──
+    // ── Consultar flag de liberación al cargar la página ──
+    (function() {
+      fetch(GOOGLE_SHEETS_URL + '?action=checklib', { redirect: 'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          try { var res = JSON.parse(txt); if (res.liberacion) localStorage.setItem('tsp_liberacion', res.liberacion); } catch(e) {}
+        })
+        .catch(function() {});
+    })();
+
+    // ── Botón admin oculto: 5 clics rápidos en el logo ──
+    // Libera a TODOS los usuarios para que puedan registrarse en otro sorteo
     (function() {
       var logoAdmin = document.getElementById('logo-admin');
       var clicks = 0;
@@ -1908,10 +1969,23 @@
           timer = setTimeout(function() { clicks = 0; }, 1500);
           if (clicks >= 5) {
             clicks = 0;
-            localStorage.removeItem('tsp_registrado');
-            localStorage.removeItem('tsp_ganadores');
-            alert('Admin: localStorage limpiado (registros y ganadores)');
-            location.reload();
+            if (!confirm('¿Liberar a todos los usuarios para que puedan registrarse en otro sorteo?')) return;
+            fetch(GOOGLE_SHEETS_URL + '?action=liberar', { redirect: 'follow' })
+              .then(function(r) { return r.text(); })
+              .then(function(txt) {
+                try {
+                  var res = JSON.parse(txt);
+                  if (res.liberado) {
+                    localStorage.setItem('tsp_liberacion', res.liberado);
+                    localStorage.removeItem('tsp_registrado');
+                    alert('¡Listo! Todos los usuarios fueron liberados. Ya pueden registrarse en otro sorteo.');
+                    location.reload();
+                  } else {
+                    alert('Error: ' + (res.mensaje || 'No se pudo liberar'));
+                  }
+                } catch(e) { alert('Error al procesar respuesta'); }
+              })
+              .catch(function(err) { alert('Error de conexión: ' + err); });
           }
         });
       }
@@ -2036,7 +2110,14 @@
                 card.classList.remove('flipped');
                 setTimeout(function() {
                   card.classList.add('cerrado');
-                  /* sorteo finalizado */
+                  // Liberar a quien estaba registrado en este sorteo (no hubo ganador)
+                  try {
+                    var regActual = localStorage.getItem('tsp_registrado');
+                    if (regActual) {
+                      var regObj = JSON.parse(regActual);
+                      if (regObj.sorteoId === sorteoId) localStorage.removeItem('tsp_registrado');
+                    }
+                  } catch(e) {}
                 }, 900);
               }, 5000);
               return;
@@ -2104,7 +2185,20 @@
                     card.classList.remove('flipped');
                     setTimeout(function() {
                       card.classList.add('cerrado');
-                      /* sorteo finalizado */
+                      // ── Liberar a los NO ganadores para que participen en otro sorteo ──
+                      try {
+                        var regActual = localStorage.getItem('tsp_registrado');
+                        if (regActual) {
+                          var regObj = JSON.parse(regActual);
+                          // Solo liberar si estaba registrado en ESTE sorteo y NO es el ganador
+                          if (regObj.sorteoId === sorteoId) {
+                            var regDni = regObj.dni || '';
+                            if (regDni !== ganador.dni) {
+                              localStorage.removeItem('tsp_registrado');
+                            }
+                          }
+                        }
+                      } catch(e) {}
                     }, 900); // esperar que termine la animación de flip
                   }, 60000); // 1 minuto
                 }
