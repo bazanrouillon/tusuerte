@@ -57,7 +57,7 @@
     .metele-tag {
       position:absolute; top:14px; left:18px;
       font-family:'Permanent Marker',cursive; font-size:clamp(1.3rem,3.8vw,2.1rem);
-      color:var(--neon-amarillo); text-shadow:2px 2px 0 #7a3300,0 0 18px var(--neon-naranja);
+      color:var(--neon-amarillo); text-shadow:2px 2px 0 #7a3300,0 0 8px rgba(255,106,0,.35);
       transform:rotate(-4deg); transform-origin:left center;
       animation:metele-pulse 2.4s ease-in-out infinite alternate;
       letter-spacing:1px; line-height:1.25; z-index:10;
@@ -73,21 +73,21 @@
     @keyframes girar { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .logo-principal { font-family:'Bangers',cursive; font-size:clamp(3.5rem,12vw,8rem);
       letter-spacing:4px; line-height:1; color:var(--neon-amarillo);
-      text-shadow:0 0 10px var(--neon-amarillo),0 0 30px var(--neon-naranja),0 0 60px var(--neon-rosa),4px 4px 0 #7a0040,8px 8px 0 #3d0020;
+      text-shadow:0 0 6px rgba(255,230,0,.4),0 0 18px rgba(255,106,0,.3),0 0 35px rgba(255,0,128,.15),4px 4px 0 #7a0040,8px 8px 0 #3d0020;
       animation:logopulse 2s ease-in-out infinite alternate; }
     @keyframes logopulse {
-      0%{text-shadow:0 0 10px var(--neon-amarillo),0 0 30px var(--neon-naranja),0 0 60px var(--neon-rosa),4px 4px 0 #7a0040,8px 8px 0 #3d0020}
-      100%{text-shadow:0 0 20px var(--neon-amarillo),0 0 60px var(--neon-naranja),0 0 100px var(--neon-rosa),4px 4px 0 #7a0040,8px 8px 0 #3d0020} }
+      0%{text-shadow:0 0 6px rgba(255,230,0,.4),0 0 18px rgba(255,106,0,.3),0 0 35px rgba(255,0,128,.15),4px 4px 0 #7a0040,8px 8px 0 #3d0020}
+      100%{text-shadow:0 0 10px rgba(255,230,0,.5),0 0 30px rgba(255,106,0,.35),0 0 50px rgba(255,0,128,.2),4px 4px 0 #7a0040,8px 8px 0 #3d0020} }
     .logo-sub { font-family:'Black Ops One',cursive; font-size:clamp(.9rem,3vw,1.5rem);
       letter-spacing:6px; color:var(--neon-verde);
-      text-shadow:0 0 10px var(--neon-verde),0 0 20px var(--neon-verde);
+      text-shadow:0 0 5px rgba(57,255,20,.3),0 0 12px rgba(57,255,20,.2);
       margin-top:4px; text-transform:uppercase; }
     /* NAV */
-    nav { background:#0d0d0d; border-bottom:3px solid var(--neon-amarillo);
+    nav { background:#0d0d0d; border-bottom:2px solid rgba(255,230,0,.5);
       display:flex; justify-content:center; flex-wrap:wrap; }
     nav a { font-family:'Bangers',cursive; color:var(--neon-amarillo); text-decoration:none;
       font-size:1.2rem; letter-spacing:2px; padding:14px 24px;
-      transition:background .2s,color .2s; border-right:2px solid #1a1a1a; cursor:pointer; }
+      transition:background .2s,color .2s; border-right:1px solid #1a1a1a; cursor:pointer; }
     nav a:hover { background:var(--neon-amarillo); color:#000; }
     /* TICKER */
     .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
@@ -99,13 +99,13 @@
     .seccion-titulo { font-family:'Bangers',cursive; font-size:clamp(2.2rem,6vw,4rem);
       letter-spacing:3px; text-align:center; margin-bottom:40px; }
     .seccion-titulo::after { content:''; display:block; height:4px; width:120px; margin:8px auto 0; border-radius:2px; }
-    #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 20px var(--neon-rosa); }
+    #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 8px rgba(255,0,128,.35); }
     #sorteos .seccion-titulo::after { background:var(--neon-rosa); }
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
     /* Contenedor 3D para flip */
     .card-sorteo-wrap { perspective:1200px; position:relative; }
-    .card-sorteo { background:#111; border:3px solid var(--neon-rosa); border-radius:4px;
-      box-shadow:0 0 25px rgba(255,0,128,.25);
+    .card-sorteo { background:#111; border:2px solid var(--neon-rosa); border-radius:4px;
+      box-shadow:0 0 12px rgba(255,0,128,.15);
       transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
       transform-style:preserve-3d; }
     .card-sorteo:hover { box-shadow:0 0 50px rgba(255,0,128,.5); }
@@ -237,7 +237,7 @@
     .paso p { font-size:.88rem; color:#ccc; line-height:1.5; }
     /* PANEL GANADORES */
     #panel-ganadores .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
-    #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 16px var(--neon-naranja); }
+    #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 6px rgba(255,106,0,.35); }
     #panel-ganadores .panel-box { border:3px solid var(--neon-naranja); }
     .ganador-entry {
       background:linear-gradient(135deg,#1a1a00,#1a0800); border:2px solid var(--neon-amarillo);
@@ -783,7 +783,8 @@
       #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
       /* ── Header ── */
       header { padding:18px 14px 14px; }
-      .metele-tag { font-size:.72rem; top:8px; left:10px; line-height:1.2; }
+      .metele-tag { font-size:.65rem; top:6px; left:6px; line-height:1.15; max-width:80px; }
+      .logo-principal { padding-left:30px; }
       .header-decoracion { gap:5px; margin-bottom:4px; }
       .estrella { font-size:.9rem; }
       .logo-sub { font-size:.7rem; letter-spacing:3px; }
@@ -863,17 +864,12 @@
   <!-- BANNER PROTOTIPO -->
   <div id="banner-prototipo" style="
     position:sticky; top:0; z-index:500;
-    background: repeating-linear-gradient(90deg,#ff0080 0px,#ff6a00 80px,#ffe600 160px,#39ff14 240px,#00e5ff 320px,#cc00ff 400px,#ff0080 480px);
-    background-size:480px 100%;
-    animation: protoBanner 4s linear infinite;
-    padding:8px 16px; text-align:center; border-bottom:3px solid #000;">
-    <span style="font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:3px;color:#000;text-shadow:1px 1px 0 rgba(255,255,255,.4);">
-      Estamos en marcha blanca 🚧 Ya puedes participar en sorteos de prueba mientras afinamos la plataforma.
+    background:#1a1a2e;
+    padding:7px 16px; text-align:center; border-bottom:1px solid rgba(255,230,0,.2);">
+    <span style="font-family:'Bangers',cursive;font-size:.95rem;letter-spacing:2px;color:rgba(255,230,0,.6);">
+      🚧 Marcha blanca — Ya puedes participar en sorteos de prueba mientras afinamos la plataforma.
     </span>
   </div>
-  <style>
-    @keyframes protoBanner { from{background-position:0 0} to{background-position:480px 0} }
-  </style>
   <!-- HEADER -->
   <header>
     <div class="metele-tag">¡Métele sin<br>miedo, mi neto!</div>
@@ -2258,8 +2254,8 @@
       width: 70px;
     }
   </style>
-  <button id="btn-musica" title="Música Peruana" onclick="toggleMusica()" style="display:none!important">🎵</button>
-  <div id="musica-label">MÚSICA<br>SUERTE</div>
+  <button id="btn-musica" title="Silenciar / Activar sonido" onclick="toggleMusica()">🔊</button>
+  <div id="musica-label">SONIDO</div>
   <!-- Silbidos cargados via fetch + Web Audio API desde silbido_1/2/3.mp3 -->
   <!-- Silbidos generados con Web Audio API usando el contexto de la música -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
@@ -2304,7 +2300,9 @@
       box-shadow: 0 0 20px var(--neon-amarillo), 0 0 6px #000;
       margin-bottom: 6px;
       text-align: center;
-      white-space: nowrap;
+      white-space: normal;
+      max-width: 200px;
+      word-break: break-word;
       opacity: 0;
     }
     #llama-burbuja2 {
@@ -2466,9 +2464,9 @@
         'Ponte pilas',
         'Estas misio?',
         'Poco floro',
-        'Oe, no seas gil',
+        'Oe, no seas\ngil!',
         'Oh ño!',
-        'No seas sapo y registrate!',
+        'No seas sapo\ny registrate!',
         'Somos!'
       ];
       var el      = document.getElementById('llama-saludo');
@@ -2489,7 +2487,7 @@
       resetLlama(); // estado inicial
       function mostrarLlama() {
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
-        burbuja.textContent = frases[Math.floor(Math.random() * frases.length)];
+        burbuja.innerHTML = frases[Math.floor(Math.random() * frases.length)].replace(/\n/g, '<br>');
         // 1) Reset completo
         resetLlama();
         // 2) Posicionar en el borde elegido (aún invisible por visibility:hidden)
@@ -2556,6 +2554,7 @@
       });
     }
     function tocarSilbido() {
+      if (audioMuteado) return;
       var ctx = musica.getCtx();
       if (!ctx || ctx.state !== 'running') return;
       // Cargar si aún no se cargaron
@@ -2748,17 +2747,32 @@
     function iniciarMusica() {
       var btn = document.getElementById('btn-musica');
       musica.start();
+      audioMuteado = false;
       btn.textContent = '🔊';
       btn.classList.add('sonando');
+      btn.title = 'Silenciar sonido';
     }
+    var audioMuteado = false;
     function toggleMusica() {
       var btn = document.getElementById('btn-musica');
-      if (musica.isPlaying()) {
-        musica.stop();
-        btn.textContent = '🎵';
+      if (!audioMuteado) {
+        // MUTE: pausar música y silbidos
+        audioMuteado = true;
+        musica.pausar();
+        btn.textContent = '🔇';
         btn.classList.remove('sonando');
+        btn.title = 'Activar sonido';
       } else {
-        iniciarMusica();
+        // UNMUTE: reanudar música y silbidos
+        audioMuteado = false;
+        if (musica.isPlaying && musica.getCtx()) {
+          musica.reanudar();
+        } else {
+          iniciarMusica();
+        }
+        btn.textContent = '🔊';
+        btn.classList.add('sonando');
+        btn.title = 'Silenciar sonido';
       }
     }
     // Escritorio: intento de autoplay al cargar
