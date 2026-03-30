@@ -1592,8 +1592,8 @@
   <div class="modal-overlay" id="modal-ya-registrado" onclick="cerrarModalYaReg()">
     <div class="modal-box" style="border-color:var(--neon-rosa);box-shadow:0 0 40px rgba(255,0,128,.5)">
       <div class="modal-titulo" style="color:var(--neon-rosa);text-shadow:0 0 20px var(--neon-rosa);">🚫 ¡NO SEAS HÁBIL!</div>
-      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en un sorteo.</p>
-      <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Espera a que se concrete tu sorteo y luego podrás inscribirte en otro. ¡Ten paciencia mi soli!</p>
+      <p class="modal-texto" style="font-size:1.1rem;margin:16px 0;">Ya estás apuntado en este sorteo.</p>
+      <p class="modal-texto" style="color:#aaa;font-size:.85rem;">Solo puedes registrarte una vez por sorteo. ¡Prueba con otro sorteo pe!</p>
       <button class="btn-cerrar" style="background:var(--neon-rosa);border-bottom-color:#7a0040;" onclick="cerrarModalYaReg()">YA FUE</button>
     </div>
   </div>
@@ -1706,31 +1706,15 @@
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
-      /* ── MARCHA BLANCA: restricción de un solo sorteo DESACTIVADA ──
-      var reg = localStorage.getItem('tsp_registrado');
-      if (reg) {
-        try {
-          var regObj = JSON.parse(reg);
-          var regSorteoId = regObj.sorteoId;
-          var fechaSorteo = SORTEOS_CFG[regSorteoId] ? SORTEOS_CFG[regSorteoId].ts : null;
-          if (!fechaSorteo || Date.now() > fechaSorteo + 120000) {
-            localStorage.removeItem('tsp_registrado'); reg = null;
-          }
-          if (reg) {
-            var libTs = localStorage.getItem('tsp_liberacion');
-            if (libTs && regObj.fecha && new Date(libTs) > new Date(regObj.fecha)) {
-              localStorage.removeItem('tsp_registrado'); reg = null;
-            }
-          }
-        } catch(e) { localStorage.removeItem('tsp_registrado'); reg = null; }
-      }
-      if (reg) {
+      // Verificar si ya se registró en ESTE sorteo específico
+      var regs = {};
+      try { regs = JSON.parse(localStorage.getItem('tsp_registrados_por_sorteo')) || {}; } catch(e) {}
+      if (regs[sorteoId]) {
         document.getElementById('modal-ya-registrado').classList.add('activo');
         var llama = document.getElementById('llama-saludo');
         if (llama) llama.style.visibility = 'hidden';
         return;
       }
-      ── FIN MARCHA BLANCA */
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
@@ -1808,15 +1792,11 @@
           document.getElementById('inscritos-' + id).textContent = contadores[id];
           var pct = Math.max(5, Math.min(contadores[id], 100));
           document.getElementById('barra-' + id).style.width = pct + '%';
-          // ── Guardar en localStorage — vence en la fecha del sorteo específico ──
-          localStorage.setItem('tsp_registrado', JSON.stringify({
-            tiktok: datos.tiktok,
-            sorteo: datos.sorteo,
-            sorteoId: id,
-            dni: datos.dni,
-            codigo: cod,
-            fecha: new Date().toISOString()
-          }));
+          // ── Guardar en localStorage por sorteo (permite registrarse en varios) ──
+          var regsGuardar = {};
+          try { regsGuardar = JSON.parse(localStorage.getItem('tsp_registrados_por_sorteo')) || {}; } catch(e) {}
+          regsGuardar[id] = { sorteo: datos.sorteo, dni: datos.dni, codigo: cod, fecha: new Date().toISOString() };
+          localStorage.setItem('tsp_registrados_por_sorteo', JSON.stringify(regsGuardar));
           // ── Mostrar código y modal de éxito ──
           document.getElementById('codigo-participacion').textContent = cod;
           cerrarPanel('panel-registro');
@@ -1840,10 +1820,10 @@
           var id = document.getElementById('sorteo-id').value;
           contadores[id]++;
           document.getElementById('inscritos-' + id).textContent = contadores[id];
-          localStorage.setItem('tsp_registrado', JSON.stringify({
-            tiktok: datos.tiktok, sorteo: datos.sorteo, sorteoId: id,
-            dni: datos.dni, codigo: cod, fecha: new Date().toISOString()
-          }));
+          var regsF = {};
+          try { regsF = JSON.parse(localStorage.getItem('tsp_registrados_por_sorteo')) || {}; } catch(e) {}
+          regsF[id] = { sorteo: datos.sorteo, dni: datos.dni, codigo: cod, fecha: new Date().toISOString() };
+          localStorage.setItem('tsp_registrados_por_sorteo', JSON.stringify(regsF));
           document.getElementById('codigo-participacion').textContent = cod;
           cerrarPanel('panel-registro');
           document.getElementById('modal-exito').classList.add('activo');
@@ -1965,23 +1945,12 @@
           timer = setTimeout(function() { clicks = 0; }, 1500);
           if (clicks >= 5) {
             clicks = 0;
-            if (!confirm('¿Liberar a todos los usuarios para que puedan registrarse en otro sorteo?')) return;
-            fetch(GOOGLE_SHEETS_URL + '?action=liberar', { redirect: 'follow' })
-              .then(function(r) { return r.text(); })
-              .then(function(txt) {
-                try {
-                  var res = JSON.parse(txt);
-                  if (res.liberado) {
-                    localStorage.setItem('tsp_liberacion', res.liberado);
-                    localStorage.removeItem('tsp_registrado');
-                    alert('¡Listo! Todos los usuarios fueron liberados. Ya pueden registrarse en otro sorteo.');
-                    location.reload();
-                  } else {
-                    alert('Error: ' + (res.mensaje || 'No se pudo liberar'));
-                  }
-                } catch(e) { alert('Error al procesar respuesta'); }
-              })
-              .catch(function(err) { alert('Error de conexión: ' + err); });
+            if (!confirm('¿Limpiar todos los registros y ganadores del localStorage?')) return;
+            localStorage.removeItem('tsp_registrados_por_sorteo');
+            localStorage.removeItem('tsp_registrado');
+            localStorage.removeItem(GANADORES_KEY);
+            alert('¡Listo! localStorage limpiado.');
+            location.reload();
           }
         });
       }
