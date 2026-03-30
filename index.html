@@ -1361,13 +1361,7 @@
                 </optgroup>
               </select>
             </div>
-            <div class="form-grupo">
-              <label for="tiktok">📱 TU USUARIO DE TIKTOK</label>
-              <input type="text" id="tiktok" name="tiktok" placeholder="@tunombre" required
-                style="border-color:var(--neon-rosa);"
-                oninput="this.value=this.value.startsWith('@')?this.value:'@'+this.value.replace('@','')"/>
-              <p style="font-size:.75rem;color:#888;margin-top:5px;line-height:1.4;">Se verificará que sigas <strong style="color:#ff0050;">@tusuerte.pe.oficial</strong> antes del sorteo. Si no sigues, se pasa al siguiente.</p>
-            </div>
+            <!-- Campo TikTok deshabilitado en marcha blanca -->
             <input type="hidden" id="sorteo-id" name="sorteo" value="" />
             <div class="form-grupo" style="margin-top:12px;">
               <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-family:inherit;font-size:.88rem;color:#ccc;letter-spacing:normal;text-transform:none;font-weight:normal;">
@@ -1435,7 +1429,7 @@
   <div class="panel-overlay" id="panel-ganadores" onclick="cerrarPanelFuera(event,'panel-ganadores')">
     <div class="panel-box">
       <div class="panel-header">
-        <span class="panel-titulo">🏆 ÚLTIMOS GANADORES</span>
+        <span class="panel-titulo">🏆 GANADORES DE LA SEMANA</span>
         <button class="panel-cerrar" onclick="cerrarPanel('panel-ganadores')">✕</button>
       </div>
       <div class="panel-body">
@@ -1713,47 +1707,38 @@
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
+      /* ── MARCHA BLANCA: restricción de un solo sorteo DESACTIVADA ──
       var reg = localStorage.getItem('tsp_registrado');
       if (reg) {
         try {
           var regObj = JSON.parse(reg);
           var regSorteoId = regObj.sorteoId;
           var fechaSorteo = SORTEOS_CFG[regSorteoId] ? SORTEOS_CFG[regSorteoId].ts : null;
-          // AUTO: si el sorteo donde se registró ya se cerró (+2 min), liberar
           if (!fechaSorteo || Date.now() > fechaSorteo + 120000) {
-            localStorage.removeItem('tsp_registrado');
-            reg = null;
+            localStorage.removeItem('tsp_registrado'); reg = null;
           }
-          // ADMIN: si hay una liberación más reciente que el registro, liberar
           if (reg) {
             var libTs = localStorage.getItem('tsp_liberacion');
             if (libTs && regObj.fecha && new Date(libTs) > new Date(regObj.fecha)) {
-              localStorage.removeItem('tsp_registrado');
-              reg = null;
+              localStorage.removeItem('tsp_registrado'); reg = null;
             }
           }
         } catch(e) { localStorage.removeItem('tsp_registrado'); reg = null; }
       }
-      // Bloquear si aún está registrado
       if (reg) {
         document.getElementById('modal-ya-registrado').classList.add('activo');
         var llama = document.getElementById('llama-saludo');
         if (llama) llama.style.visibility = 'hidden';
         return;
       }
+      ── FIN MARCHA BLANCA */
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
-      // Resetear al paso 1 (TikTok)
-      document.getElementById('paso-tiktok').style.display = 'block';
-      document.getElementById('paso-formulario').style.display = 'none';
-      document.getElementById('panel-reg-titulo').textContent = '✍️ ¡APÚNTATE AL TOQUE!';
-      const btnConfirmar = document.getElementById('btn-confirmar-tiktok');
-      btnConfirmar.disabled = true;
-      btnConfirmar.style.opacity = '.45';
-      btnConfirmar.style.cursor = 'not-allowed';
-      btnConfirmar.style.background = '#555';
-      btnConfirmar.style.borderBottomColor = '#333';
+      // Marcha blanca: ir directo al formulario (sin paso TikTok)
+      document.getElementById('paso-tiktok').style.display = 'none';
+      document.getElementById('paso-formulario').style.display = 'block';
+      document.getElementById('panel-reg-titulo').textContent = '📝 COMPLETA TUS DATOS';
       abrirPanel('panel-registro');
     }
     function activarConfirmacion() {
@@ -1903,6 +1888,19 @@
       '#ff0080','#39ff14','#ffe600','#00e5ff','#cc00ff','#ff6a00',
       '#ff4488','#22cc44','#ffcc00','#0099ff','#aa00ff','#ff8833'
     ];
+
+    // ── Limpiar ganadores automáticamente cada lunes ──
+    (function() {
+      var ahora = new Date();
+      if (ahora.getDay() === 1) { // Lunes = 1
+        var yaLimpio = localStorage.getItem('tsp_ganadores_limpiado');
+        var semanaActual = ahora.getFullYear() + '-W' + Math.ceil((((ahora - new Date(ahora.getFullYear(),0,1)) / 86400000) + new Date(ahora.getFullYear(),0,1).getDay() + 1) / 7);
+        if (yaLimpio !== semanaActual) {
+          localStorage.removeItem(GANADORES_KEY);
+          localStorage.setItem('tsp_ganadores_limpiado', semanaActual);
+        }
+      }
+    })();
 
     // ── Cargar ganadores de localStorage ──
     function cargarGanadores() {
