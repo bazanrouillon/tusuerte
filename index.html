@@ -2564,57 +2564,37 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-    /* ─── SILBIDOS (generados con osciladores, mismo ctx de la música) ─── */
+    /* ─── SILBIDOS (tus mp3 originales, usando el ctx de la música) ─── */
+    var silbidoBuffers = [null, null, null];
+    var silbidosCargados = false;
+    function cargarSilbidosMp3() {
+      if (silbidosCargados) return;
+      var ctx = musica.getCtx();
+      if (!ctx) return;
+      silbidosCargados = true;
+      ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'].forEach(function(url, i) {
+        fetch(url)
+          .then(function(r) { return r.arrayBuffer(); })
+          .then(function(arr) { return ctx.decodeAudioData(arr); })
+          .then(function(decoded) { silbidoBuffers[i] = decoded; })
+          .catch(function() {});
+      });
+    }
     function tocarSilbido() {
       var ctx = musica.getCtx();
       if (!ctx || ctx.state !== 'running') return;
-      var tipo = Math.floor(Math.random() * 3);
-      var t = ctx.currentTime;
-
-      if (tipo === 0) {
-        // Silbido "fiu-fiu" clásico peruano
-        var o = ctx.createOscillator();
-        var g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(800, t);
-        o.frequency.linearRampToValueAtTime(1400, t + 0.18);
-        o.frequency.linearRampToValueAtTime(600, t + 0.5);
-        g.gain.setValueAtTime(0.001, t);
-        g.gain.linearRampToValueAtTime(0.18, t + 0.04);
-        g.gain.setValueAtTime(0.18, t + 0.35);
-        g.gain.linearRampToValueAtTime(0.001, t + 0.55);
-        o.connect(g); g.connect(ctx.destination);
-        o.start(t); o.stop(t + 0.6);
-      } else if (tipo === 1) {
-        // Doble silbido rápido "fiu fiu!"
-        [0, 0.28].forEach(function(off) {
-          var o = ctx.createOscillator();
-          var g = ctx.createGain();
-          o.type = 'sine';
-          o.frequency.setValueAtTime(900, t + off);
-          o.frequency.linearRampToValueAtTime(1350, t + off + 0.12);
-          o.frequency.linearRampToValueAtTime(750, t + off + 0.24);
-          g.gain.setValueAtTime(0.001, t + off);
-          g.gain.linearRampToValueAtTime(0.16, t + off + 0.03);
-          g.gain.setValueAtTime(0.16, t + off + 0.17);
-          g.gain.linearRampToValueAtTime(0.001, t + off + 0.26);
-          o.connect(g); g.connect(ctx.destination);
-          o.start(t + off); o.stop(t + off + 0.28);
-        });
-      } else {
-        // Silbido largo bajando "fiuuuuu"
-        var o = ctx.createOscillator();
-        var g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(1300, t);
-        o.frequency.exponentialRampToValueAtTime(500, t + 0.7);
-        g.gain.setValueAtTime(0.001, t);
-        g.gain.linearRampToValueAtTime(0.18, t + 0.04);
-        g.gain.setValueAtTime(0.15, t + 0.5);
-        g.gain.linearRampToValueAtTime(0.001, t + 0.75);
-        o.connect(g); g.connect(ctx.destination);
-        o.start(t); o.stop(t + 0.8);
-      }
+      // Cargar si aún no se cargaron
+      if (!silbidosCargados) { cargarSilbidosMp3(); return; }
+      var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
+      if (disponibles.length === 0) return;
+      var buf = disponibles[Math.floor(Math.random() * disponibles.length)];
+      var source = ctx.createBufferSource();
+      var gain = ctx.createGain();
+      source.buffer = buf;
+      gain.gain.value = 0.4;
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      source.start(0);
     }
 
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
@@ -2816,6 +2796,10 @@
     function arrancarEnInteraccion() {
       if (!musica.isPlaying()) {
         iniciarMusica();
+      }
+      // Cargar silbidos mp3 apenas la música esté activa
+      if (musica.getCtx() && !silbidosCargados) {
+        cargarSilbidosMp3();
       }
       if (musica.isPlaying()) {
         document.removeEventListener('click',      arrancarEnInteraccion);
