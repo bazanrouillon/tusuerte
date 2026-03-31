@@ -9,6 +9,7 @@
   <meta name="keywords" content="sorteos gratis peru, sorteo online peru, ganar premios peru, tusuerte, sorteo tiktok peru, concursos gratis peru"/>
   <meta name="author" content="tusuerte.pe"/>
   <meta name="robots" content="index, follow"/>
+  <meta name="google-site-verification" content="google89f1e869b635f9a0"/>
   <link rel="canonical" href="https://tusuerte.pe/"/>
   <!-- Open Graph (WhatsApp, Facebook, etc.) -->
   <meta property="og:type" content="website"/>
@@ -63,7 +64,7 @@
       background-size: 80px 80px, 120px 120px;
       background-position: 0 0, 40px 40px;
       animation: bgStars 4s ease-in-out infinite alternate; }
-    @keyframes bgStars { 0%{opacity:.3} 100%{opacity:.6} }
+    @keyframes bgStars { 0%{opacity:.15} 100%{opacity:.25} }
     /* METELE TAG — SVG chicha */
     .metele-tag {
       position:absolute; top:6px; left:8px;
@@ -141,7 +142,7 @@
     }
     @keyframes logopulse {
       0%{ transform:scale(1); }
-      100%{ transform:scale(1.02); }
+      100%{ transform:scale(1.005); }
     }
     /* Chicha decorative line below header */
     .header-chicha-line {
@@ -170,52 +171,35 @@
     /* Contenedor chicha para los 2 botones principales */
     .nav-chicha-box {
       display:flex; align-items:center; gap:10px;
-      background:linear-gradient(135deg,#1a0a30,#0d1530,#1a0a30);
-      border:3px solid; border-image:linear-gradient(135deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde)) 1;
-      border-radius:0; /* border-image doesn't support radius, we use outline trick */
+      background:linear-gradient(135deg,#0d0a1a,#0d1530,#0d0a1a);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:0;
       padding:8px 20px;
       position:relative;
-      box-shadow:
-        0 0 20px rgba(255,20,147,.2),
-        0 0 40px rgba(255,106,0,.1),
-        inset 0 0 30px rgba(255,20,147,.08);
+      box-shadow:none;
     }
-    /* Decorative stars on the chicha box */
-    .nav-chicha-box::before {
-      content:'✦';
-      position:absolute; left:-18px; top:50%; transform:translateY(-50%);
-      font-size:1.3rem; color:var(--chicha-amarillo);
-      text-shadow:0 0 10px var(--chicha-amarillo);
-      animation:chichaNavStar 1.5s ease-in-out infinite alternate;
-    }
-    .nav-chicha-box::after {
-      content:'✦';
-      position:absolute; right:-18px; top:50%; transform:translateY(-50%);
-      font-size:1.3rem; color:var(--chicha-verde);
-      text-shadow:0 0 10px var(--chicha-verde);
-      animation:chichaNavStar 1.5s ease-in-out infinite alternate-reverse;
-    }
-    @keyframes chichaNavStar { 0%{transform:translateY(-50%) scale(.8);opacity:.5} 100%{transform:translateY(-50%) scale(1.2);opacity:1} }
+    /* Decorative stars on the chicha box — desactivadas */
+    .nav-chicha-box::before, .nav-chicha-box::after { display:none; }
     nav a.nav-btn-chicha {
       font-family:'Passion One','Bangers',cursive; font-weight:900;
-      color:#fff; text-decoration:none;
+      color:rgba(255,255,255,.7); text-decoration:none;
       font-size:clamp(1rem,3vw,1.35rem); letter-spacing:3px;
       padding:10px 22px;
       transition:all .25s; cursor:pointer;
-      border:2px solid var(--chicha-rosa);
+      border:1px solid rgba(255,255,255,.12);
       border-radius:8px;
-      background:linear-gradient(135deg,rgba(255,20,147,.15),rgba(255,106,0,.1));
-      text-shadow: 2px 2px 0 #000, 0 0 12px rgba(255,20,147,.4);
+      background:rgba(255,255,255,.03);
+      text-shadow: 1px 1px 0 #000;
       text-transform:uppercase;
       position:relative; overflow:hidden;
     }
     nav a.nav-btn-chicha:hover {
-      background:linear-gradient(135deg,rgba(255,20,147,.3),rgba(255,106,0,.2));
-      border-color:var(--chicha-amarillo);
-      color:var(--chicha-amarillo);
-      text-shadow: 2px 2px 0 #000, 0 0 18px rgba(255,215,0,.5);
-      transform:scale(1.05);
-      box-shadow:0 0 20px rgba(255,20,147,.3);
+      background:rgba(255,20,147,.1);
+      border-color:rgba(255,20,147,.3);
+      color:#fff;
+      text-shadow: 1px 1px 0 #000;
+      transform:scale(1.03);
+      box-shadow:none;
     }
     /* Footer links for FAQ and Terms */
     .footer-nav-links { margin-bottom:26px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
@@ -268,10 +252,10 @@
       max-width:480px; margin:0 auto 30px;
     }
     .card-hoy {
-      background:linear-gradient(180deg,#0d1530 0%,#0a0e20 50%,#0d1530 100%);
-      border:3px solid #ff1493;
+      background:linear-gradient(180deg,#0d1530 0%,#080c1a 50%,#0d1530 100%);
+      border:2px solid rgba(255,20,147,.35);
       border-radius:16px;
-      box-shadow: 0 0 30px rgba(255,20,147,.25), 0 8px 30px rgba(0,0,0,.4);
+      box-shadow: 0 0 12px rgba(255,20,147,.1), 0 8px 30px rgba(0,0,0,.5);
       position:relative;
       transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
       transition:transform .8s ease-in-out;
@@ -286,53 +270,68 @@
       display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px;
       border-radius:16px; overflow:hidden; z-index:2;
     }
-    /* Badge HOY */
+    /* Badge HOY — 2 líneas para no tapar imagen */
     .badge-hoy {
-      position:absolute; top:14px; left:14px; z-index:3;
-      background:#ff1493; color:#fff;
+      position:absolute; top:10px; left:10px; z-index:3;
+      background:rgba(255,20,147,.85); color:#fff;
       font-family:'Poppins',sans-serif; font-weight:700;
-      font-size:.85rem; letter-spacing:1px;
-      padding:6px 14px; border-radius:8px;
-      box-shadow: 0 4px 12px rgba(255,20,147,.4);
+      font-size:.7rem; letter-spacing:.5px;
+      padding:5px 10px; border-radius:6px;
+      box-shadow: none;
+      max-width:110px; line-height:1.3; text-align:center;
     }
     .card-hoy .card-img { height:160px; }
-    .card-hoy .card-titulo { font-size:1.8rem; }
-    .card-hoy .card-desc { font-size:.92rem; }
+    .card-hoy .card-titulo { font-size:2.2rem; color:#ffd700; text-shadow:0 0 14px rgba(255,215,0,.4),2px 2px 0 #000; }
+    .card-hoy .card-desc { font-size:1rem; color:#ff6a6a; font-family:'Poppins',sans-serif; font-weight:700; letter-spacing:.5px; text-transform:uppercase; }
     .card-hoy .btn-participar {
-      background:#ff1493; color:#fff; border-bottom-color:#a00050;
-      font-family:'Poppins',sans-serif; font-weight:700;
-      font-size:1.3rem; letter-spacing:2px;
-      border-radius:10px;
-      box-shadow: 0 15px 35px rgba(255,0,128,.9), 0 5px 15px rgba(255,0,128,.4);
-      transition:transform .2s ease, box-shadow .2s ease;
-      animation: btnRespira 2.5s ease-in-out infinite;
+      background:linear-gradient(135deg,#ff1493,#ff006a); color:#fff; border-bottom-color:#a00050;
+      font-family:'Poppins',sans-serif; font-weight:800;
+      font-size:1.4rem; letter-spacing:2px;
+      border-radius:12px; padding:16px;
+      box-shadow: 0 8px 24px rgba(255,0,128,.5);
+      transition:transform .15s ease, box-shadow .15s ease;
+      animation: btnCTAPulse 2s ease-in-out infinite;
     }
-    @keyframes btnRespira {
-      0%   { transform:translateY(-2px) scale(1);    box-shadow:0 15px 35px rgba(255,0,128,.8), 0 5px 15px rgba(255,0,128,.3); }
-      50%  { transform:translateY(-4px) scale(1.03);  box-shadow:0 18px 40px rgba(255,0,128,1),  0 8px 20px rgba(255,0,128,.5); }
-      100% { transform:translateY(-2px) scale(1);    box-shadow:0 15px 35px rgba(255,0,128,.8), 0 5px 15px rgba(255,0,128,.3); }
+    @keyframes btnCTAPulse {
+      0%   { box-shadow:0 8px 24px rgba(255,0,128,.5); }
+      50%  { box-shadow:0 8px 35px rgba(255,0,128,.8), 0 0 60px rgba(255,0,128,.3); }
+      100% { box-shadow:0 8px 24px rgba(255,0,128,.5); }
     }
     .card-hoy .btn-participar:hover {
       animation:none;
-      transform:translateY(-5px) scale(1.05);
-      box-shadow: 0 20px 45px rgba(255,0,128,1), 0 8px 20px rgba(255,0,128,.6);
+      transform:translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(255,0,128,.9);
+    }
+    /* Barra de urgencia/adicción */
+    .urgencia-barra {
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:.75rem; color:#ff6a6a; letter-spacing:.3px;
+      text-align:center; margin-bottom:10px; padding:6px 10px;
+      background:rgba(255,0,0,.06); border-radius:6px;
+      border:1px solid rgba(255,0,0,.1);
+      animation: urgBarraPulse 2.5s ease-in-out infinite;
+    }
+    .urgencia-fuego { font-size:.8rem; }
+    @keyframes urgBarraPulse {
+      0%,100% { opacity:.7; }
+      50% { opacity:1; }
     }
     .card-confianza {
       font-family:'Poppins',sans-serif; font-weight:600;
-      font-size:.9rem; color:rgba(255,255,255,.85);
+      font-size:.7rem; color:rgba(255,255,255,.25);
       text-align:center; margin-top:4px; margin-bottom:6px;
       letter-spacing:.3px;
     }
     /* Card protagonista cerrado */
-    .card-hoy.cerrado:not(.flipped) .card-front { opacity:.15; filter:grayscale(1) brightness(.3); }
+    .card-hoy.cerrado:not(.flipped) .card-front { opacity:.12; filter:grayscale(1) brightness(.25); }
     .card-hoy.cerrado:not(.flipped) .sello-cerrado {
-      display:block; opacity:.7; color:#cc2020; border-color:#cc2020;
-      background:rgba(0,0,0,.6); box-shadow:0 0 10px rgba(200,0,0,.15); text-shadow:0 0 4px rgba(200,0,0,.3);
+      display:block; opacity:.5; color:rgba(200,50,50,.5); border-color:rgba(200,50,50,.3);
+      background:rgba(0,0,0,.5); box-shadow:none; text-shadow:none;
     }
     .card-hoy.cerrado.flipped .sello-cerrado { display:none; }
     .card-hoy.cerrado .btn-participar { pointer-events:none; opacity:.1; }
     .card-hoy.cerrado:not(.flipped) { cursor:pointer; border-color:#1a1a1a; }
-    .card-hoy.cerrado.flipped { border-color:var(--chicha-amarillo); box-shadow:0 0 30px rgba(255,215,0,.4); }
+    .card-hoy.cerrado.flipped { border-color:rgba(255,215,0,.3); box-shadow:0 0 10px rgba(255,215,0,.1); }
     /* ── FRANJA SEMANAL — próximos sorteos ── */
     .semana-titulo {
       font-family:'Poppins',sans-serif; font-weight:700;
@@ -386,16 +385,23 @@
     .semana-card-estado.proximo { background:rgba(255,255,255,.08); color:rgba(255,255,255,.4); }
     .semana-card-estado.hoy-badge { background:#ff1493; color:#fff; }
     .semana-card-estado.cerrado-badge { background:rgba(255,255,255,.05); color:rgba(255,255,255,.3); }
-    /* Contador casi (< 2h) */
-    .mini-cnt-wrap.casi .mc-num { color:#ffd700 !important; }
-    /* Contador urgente (< 30 min) */
-    .mini-cnt-wrap.urgente .mc-num {
-      color:#ff4444 !important;
-      animation: urgentePulse 1s ease-in-out infinite alternate;
+    /* Contador casi (< 2h) — text glow functional */
+    .mini-cnt-wrap.casi .mc-num { color:#ffd700 !important;
+      animation: timerPulseCasi 1.2s ease-in-out infinite !important; }
+    @keyframes timerPulseCasi {
+      0% { text-shadow:0 0 5px rgba(255,215,0,.3); }
+      50% { text-shadow:0 0 25px rgba(255,215,0,.8), 0 0 50px rgba(255,215,0,.3); }
+      100% { text-shadow:0 0 5px rgba(255,215,0,.3); }
     }
-    @keyframes urgentePulse {
-      0%{ opacity:.7; transform:scale(1); }
-      100%{ opacity:1; transform:scale(1.08); }
+    /* Contador urgente (< 30 min) — RED ALARM */
+    .mini-cnt-wrap.urgente .mc-num {
+      color:#ff3333 !important;
+      animation: timerPulseUrgente .8s ease-in-out infinite !important;
+    }
+    @keyframes timerPulseUrgente {
+      0% { text-shadow:0 0 5px rgba(255,50,50,.3); }
+      50% { text-shadow:0 0 30px rgba(255,0,0,.9), 0 0 60px rgba(255,0,0,.4); }
+      100% { text-shadow:0 0 5px rgba(255,50,50,.3); }
     }
     /* Grid sorteos */
     .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:16px; padding:0 20px; }
@@ -455,24 +461,8 @@
         6px 6px 12px rgba(0,0,0,.7);
       background:none;
     }
-    /* Estrellas animadas */
-    .chicha-banner-stars {
-      display:flex; justify-content:center; gap:14px; margin-top:6px;
-    }
-    .chicha-banner-stars span {
-      font-size:1.1rem;
-      animation: chichaStarBanner 1.8s ease-in-out infinite alternate;
-    }
-    .chicha-banner-stars span:nth-child(1) { color:#ff1744; animation-delay:0s; }
-    .chicha-banner-stars span:nth-child(2) { color:#00e5ff; animation-delay:.3s; }
-    .chicha-banner-stars span:nth-child(3) { color:#cc00ff; animation-delay:.6s; }
-    .chicha-banner-stars span:nth-child(4) { color:#ffd700; animation-delay:.9s; }
-    .chicha-banner-stars span:nth-child(5) { color:#ff1744; animation-delay:1.2s; }
-    @keyframes chichaStarBanner {
-      0% { opacity:.3; transform:scale(.7) rotate(0deg); }
-      50% { opacity:1; transform:scale(1.2) rotate(180deg); }
-      100% { opacity:.3; transform:scale(.7) rotate(360deg); }
-    }
+    /* Estrellas — desactivadas, solo ruido visual */
+    .chicha-banner-stars { display:none; }
     /* Subtítulo blanco */
     .bloque2-subtitulo {
       font-family:'Poppins',sans-serif; font-weight:600; font-size:clamp(.95rem,3vw,1.3rem);
@@ -520,15 +510,15 @@
     }
     /* Contenedor 3D para flip */
     .card-sorteo-wrap { perspective:1200px; -webkit-perspective:1200px; position:relative; }
-    .card-sorteo { background:linear-gradient(180deg,#0d1530 0%,#0a0e20 50%,#0d1530 100%);
-      border:3px solid var(--chicha-rosa);
+    .card-sorteo { background:linear-gradient(180deg,#0a0e20 0%,#080c18 50%,#0a0e20 100%);
+      border:1px solid rgba(255,255,255,.08);
       border-radius:14px;
-      box-shadow:0 0 15px rgba(255,20,147,.15), inset 0 0 20px rgba(26,42,108,.3);
+      box-shadow:none;
       transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
       transform-style:preserve-3d;
       -webkit-transform-style:preserve-3d; }
-    .card-sorteo:hover { box-shadow:0 0 40px rgba(255,20,147,.4), 0 0 60px rgba(255,106,0,.2); }
-    .card-sorteo:not(.flipped):hover { transform:translateY(-8px); }
+    .card-sorteo:hover { box-shadow:0 0 10px rgba(255,255,255,.05); }
+    .card-sorteo:not(.flipped):hover { transform:translateY(-4px); }
     .card-sorteo.flipped { transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
     .card-front { position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden;
       overflow:hidden; border-radius:14px; }
@@ -543,19 +533,19 @@
       z-index:2;
     }
     .card-back-titulo {
-      font-family:'Bangers',cursive; font-size:1.1rem; color:var(--neon-amarillo);
-      letter-spacing:2px; text-shadow:0 0 10px var(--neon-amarillo);
+      font-family:'Bangers',cursive; font-size:1.1rem; color:rgba(255,215,0,.7);
+      letter-spacing:2px; text-shadow:none;
       margin-bottom:6px; text-align:center;
     }
     .card-back-estado {
-      font-family:'Righteous',cursive; font-size:.8rem; color:var(--neon-verde);
-      text-shadow:0 0 8px var(--neon-verde); margin-bottom:10px;
+      font-family:'Righteous',cursive; font-size:.8rem; color:rgba(57,255,20,.6);
+      text-shadow:none; margin-bottom:10px;
       text-align:center; min-height:1.4em;
     }
     .card-ruleta-container { position:relative; width:180px; height:180px; margin:0 auto; }
     .card-ruleta-canvas { width:100%; height:100%; border-radius:50%;
-      border:3px solid var(--neon-amarillo);
-      box-shadow:0 0 18px var(--neon-amarillo),inset 0 0 20px rgba(0,0,0,.5); }
+      border:2px solid rgba(255,215,0,.4);
+      box-shadow:inset 0 0 15px rgba(0,0,0,.5); }
     .card-ruleta-flecha {
       position:absolute; top:-10px; left:50%; transform:translateX(-50%);
       width:0; height:0;
@@ -582,40 +572,40 @@
     .card-ganador-dni {
       font-family:'Righteous',cursive; font-size:.75rem; color:var(--neon-celeste); margin-top:3px;
     }
-    /* Sello CERRADO */
+    /* Sello CERRADO — sutil */
     .sello-cerrado {
       display:none; position:absolute; top:50%; left:50%;
       transform:translate(-50%,-50%) rotate(-15deg) translateZ(2px);
-      font-family:'Bangers',cursive; font-size:clamp(2rem,6vw,3.5rem); letter-spacing:6px;
-      color:#ff2020; border:5px solid #ff2020; padding:8px 24px; border-radius:8px;
-      text-shadow:0 0 10px rgba(255,0,0,.5);
-      box-shadow:0 0 20px rgba(255,0,0,.3);
-      background:rgba(0,0,0,.7); z-index:5;
+      font-family:'Bangers',cursive; font-size:clamp(1.5rem,5vw,2.5rem); letter-spacing:4px;
+      color:rgba(255,50,50,.5); border:2px solid rgba(255,50,50,.3); padding:6px 18px; border-radius:6px;
+      text-shadow:none;
+      box-shadow:none;
+      background:rgba(0,0,0,.6); z-index:5;
       pointer-events:none;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
     }
     .card-sorteo.cerrado:not(.flipped) .sello-cerrado {
-      display:block; opacity:.85; font-size:clamp(1.4rem,5vw,2.2rem);
-      border-width:3px; color:#ff2020; border-color:#ff2020;
-      background:rgba(0,0,0,.7); box-shadow:0 0 15px rgba(255,0,0,.25); text-shadow:0 0 8px rgba(255,0,0,.4);
-      transform:translate(-50%,-50%) rotate(-22deg) translateZ(2px);
-      letter-spacing:5px;
+      display:block; opacity:.7; font-size:clamp(1.2rem,4vw,1.8rem);
+      border-width:2px; color:rgba(255,50,50,.4); border-color:rgba(255,50,50,.2);
+      background:rgba(0,0,0,.5); box-shadow:none; text-shadow:none;
+      transform:translate(-50%,-50%) rotate(-18deg) translateZ(2px);
+      letter-spacing:4px;
     }
     .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
     .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.2; filter:grayscale(.8) brightness(.35); }
     .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
     .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
-    .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(57,255,20,.3); box-shadow:0 0 12px rgba(57,255,20,.1); }
-    .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 16px rgba(57,255,20,.15); transform:translateY(-2px); }
+    .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(255,255,255,.04); box-shadow:none; }
+    .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 6px rgba(255,255,255,.05); transform:translateY(-2px); }
     /* Ganador preview en FRONT del card cerrado */
     .card-ganador-preview {
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:6;
       text-align:center; pointer-events:none;
       font-family:'Bangers',cursive;
       display:flex; flex-direction:column; align-items:center; gap:4px;
-      background:rgba(0,0,0,.85); border:2px solid var(--neon-amarillo);
-      border-radius:10px; padding:12px 16px;
-      box-shadow:0 0 18px rgba(255,215,0,.35), 0 0 6px rgba(0,0,0,.8);
+      background:rgba(0,0,0,.8); border:1px solid rgba(255,215,0,.25);
+      border-radius:8px; padding:10px 14px;
+      box-shadow:none;
     }
     .ganador-preview-icon { font-size:1.6rem; }
     .ganador-preview-nombre {
@@ -629,7 +619,7 @@
     }
     .card-sorteo.cerrado:not(.flipped) .card-ganador-preview { display:flex; }
     .card-sorteo.cerrado.flipped .card-ganador-preview { display:none; }
-    .card-sorteo.cerrado.flipped { border-color:var(--chicha-amarillo); box-shadow:0 0 30px rgba(255,215,0,.4); }
+    .card-sorteo.cerrado.flipped { border-color:rgba(255,215,0,.2); box-shadow:0 0 8px rgba(255,215,0,.08); }
     /* Back cerrado: fondo sólido, solo ganador */
     .card-back-cerrado {
       background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2a 50%,#0a0a1a 100%);
@@ -639,43 +629,49 @@
     .card-back-cerrado .card-ganador-nombre { color:var(--chicha-amarillo); font-family:'Bangers',cursive; letter-spacing:2px; text-shadow:0 0 10px rgba(255,215,0,.4); }
     .card-back-cerrado .card-ganador-dni { color:#888; font-family:'Poppins',sans-serif; }
     .badge-gratis { position:absolute; top:12px; right:-8px;
-      background:var(--neon-verde); color:#000; font-family:'Bangers',cursive;
-      font-size:1rem; letter-spacing:2px; padding:4px 18px 4px 14px;
-      box-shadow:0 0 12px var(--neon-verde); clip-path:polygon(0 0,100% 0,100% 100%,0 100%,6% 50%); }
+      background:rgba(57,255,20,.8); color:#000; font-family:'Bangers',cursive;
+      font-size:.85rem; letter-spacing:2px; padding:3px 14px 3px 12px;
+      box-shadow:none; clip-path:polygon(0 0,100% 0,100% 100%,0 100%,6% 50%); }
     .card-img { width:100%; height:190px; display:flex; align-items:center; justify-content:center;
-      font-size:5rem; background:linear-gradient(135deg,#0a0e20,#1a1040);
-      border-bottom:3px solid var(--chicha-rosa); }
+      font-size:5rem; background:linear-gradient(135deg,#0a0e20,#12082a);
+      border-bottom:1px solid rgba(255,20,147,.15); }
     .card-body { padding:18px; background:linear-gradient(180deg,#0d1530,#0a0e20); }
     /* ── Cards compactas dentro del grid ── */
-    /* ── Cards secundarias: peso visual bajo ── */
+    /* ── Cards secundarias ── */
     .grid-sorteos .card-sorteo {
-      border-width:2px; border-radius:10px;
-      border-color:rgba(57,255,20,.35);
-      box-shadow:0 0 14px rgba(57,255,20,.12), 0 0 4px rgba(255,20,147,.08);
+      border-width:1px; border-radius:10px;
+      border-color:rgba(255,255,255,.06);
+      box-shadow:none;
+      opacity:.7;
+      background:linear-gradient(180deg,#080c18 0%,#060a14 100%);
+    }
+    /* Cerrados: muy oscuros */
+    .grid-sorteos .card-sorteo.cerrado { opacity:.55; }
+    /* Activos (no cerrados): iluminados un poco */
+    .grid-sorteos .card-sorteo:not(.cerrado) {
       opacity:1;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
-      background-size:150px 150px;
+      border-color:rgba(255,255,255,.1);
+      background:linear-gradient(180deg,#0c1225 0%,#080e1e 100%);
     }
     .grid-sorteos .card-sorteo:not(.cerrado) .card-front {
-      filter:saturate(.8) brightness(.9);
+      filter:saturate(.8) brightness(.88);
     }
     .grid-sorteos .card-sorteo:not(.cerrado):hover .card-front {
-      filter:saturate(.85) brightness(.95);
+      filter:saturate(.9) brightness(.95);
     }
     .grid-sorteos .card-sorteo:not(.cerrado):hover {
-      opacity:1;
-      border-color:rgba(57,255,20,.3);
-      box-shadow:0 0 10px rgba(57,255,20,.1);
-      transform:translateY(-4px);
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 0 10px rgba(255,255,255,.06);
+      transform:translateY(-3px);
     }
     .grid-sorteos .card-img { height:90px; }
     .grid-sorteos .yape-logo svg.yape-svg { width:60px; height:60px; }
     .grid-sorteos .card-body { padding:10px 12px; }
     .grid-sorteos .badge-gratis { font-size:.65rem; padding:2px 10px 2px 8px; top:6px; box-shadow:none; }
     .grid-sorteos .card-categoria { font-size:.5rem; letter-spacing:1px; margin-bottom:2px; opacity:.4; color:#8ab; }
-    .grid-sorteos .card-titulo { font-size:1rem; letter-spacing:1px; margin-bottom:3px; text-shadow:1px 1px 0 #000;
-      transform:skewX(-2deg); font-style:italic; }
-    .grid-sorteos .card-desc { font-size:.72rem; margin-bottom:6px; line-height:1.3; color:#999; }
+    .grid-sorteos .card-titulo { font-size:.9rem; letter-spacing:1px; margin-bottom:3px; text-shadow:1px 1px 0 #000;
+      color:rgba(255,215,0,.6); }
+    .grid-sorteos .card-desc { font-size:.7rem; margin-bottom:6px; line-height:1.3; color:#666; }
     .grid-sorteos .card-meta { margin-bottom:10px; gap:4px; }
     .grid-sorteos .card-participantes { font-size:.6rem; color:#5a9; opacity:.5; }
     .grid-sorteos .card-fecha { font-size:.68rem; color:#b08030; }
@@ -683,29 +679,32 @@
     .grid-sorteos .mini-cnt-wrap { display:none; }
     .grid-sorteos .badge-gratis { display:none; }
     .grid-sorteos .btn-participar {
-      font-size:.85rem; padding:10px; letter-spacing:1px; border-radius:8px; border-bottom-width:2px;
-      background:linear-gradient(135deg,#1a1a2e,#252545);
-      color:#777; box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
-      border-bottom-color:rgba(57,255,20,.08);
+      font-size:.8rem; padding:8px; letter-spacing:1px; border-radius:8px; border-bottom-width:2px;
+      background:rgba(255,255,255,.04);
+      color:#555; box-shadow:none;
+      border-bottom-color:transparent;
       border:1px solid rgba(255,255,255,.06);
     }
     .grid-sorteos .card-sorteo:not(.cerrado) .btn-participar:hover {
-      background:linear-gradient(135deg,#ff1493,#ff6a00);
-      color:#000; box-shadow:0 4px 12px rgba(255,20,147,.3);
+      background:rgba(255,20,147,.15);
+      color:#ff69b4; box-shadow:none;
     }
     .grid-sorteos .sello-cerrado { font-size:clamp(1.5rem,5vw,2.4rem); padding:6px 18px; border-width:3px; letter-spacing:5px; }
-    /* Card más próximo → destaca un poco */
+    /* Card más próximo → un poco más iluminado */
     .grid-sorteos .card-sorteo.siguiente {
-      border-color:rgba(57,255,20,.5);
-      box-shadow:0 0 20px rgba(57,255,20,.2), 0 0 8px rgba(255,20,147,.12);
-      transform:scale(1.03);
-      animation:siguientePulse 2.5s ease-in-out infinite alternate;
+      border-color:rgba(57,255,20,.15);
+      box-shadow:0 0 6px rgba(57,255,20,.05);
+      opacity:1;
+      animation:none;
     }
-    @keyframes siguientePulse {
-      0% { box-shadow:0 0 20px rgba(57,255,20,.2), 0 0 8px rgba(255,20,147,.12); }
-      100% { box-shadow:0 0 30px rgba(57,255,20,.3), 0 0 14px rgba(255,20,147,.2); }
-    }
-    .grid-sorteos .card-sorteo.siguiente .card-front { filter:saturate(.9) brightness(.95); }
+    .grid-sorteos .card-sorteo.siguiente .card-front { filter:saturate(.85) brightness(.9); }
+    /* Secundarios: estructura simplificada */
+    .sec-monto { font-family:'Bebas Neue','Poppins',sans-serif; font-size:1.4rem; color:#ffd700; letter-spacing:1px; text-align:center; margin-bottom:2px; }
+    .sec-fecha { font-family:'Poppins',sans-serif; font-weight:600; font-size:.65rem; color:#555; text-align:center; margin-bottom:6px; letter-spacing:.5px; }
+    .sec-estado { display:block; font-family:'Poppins',sans-serif; font-weight:700; font-size:.6rem; letter-spacing:2px; text-transform:uppercase; text-align:center; padding:3px 0; margin-bottom:6px; }
+    .sec-estado.sec-siguiente { color:rgba(57,255,20,.6); }
+    .sec-estado.sec-pronto { color:rgba(255,255,255,.25); }
+    .sec-estado.sec-cerrado { color:rgba(255,255,255,.15); }
     .grid-sorteos .card-back { padding:12px 10px; }
     .grid-sorteos .card-back-titulo { font-size:.85rem; margin-bottom:4px; }
     .grid-sorteos .card-back-estado { font-size:.7rem; margin-bottom:6px; }
@@ -723,32 +722,38 @@
     .card-categoria { font-family:'Righteous',cursive; font-size:.75rem; letter-spacing:3px; color:var(--neon-celeste); text-transform:uppercase; margin-bottom:6px; }
     .card-titulo { font-family:'Bangers',cursive; font-size:1.6rem; letter-spacing:2px;
       color:var(--chicha-amarillo); line-height:1.1; margin-bottom:8px;
-      text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,215,0,.3); }
-    .card-desc { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.4; margin-bottom:10px; letter-spacing:0.3px; }
+      text-shadow:1px 1px 0 #000; }
+    .card-desc { font-family:'Righteous',cursive; font-size:.88rem; color:#888; line-height:1.4; margin-bottom:10px; letter-spacing:0.3px; }
     .card-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
     .card-participantes { font-family:'Righteous',cursive; font-size:.82rem; color:#7dffb3; }
     .card-fecha { font-family:'Righteous',cursive; font-size:.85rem; color:#ffb347; letter-spacing:0.5px; }
     .barra-wrap { background:#111528; border-radius:4px; height:8px; margin-bottom:10px; border:1px solid #1a2040; }
     .barra-fill { height:100%; border-radius:4px;
-      background:linear-gradient(90deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde));
-      box-shadow:0 0 8px var(--chicha-rosa); transition:width 1s ease; }
-    /* Mini-contador por sorteo */
-    .mini-cnt-wrap { margin-bottom:8px; background:#020408; border-radius:8px; border:1px solid #1a2040; overflow:hidden; }
-    .mini-contador { display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 8px 12px; }
-    .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:38px; }
-    .mc-num { font-family:'Poppins','Segoe UI',Arial,sans-serif; font-weight:800; font-size:1.8rem; line-height:1; color:#fff; text-shadow:0 0 8px rgba(255,215,0,.5); letter-spacing:0.5px; }
-    .mc-lbl { font-family:'Poppins',sans-serif; font-size:.5rem; color:#888; letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:2px; }
-    .mc-sep { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.4rem; color:#ffd700; margin-bottom:12px; }
-    .mini-contador.vencido .mc-num { color:#ff8a8a; text-shadow:none; }
+      background:linear-gradient(90deg,rgba(255,20,147,.6),rgba(255,106,0,.5));
+      box-shadow:none; transition:width 1s ease; }
+    /* Mini-contador por sorteo — ARMA PRINCIPAL */
+    .mini-cnt-wrap { margin-bottom:10px; background:#020408; border-radius:10px; border:1px solid rgba(255,215,0,.15); overflow:hidden; }
+    .mini-contador { display:flex; align-items:center; justify-content:center; gap:8px; padding:14px 10px 16px; }
+    .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:48px; }
+    .mc-num { font-family:'Bebas Neue','Poppins',sans-serif; font-weight:400; font-size:2.8rem; line-height:1; color:#fff; letter-spacing:1px;
+      animation: timerPulse 1.5s ease-in-out infinite; }
+    @keyframes timerPulse {
+      0% { text-shadow:0 0 5px rgba(255,255,255,.3); }
+      50% { text-shadow:0 0 20px rgba(255,0,170,.7), 0 0 40px rgba(255,0,170,.3); }
+      100% { text-shadow:0 0 5px rgba(255,255,255,.3); }
+    }
+    .mc-lbl { font-family:'Poppins',sans-serif; font-size:.5rem; color:rgba(255,255,255,.35); letter-spacing:2px; text-transform:uppercase; font-weight:600; margin-top:2px; }
+    .mc-sep { font-family:'Bebas Neue','Poppins',sans-serif; font-weight:400; font-size:2.2rem; color:rgba(255,215,0,.6); margin-bottom:16px; }
+    .mini-contador.vencido .mc-num { color:#ff8a8a; text-shadow:none; animation:none; }
     .btn-participar { display:block; width:90%; margin:0 auto 6px;
-      background:linear-gradient(135deg,#ff1493,#ff6a00,#ffd700);
-      color:#000; border:none;
-      font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:14px;
-      cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase;
-      border-radius:10px; font-weight:900;
-      text-shadow:0 1px 0 rgba(255,255,255,.3);
-      box-shadow:0 4px 15px rgba(255,20,147,.3); }
-    .btn-participar:hover { transform:translateY(-3px); box-shadow:0 0 30px var(--chicha-rosa), 0 0 60px rgba(255,106,0,.3); }
+      background:linear-gradient(135deg,#ff1493,#ff006a);
+      color:#fff; border:none;
+      font-family:'Poppins',sans-serif; font-size:1.2rem; letter-spacing:2px; padding:14px;
+      cursor:pointer; border-bottom:3px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase;
+      border-radius:10px; font-weight:700;
+      text-shadow:none;
+      box-shadow:0 4px 12px rgba(255,20,147,.2); }
+    .btn-participar:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(255,20,147,.4); }
     /* LOGOS ESPECIALES */
     .petcenter-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:6px; }
     .petcenter-paw { font-size:3.2rem; }
@@ -2073,12 +2078,12 @@
     // ══════════════════════════════════════════════════════════════
     var DIAS_NOMBRE = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
     var SORTEO_DATA = [
-      { id:'1', emoji:'🍬', sub:'Pal chicle', nombre:'YAPE PAL CHICLE 🍬', desc:'Hoy te llevas 1 lukita directo a tu Yape', monto:'S/1', lukitas:'1 lukita' },
-      { id:'2', emoji:'🌾', sub:'Pa la quinua', nombre:'YAPE PA LA QUINUA 🥣', desc:'Hoy te llevas 2 lukitas directo a tu Yape', monto:'S/2', lukitas:'2 lukitas' },
-      { id:'3', emoji:'🥤', sub:'Pa la gaseosa', nombre:'YAPE PA LA GASEOSA 🥤', desc:'Hoy te llevas 5 lukitas directo a tu Yape', monto:'S/5', lukitas:'5 lukitas' },
-      { id:'4', emoji:'🍺', sub:'Pa la chelita', nombre:'YAPE PA LA CHELITA 🍺', desc:'Hoy te llevas 6 lukitas directo a tu Yape', monto:'S/6', lukitas:'6 lukitas' },
-      { id:'5', emoji:'🚌', sub:'Pa la recarga', nombre:'YAPE PA LA RECARGA 📱', desc:'Hoy te llevas 7 lukitas directo a tu Yape', monto:'S/7', lukitas:'7 lukitas' },
-      { id:'6', emoji:'🍗', sub:'Pal pollito', nombre:'YAPE PAL POLLITO 🍗', desc:'Hoy te llevas 20 lukitas directo a tu Yape', monto:'S/20', lukitas:'20 lukitas' }
+      { id:'1', emoji:'🍬', sub:'Pal chicle', nombre:'YAPE PAL CHICLE 🍬', desc:'SE VA ESTE YAPE. NO LO DEJES PASAR CAUSA', monto:'S/1', lukitas:'S/1' },
+      { id:'2', emoji:'🌾', sub:'Pa la quinua', nombre:'YAPE PA LA QUINUA 🥣', desc:'HOY SE VA ESTE YAPE. ESTO VUELA', monto:'S/2', lukitas:'S/2' },
+      { id:'3', emoji:'🥤', sub:'Pa la gaseosa', nombre:'YAPE PA LA GASEOSA 🥤', desc:'HOY SE VA ESTE YAPE. SE ACABA HOY', monto:'S/5', lukitas:'S/5' },
+      { id:'4', emoji:'🍺', sub:'Pa la chelita', nombre:'YAPE PA LA CHELITA 🍺', desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?', monto:'S/6', lukitas:'S/6' },
+      { id:'5', emoji:'🚌', sub:'Pa la recarga', nombre:'YAPE PA LA RECARGA 📱', desc:'HOY SE VA ESTE YAPE. ESTO VUELA', monto:'S/7', lukitas:'S/7' },
+      { id:'6', emoji:'🍗', sub:'Pal pollito', nombre:'YAPE PAL POLLITO 🍗', desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?', monto:'S/20', lukitas:'S/20' }
     ];
 
     // ── SVG Yape logo inline (reutilizable) ──
@@ -2205,11 +2210,11 @@
       var horaCorta = (hh > 12 ? hh - 12 : hh) + (mm > 0 ? ':' + (mm < 10 ? '0' + mm : mm) : '') + (hh >= 12 ? 'PM' : 'AM');
       var ahora = new Date();
       var estado = getEstado(sorteoId);
-      if (estado === 'activo') return '🔴 EN VIVO 🔥';
+      if (estado === 'activo') return '🔴 EN VIVO<br>🔥';
       if (d.getDate() === ahora.getDate() && d.getMonth() === ahora.getMonth()) {
-        return 'HOY ' + horaCorta + ' — SE JUEGA 🔥';
+        return 'HOY ' + horaCorta + '<br>SE JUEGA 🔥';
       }
-      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + ' 🔥';
+      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + '<br>🔥';
     }
 
     // ── Generar HTML del card PRINCIPAL ──
@@ -2232,8 +2237,9 @@
                 '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 's">--</div><div class="mc-lbl">Seg</div></div>' +
               '</div>' +
             '</div>' +
-            '<button class="btn-participar" data-sorteo-nombre="' + s.nombre + ' – ' + s.monto + '" data-sorteo-id="' + s.id + '">PARTICIPAR GRATIS</button>' +
-            '<div class="card-confianza">Solo con tu número de Yape. Sin pago, sin floro.</div>' +
+            '<div class="urgencia-barra"><span class="urgencia-fuego">🔥</span> Ya se están apuntando — no lo dejes pasar</div>' +
+            '<button class="btn-participar" data-sorteo-nombre="' + s.nombre + ' – ' + s.monto + '" data-sorteo-id="' + s.id + '">ENTRAR AL SORTEO 🔥</button>' +
+            '<div class="card-confianza">Gratis. Solo con tu número de Yape.</div>' +
           '</div>' +
         '</div>' +
         '<div class="sello-cerrado">CERRADO</div>' +
@@ -2255,32 +2261,21 @@
         (d.getHours() >= 12 ? 'PM' : 'AM');
       var claseExtra = esCerrado ? ' cerrado' : '';
       if (esSiguiente) claseExtra += ' siguiente';
-      // Buscar ganador pre-cargado para cards cerrados
-      var ganadorPreview = '';
-      if (esCerrado && _ganadoresPreload[s.id]) {
-        var gp = _ganadoresPreload[s.id];
-        var dniM = gp.dni ? gp.dni.substring(0,2) + '****' +gp.dni.substring(gp.dni.length - 2) : 'Verificado ✓';
-        ganadorPreview = '<div class="card-ganador-preview">' +
-          '<span class="ganador-preview-icon">🏆</span> ' +
-          '<span class="ganador-preview-nombre">' + (gp.nombres + ' ' + gp.apellidos).toUpperCase() + '</span>' +
-          '<span class="ganador-preview-dni">DNI: ' + dniM + '</span>' +
-        '</div>';
-      }
       var btnHTML = esCerrado
-        ? '<button class="btn-participar" style="pointer-events:none;opacity:.3">FINALIZADO</button>'
-        : '<button class="btn-participar" style="pointer-events:none">EN BREVE CAUSA</button>';
-      var metaHTML = esCerrado
-        ? '<div class="card-meta"><span class="card-fecha" style="color:#666">📅 ' + fechaTexto + '</span></div>'
-        : '<div class="card-meta"><span class="card-participantes">Sé el primero 👀</span><span class="card-fecha">📅 ' + fechaTexto + '</span></div>';
+        ? '<button class="btn-participar" style="pointer-events:none;opacity:.3">CERRADO</button>'
+        : '<button class="btn-participar" style="pointer-events:none">PRÓXIMO</button>';
+      var estadoTag = esCerrado
+        ? '<span class="sec-estado sec-cerrado">CERRADO</span>'
+        : '<span class="sec-estado sec-siguiente">PRÓXIMO</span>';
       return '<div class="card-sorteo-wrap">' +
         '<div class="card-sorteo' + claseExtra + '" id="card-sorteo-' + s.id + '">' +
           '<div class="card-front">' +
-            '<div class="card-img" style="padding:0;border-bottom-color:rgba(57,255,20,.3)"><div class="yape-logo">' + yapeSVG('ypSBg' + s.id) + '</div></div>' +
+            '<div class="card-img" style="padding:0;border-bottom-color:rgba(255,255,255,.04)"><div class="yape-logo">' + yapeSVG('ypSBg' + s.id) + '</div></div>' +
             '<div class="card-body">' +
-              '<div class="card-titulo">¡' + s.nombre + '!</div>' +
-              '<div class="card-desc" style="color:#999">' + s.lukitas + ' directo a tu Yape</div>' +
-              ganadorPreview +
-              metaHTML +
+              '<div class="card-titulo">' + s.emoji + ' ' + s.sub + '</div>' +
+              '<div class="sec-monto">' + s.monto + '</div>' +
+              '<div class="sec-fecha">' + fechaTexto + '</div>' +
+              estadoTag +
               btnHTML +
             '</div>' +
           '</div>' +
