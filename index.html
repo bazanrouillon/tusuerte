@@ -2221,7 +2221,7 @@
       var ganadorPreview = '';
       if (esCerrado && _ganadoresPreload[s.id]) {
         var gp = _ganadoresPreload[s.id];
-        var dniM = gp.dni ? gp.dni.substring(0,3) + '***' + gp.dni.substring(gp.dni.length - 2) : '';
+        var dniM = gp.dni ? gp.dni.substring(0,2) + '****' +gp.dni.substring(gp.dni.length - 2) : 'Verificado ✓';
         ganadorPreview = '<div class="card-ganador-preview">' +
           '<span class="ganador-preview-icon">🏆</span> ' +
           '<span class="ganador-preview-nombre">' + (gp.nombres + ' ' + gp.apellidos).toUpperCase() + '</span>' +
@@ -2263,7 +2263,7 @@
       if (ganador && ganadorNombre && ganadorDni) {
         if (estadoEl) { estadoEl.textContent = '🎉 ¡GANADOR!'; estadoEl.style.color = 'var(--neon-amarillo)'; estadoEl.style.fontSize = '1rem'; }
         ganadorNombre.textContent = (ganador.nombres + ' ' + ganador.apellidos).toUpperCase();
-        var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
+        var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' +ganador.dni.substring(ganador.dni.length - 2) : '';
         ganadorDni.textContent = 'DNI: ' + dniMask;
         if (ganadorDiv) ganadorDiv.classList.add('visible');
         lanzarConfeti();
@@ -2297,7 +2297,7 @@
         function mostrarEnCard(g) {
           if (g && ganadorNombre && ganadorDni) {
             ganadorNombre.textContent = (g.nombres + ' ' + g.apellidos).toUpperCase();
-            var dniM = g.dni ? g.dni.substring(0,3) + '***' + g.dni.substring(g.dni.length - 2) : '';
+            var dniM = g.dni ? g.dni.substring(0,2) + '****' +g.dni.substring(g.dni.length - 2) : 'Verificado ✓';
             ganadorDni.textContent = 'DNI: ' + dniM;
             lanzarConfeti();
           } else {
@@ -2739,7 +2739,7 @@
       lista.forEach(function(g) {
         var div = document.createElement('div');
         div.className = 'ganador-entry';
-        var dniMask = g.dni ? g.dni.substring(0,3) + '***' + g.dni.substring(g.dni.length - 2) : '---';
+        var dniMask = g.dni ? g.dni.substring(0,2) + '****' +g.dni.substring(g.dni.length - 2) : '---';
         div.innerHTML =
           '<div class="ganador-entry-icon">🏆</div>' +
           '<div class="ganador-entry-info">' +
@@ -2957,7 +2957,7 @@
                   // ¡Ganador!
                   var ganador = participantes[ganadorIdx];
                   var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
-                  var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
+                  var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' +ganador.dni.substring(ganador.dni.length - 2) : '';
 
                   estadoEl.textContent = '🎉 ¡GANADOR!';
                   ganadorNombre.textContent = nombreCompleto.toUpperCase();
