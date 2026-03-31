@@ -1266,34 +1266,38 @@
     ══════════════════════════════════════════ */
     @media(max-width:640px){
       /* ── Banner prototipo ── */
-      #banner-prototipo { padding:6px 10px; }
-      #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
+      #banner-prototipo { padding:4px 8px; }
+      #banner-prototipo span { font-size:.65rem; letter-spacing:1px; }
       /* ── Header ── */
-      header { padding:18px 14px 14px; }
-      .metele-tag { position:relative; top:auto; bottom:auto; left:auto; width:clamp(90px,24vw,130px); margin:-4px auto 0; transform:rotate(-4deg); transform-origin:center center; }
-      .logo-principal { padding-left:0; font-size:clamp(3.2rem,14vw,6rem); text-align:center; }
+      header { padding:10px 10px 6px; }
+      .metele-tag { position:relative; top:auto; bottom:auto; left:auto; width:clamp(70px,20vw,100px); margin:-2px auto 0; transform:rotate(-4deg); transform-origin:center center; }
+      .logo-principal { padding-left:0; font-size:clamp(2.8rem,12vw,5rem); text-align:center; line-height:1; }
       .logo-principal .logo-tu, .logo-principal .logo-suerte, .logo-principal .logo-pe { -webkit-text-stroke:2px #000; }
       .logo-principal::before, .logo-principal::after { display:none; }
-      .header-decoracion { gap:5px; margin-bottom:4px; }
+      .header-decoracion { gap:5px; margin-bottom:2px; }
+      .header-chicha-line { margin-top:2px !important; margin-bottom:0 !important; }
       .estrella { font-size:.9rem; }
       .logo-sub { font-size:.7rem; letter-spacing:3px; }
       /* ── Nav chicha mobile ── */
-      nav { padding:8px 10px; gap:8px; }
-      .nav-chicha-box { padding:6px 12px; gap:6px; flex-wrap:nowrap; }
+      nav { padding:5px 10px; gap:6px; }
+      .nav-chicha-box { padding:4px 10px; gap:4px; flex-wrap:nowrap; }
       .nav-chicha-box::before, .nav-chicha-box::after { font-size:.9rem; left:-12px; right:-12px; }
-      nav a.nav-btn-chicha { font-size:clamp(.75rem,2.5vw,1rem); padding:8px 12px; letter-spacing:1.5px; }
+      nav a.nav-btn-chicha { font-size:clamp(.75rem,2.5vw,1rem); padding:6px 10px; letter-spacing:1.5px; }
       .nav-chicha-box { justify-content:center; }
       /* ── Ticker ── */
-      .ticker span { font-size:.95rem; padding:0 55px; }
+      .ticker span { font-size:.85rem; padding:0 45px; }
+      .ticker-wrap { padding:2px 0 !important; }
       /* ── Sorteos ── */
       #sorteos { padding:28px 12px; }
       .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
       /* ── Bloque 2 mobile ── */
-      .bloque2 { padding:20px 14px 18px; }
-      .chicha-line1 { font-size:clamp(1.5rem,5.5vw,2.3rem); }
-      .chicha-line2 { font-size:clamp(2.3rem,9vw,3.8rem); }
-      .bloque2-subtitulo { font-size:clamp(.82rem,2.8vw,1rem); margin-top:10px; }
-      .bloque2-btn { font-size:clamp(.95rem,3vw,1.2rem); padding:12px 28px; }
+      .bloque2 { padding:14px 10px 14px; }
+      .chicha-line1 { font-size:clamp(1.5rem,5.5vw,2.3rem); line-height:1; }
+      .chicha-line2 { font-size:clamp(2.3rem,9vw,3.8rem); line-height:1; }
+      .chicha-banner-stars { margin:4px 0 !important; }
+      .bloque2-subtitulo { font-size:clamp(.82rem,2.8vw,1rem); margin-top:6px !important; margin-bottom:0; }
+      .bloque2-btn { font-size:clamp(.95rem,3vw,1.2rem); padding:12px 28px; margin-top:10px !important; }
+      .bloque2-urgencia { margin-top:8px !important; }
       /* ── Bloque 3 mobile ── */
       #sorteos { padding:20px 12px 30px; }
       .sorteos-header-titulo { font-size:clamp(1.1rem,4vw,1.4rem); }
@@ -1310,6 +1314,12 @@
       .semana-card-nombre { font-size:.7rem; }
       /* ── Paneles: sheet desde abajo ── */
       .panel-overlay { padding:0; align-items:flex-end; }
+      .panel-overlay#panel-ganadores { align-items:center; padding:12px; }
+      .panel-overlay#panel-ganadores .panel-box {
+        border-radius:14px !important;
+        border:3px solid var(--chicha-naranja) !important;
+        max-height:80vh;
+      }
       .panel-box {
         max-width: 100%;
         max-height: 92vh;
@@ -2866,19 +2876,41 @@
     renderGanadores();
 
     // ── Abrir panel ganadores con fetch en vivo desde Google Sheets ──
+    // ── Cache de ganadores del servidor (evita fetch repetidos) ──
+    var _ganadoresServerCache = null;
+
     function abrirPanelGanadores() {
       var container = document.getElementById('ganadores-lista');
       var empty = document.getElementById('ganadores-empty');
-      if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-family:Poppins,sans-serif;">Cargando ganadores...</div>';
-      if (empty) empty.style.display = 'none';
+
+      // 1) Mostrar inmediato con datos que ya tenemos (cache o preload)
+      if (_ganadoresServerCache && _ganadoresServerCache.length > 0) {
+        renderGanadores(_ganadoresServerCache);
+        abrirPanel('panel-ganadores');
+        return;
+      }
+
+      // Mostrar preload/locales instantáneamente mientras carga
+      var datosRapidos = [];
+      Object.keys(_ganadoresPreload).forEach(function(sid) {
+        var g = _ganadoresPreload[sid];
+        if (g && g.nombres) datosRapidos.push(g);
+      });
+      if (datosRapidos.length > 0) {
+        renderGanadores(datosRapidos);
+      } else {
+        if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-family:Poppins,sans-serif;">Cargando ganadores...</div>';
+        if (empty) empty.style.display = 'none';
+      }
       abrirPanel('panel-ganadores');
 
+      // 2) Fetch del servidor en background y actualizar
       fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
           var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
           if (data.status === 'ok' && data.ganadores && data.ganadores.length > 0) {
-            var lista = data.ganadores.map(function(g) {
+            _ganadoresServerCache = data.ganadores.map(function(g) {
               return {
                 nombres: g.nombres || '',
                 apellidos: g.apellidos || '',
@@ -2888,28 +2920,10 @@
                 fecha: g.fecha || ''
               };
             });
-            renderGanadores(lista);
-          } else {
-            // Sin ganadores en servidor, intentar datos locales
-            var locales = cargarGanadores();
-            if (locales.length > 0) {
-              renderGanadores(locales);
-            } else {
-              if (container) container.innerHTML = '';
-              if (empty) empty.style.display = '';
-            }
+            renderGanadores(_ganadoresServerCache);
           }
         })
-        .catch(function() {
-          // Si falla el fetch, mostrar datos locales
-          var locales = cargarGanadores();
-          if (locales.length > 0) {
-            renderGanadores(locales);
-          } else {
-            if (container) container.innerHTML = '';
-            if (empty) empty.style.display = '';
-          }
-        });
+        .catch(function() { /* silencioso — ya mostramos datos locales */ });
     }
 
     // ── Consultar flag de liberación al cargar la página ──
