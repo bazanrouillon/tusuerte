@@ -270,15 +270,14 @@
       display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px;
       border-radius:16px; overflow:hidden; z-index:2;
     }
-    /* Badge HOY — 2 líneas para no tapar imagen */
+    /* Badge HOY */
     .badge-hoy {
       position:absolute; top:10px; left:10px; z-index:3;
       background:rgba(255,20,147,.85); color:#fff;
       font-family:'Poppins',sans-serif; font-weight:700;
       font-size:.7rem; letter-spacing:.5px;
       padding:5px 10px; border-radius:6px;
-      box-shadow: none;
-      max-width:110px; line-height:1.3; text-align:center;
+      box-shadow: none; white-space:nowrap;
     }
     .card-hoy .card-img { height:160px; }
     .card-hoy .card-titulo { font-size:2.2rem; color:#ffd700; text-shadow:0 0 14px rgba(255,215,0,.4),2px 2px 0 #000; }
@@ -323,10 +322,11 @@
       letter-spacing:.3px;
     }
     /* Card protagonista cerrado */
-    .card-hoy.cerrado:not(.flipped) .card-front { opacity:.12; filter:grayscale(1) brightness(.25); }
+    .card-hoy.cerrado:not(.flipped) .card-front { opacity:.3; filter:grayscale(.5) brightness(.45); }
     .card-hoy.cerrado:not(.flipped) .sello-cerrado {
-      display:block; opacity:.5; color:rgba(200,50,50,.5); border-color:rgba(200,50,50,.3);
-      background:rgba(0,0,0,.5); box-shadow:none; text-shadow:none;
+      display:block; opacity:1; color:#ff3030; border-color:#ff3030; border-width:3px;
+      background:rgba(0,0,0,.65); text-shadow:0 0 8px rgba(255,0,0,.5);
+      box-shadow:0 0 12px rgba(255,0,0,.2);
     }
     .card-hoy.cerrado.flipped .sello-cerrado { display:none; }
     .card-hoy.cerrado .btn-participar { pointer-events:none; opacity:.1; }
@@ -532,6 +532,28 @@
       border-radius:14px; overflow:hidden;
       z-index:2;
     }
+    /* EN VIVO badge — dentro del card-back, orientación correcta */
+    .en-vivo-badge {
+      display:none; align-items:center; justify-content:center; gap:6px;
+      position:absolute; top:10px; left:10px; z-index:10;
+      background:rgba(255,0,0,.9); color:#fff;
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:.75rem; letter-spacing:1px;
+      padding:5px 12px; border-radius:6px;
+      animation: enVivoPulse 1s ease-in-out infinite;
+    }
+    .en-vivo-dot {
+      width:8px; height:8px; border-radius:50%; background:#fff;
+      animation: enVivoDot 1s ease-in-out infinite;
+    }
+    @keyframes enVivoPulse {
+      0%,100% { box-shadow:0 0 6px rgba(255,0,0,.4); }
+      50% { box-shadow:0 0 16px rgba(255,0,0,.8); }
+    }
+    @keyframes enVivoDot {
+      0%,100% { opacity:1; }
+      50% { opacity:.3; }
+    }
     .card-back-titulo {
       font-family:'Bangers',cursive; font-size:1.1rem; color:rgba(255,215,0,.7);
       letter-spacing:2px; text-shadow:none;
@@ -572,30 +594,31 @@
     .card-ganador-dni {
       font-family:'Righteous',cursive; font-size:.75rem; color:var(--neon-celeste); margin-top:3px;
     }
-    /* Sello CERRADO — sutil */
+    /* Sello CERRADO */
     .sello-cerrado {
       display:none; position:absolute; top:50%; left:50%;
       transform:translate(-50%,-50%) rotate(-15deg) translateZ(2px);
       font-family:'Bangers',cursive; font-size:clamp(1.5rem,5vw,2.5rem); letter-spacing:4px;
-      color:rgba(255,50,50,.5); border:2px solid rgba(255,50,50,.3); padding:6px 18px; border-radius:6px;
-      text-shadow:none;
+      color:rgba(255,60,60,.8); border:2px solid rgba(255,60,60,.5); padding:6px 18px; border-radius:6px;
+      text-shadow:0 0 6px rgba(255,0,0,.3);
       box-shadow:none;
-      background:rgba(0,0,0,.6); z-index:5;
+      background:rgba(0,0,0,.55); z-index:5;
       pointer-events:none;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
     }
     .card-sorteo.cerrado:not(.flipped) .sello-cerrado {
-      display:block; opacity:.7; font-size:clamp(1.2rem,4vw,1.8rem);
-      border-width:2px; color:rgba(255,50,50,.4); border-color:rgba(255,50,50,.2);
-      background:rgba(0,0,0,.5); box-shadow:none; text-shadow:none;
+      display:block; opacity:1; font-size:clamp(1.4rem,5vw,2.2rem);
+      border-width:3px; color:#ff3030; border-color:#ff3030;
+      background:rgba(0,0,0,.65); text-shadow:0 0 8px rgba(255,0,0,.5);
+      box-shadow:0 0 12px rgba(255,0,0,.2);
       transform:translate(-50%,-50%) rotate(-18deg) translateZ(2px);
-      letter-spacing:4px;
+      letter-spacing:5px;
     }
     .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
-    .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.2; filter:grayscale(.8) brightness(.35); }
+    .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.35; filter:grayscale(.5) brightness(.5); }
     .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
     .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
-    .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(255,255,255,.04); box-shadow:none; }
+    .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(255,255,255,.08); box-shadow:none; }
     .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 6px rgba(255,255,255,.05); transform:translateY(-2px); }
     /* Ganador preview en FRONT del card cerrado */
     .card-ganador-preview {
@@ -645,8 +668,8 @@
       opacity:.7;
       background:linear-gradient(180deg,#080c18 0%,#060a14 100%);
     }
-    /* Cerrados: muy oscuros */
-    .grid-sorteos .card-sorteo.cerrado { opacity:.55; }
+    /* Cerrados: visibles pero apagados */
+    .grid-sorteos .card-sorteo.cerrado { opacity:.75; }
     /* Activos (no cerrados): iluminados un poco */
     .grid-sorteos .card-sorteo:not(.cerrado) {
       opacity:1;
@@ -2210,11 +2233,11 @@
       var horaCorta = (hh > 12 ? hh - 12 : hh) + (mm > 0 ? ':' + (mm < 10 ? '0' + mm : mm) : '') + (hh >= 12 ? 'PM' : 'AM');
       var ahora = new Date();
       var estado = getEstado(sorteoId);
-      if (estado === 'activo') return '🔴 EN VIVO<br>🔥';
+      if (estado === 'activo') return '🔴 EN VIVO 🔥';
       if (d.getDate() === ahora.getDate() && d.getMonth() === ahora.getMonth()) {
-        return 'HOY ' + horaCorta + '<br>SE JUEGA 🔥';
+        return 'HOY ' + horaCorta + ' — SE JUEGA 🔥';
       }
-      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + '<br>🔥';
+      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + ' 🔥';
     }
 
     // ── Generar HTML del card PRINCIPAL ──
@@ -2244,6 +2267,7 @@
         '</div>' +
         '<div class="sello-cerrado">CERRADO</div>' +
         '<div class="card-back">' +
+          '<div class="en-vivo-badge" style="display:none"><span class="en-vivo-dot"></span> EN VIVO</div>' +
           '<div class="card-back-titulo">RULETA DEL SORTEO</div>' +
           '<div class="card-back-estado" id="card-estado-' + s.id + '">Cargando...</div>' +
           '<div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-' + s.id + '" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>' +
@@ -2318,19 +2342,36 @@
         if (card._busy) return;
         card._busy = true;
 
+        // Buscar elementos ganador dentro del card-back
         var ganadorNombre = card.querySelector('.card-ganador-nombre');
         var ganadorDni = card.querySelector('.card-ganador-dni');
 
+        // Si el card no tiene card-back-cerrado (ej: fue renderizado como principal),
+        // crear el card-back-cerrado dinámicamente
+        if (!ganadorNombre) {
+          var backEl = card.querySelector('.card-back');
+          if (backEl) {
+            backEl.className = 'card-back card-back-cerrado';
+            backEl.innerHTML = '<div class="card-ganador-result" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">' +
+              '<div style="font-size:2.5rem;margin-bottom:8px">🏆</div>' +
+              '<div class="card-ganador-nombre" style="font-size:1.1rem"></div>' +
+              '<div class="card-ganador-dni" style="font-size:.7rem;margin-top:4px"></div>' +
+            '</div>';
+            ganadorNombre = backEl.querySelector('.card-ganador-nombre');
+            ganadorDni = backEl.querySelector('.card-ganador-dni');
+          }
+        }
+
         // Limpiar antes de voltear
-        if (ganadorNombre) ganadorNombre.textContent = '';
+        if (ganadorNombre) ganadorNombre.textContent = 'Cargando...';
         if (ganadorDni) ganadorDni.textContent = '';
 
         card.classList.add('flipped');
 
         function mostrarEnCard(g) {
-          if (g && ganadorNombre && ganadorDni) {
+          if (g && g.nombres && ganadorNombre && ganadorDni) {
             ganadorNombre.textContent = (g.nombres + ' ' + g.apellidos).toUpperCase();
-            var dniM = g.dni ? g.dni.substring(0,2) + '****' +g.dni.substring(g.dni.length - 2) : 'Verificado ✓';
+            var dniM = g.dni ? g.dni.substring(0,2) + '****' + g.dni.substring(g.dni.length - 2) : 'Verificado ✓';
             ganadorDni.textContent = 'DNI: ' + dniM;
             lanzarConfeti();
           } else {
@@ -2340,123 +2381,126 @@
           setTimeout(function() { card.classList.remove('flipped'); card._busy = false; }, 5000);
         }
 
-        // 1) Checar localStorage
-        var ganadores = cargarGanadores();
-        var ganadorLocal = null;
-        for (var i = 0; i < ganadores.length; i++) {
-          if (ganadores[i].sorteoId === sorteoId) { ganadorLocal = ganadores[i]; break; }
-        }
-        if (ganadorLocal) {
-          setTimeout(function() { mostrarEnCard(ganadorLocal); }, 400);
-          return;
-        }
-
-        // 2) Checar preload (incluye ganadores oficiales)
-        if (_ganadoresPreload[sorteoId]) {
-          setTimeout(function() { mostrarEnCard(_ganadoresPreload[sorteoId]); }, 400);
-          return;
-        }
-
-        // 3) Checar ganadores oficiales hardcodeados directamente
-        if (GANADORES_OFICIALES[sorteoId]) {
-          setTimeout(function() { mostrarEnCard(GANADORES_OFICIALES[sorteoId]); }, 400);
-          return;
-        }
-
-        // 4) Fetch de Google Sheets como último recurso
+        // Siempre intentar fetch desde Google Sheets primero (fuente de verdad)
         var cfg = SORTEOS_CFG[sorteoId];
         if (!cfg) { setTimeout(function() { mostrarEnCard(null); }, 400); return; }
         var nombreSorteo = cfg.nombre.split('–')[0].trim();
+
         fetch(GOOGLE_SHEETS_URL + '?action=obtenerGanador&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
           .then(function(r) { return r.text(); })
           .then(function(txt) {
             var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
-            if (data.status === 'ok' && data.ganador) {
+            if (data.status === 'ok' && data.ganador && data.ganador.nombres) {
               var g = data.ganador;
               var obj = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sorteoId, sorteo:cfg.nombre };
-              var lista = cargarGanadores();
-              var yaExiste = false;
-              for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sorteoId) { yaExiste = true; break; } }
-              if (!yaExiste) { lista.unshift(obj); localStorage.setItem(GANADORES_KEY, JSON.stringify(lista)); }
+              // Guardar en localStorage para futuras consultas
+              _ganadoresPreload[sorteoId] = obj;
+              guardarGanadorEnLocal(sorteoId, obj);
               mostrarEnCard(obj);
             } else {
-              mostrarEnCard(null);
+              // Fallback a datos locales
+              usarDatosLocales();
             }
-          }).catch(function() { mostrarEnCard(null); });
+          }).catch(function() {
+            // Si el fetch falla, intentar datos locales
+            usarDatosLocales();
+          });
+
+        function usarDatosLocales() {
+          // 1) localStorage
+          var ganadores = cargarGanadores();
+          for (var i = 0; i < ganadores.length; i++) {
+            if (ganadores[i].sorteoId === sorteoId && ganadores[i].nombres) {
+              mostrarEnCard(ganadores[i]);
+              return;
+            }
+          }
+          // 2) preload
+          if (_ganadoresPreload[sorteoId] && _ganadoresPreload[sorteoId].nombres) {
+            mostrarEnCard(_ganadoresPreload[sorteoId]);
+            return;
+          }
+          // 3) oficiales hardcodeados
+          if (GANADORES_OFICIALES[sorteoId]) {
+            mostrarEnCard(GANADORES_OFICIALES[sorteoId]);
+            return;
+          }
+          mostrarEnCard(null);
+        }
       });
     }
 
     // ── RENDER PRINCIPAL — el corazón del sistema ──
     var _principalActualId = null;
     var _contadorInterval = null;
+    var _sorteoEnVivo = false; // true mientras la ruleta está girando/mostrando ganador
+    var _transicionTimer = null; // timer de 5 min post-ganador
 
     function renderBloque3() {
       var ahora = Date.now();
       var principalWrap = document.getElementById('principal-wrap');
       var secundariosWrap = document.getElementById('secundarios-wrap');
 
-      // Clasificar sorteos por estado
-      var activo = null;   // el que está en vivo o es el próximo inmediato
-      var proximos = [];   // los que vienen después
-      var finalizados = [];
+      // Si hay un sorteo en vivo, NO cambiar el principal
+      if (_sorteoEnVivo) {
+        renderSecundarios(secundariosWrap, _principalActualId);
+        return;
+      }
 
-      // Primero buscar si hay uno activo (en vivo)
+      // ── Si el principal actual ya finalizó, forzar cambio ──
+      if (_principalActualId && getEstado(_principalActualId) === 'finalizado') {
+        _principalActualId = null; // forzar re-selección
+      }
+
+      // ── Determinar quién es el PRINCIPAL ──
+      // Regla: sorteo activo (en vivo) > próximo más cercano
+      var principal = null;
+      var menorTs = Infinity;
       for (var i = 0; i < SORTEO_DATA.length; i++) {
         var est = getEstado(SORTEO_DATA[i].id);
-        if (est === 'activo') { activo = SORTEO_DATA[i]; break; }
-      }
-      // Si no hay activo en vivo, el principal es el próximo más cercano
-      if (!activo) {
-        for (var j = 0; j < SORTEO_DATA.length; j++) {
-          if (getEstado(SORTEO_DATA[j].id) === 'proximo') { activo = SORTEO_DATA[j]; break; }
+        var ts = SORTEOS_CFG[SORTEO_DATA[i].id].ts;
+        if (est === 'activo') { principal = SORTEO_DATA[i]; break; }
+        if (est === 'proximo' && ts < menorTs) {
+          menorTs = ts;
+          principal = SORTEO_DATA[i];
         }
       }
-      // Separar el resto
-      SORTEO_DATA.forEach(function(s) {
-        if (activo && s.id === activo.id) return; // ya está en principal
-        var est = getEstado(s.id);
-        if (est === 'proximo') proximos.push(s);
-        else if (est === 'finalizado') finalizados.push(s);
-      });
 
       // ── Renderizar PRINCIPAL ──
-      if (activo && _principalActualId !== activo.id) {
-        _principalActualId = activo.id;
-        window._hoyCardId = activo.id;
-        principalWrap.innerHTML = renderPrincipal(activo);
+      if (principal && _principalActualId !== principal.id) {
+        _principalActualId = principal.id;
+        window._hoyCardId = principal.id;
+        principalWrap.innerHTML = renderPrincipal(principal);
 
-        // Participar — delegated click handler (evita problemas de emojis en onclick)
+        // Participar — delegated click handler
         var btnParticipar = principalWrap.querySelector('.btn-participar[data-sorteo-id]');
         if (btnParticipar) {
           btnParticipar.addEventListener('click', function(ev) {
             ev.stopPropagation();
-            var nombre = this.getAttribute('data-sorteo-nombre');
-            var id = this.getAttribute('data-sorteo-id');
-            abrirRegistro(nombre, id);
+            abrirRegistro(this.getAttribute('data-sorteo-nombre'), this.getAttribute('data-sorteo-id'));
           });
         }
         window.participarHoy = function() {
-          abrirRegistro(activo.nombre + ' – ' + activo.monto, activo.id);
+          abrirRegistro(principal.nombre + ' – ' + principal.monto, principal.id);
         };
 
         // Contador
         if (_contadorInterval) clearInterval(_contadorInterval);
-        var cfg = SORTEOS_CFG[activo.id];
+        var cfg = SORTEOS_CFG[principal.id];
         function actualizarContadorPrincipal() {
           var ms = msHasta(cfg.ts);
-          var wrap = document.getElementById('mini-cnt-' + activo.id);
+          var wrap = document.getElementById('mini-cnt-' + principal.id);
           if (!wrap) return;
           if (ms <= 0) {
-            ['h','m','s'].forEach(function(p) { var el = document.getElementById('mc' + activo.id + p); if (el) el.textContent = '00'; });
+            ['h','m','s'].forEach(function(p) { var el = document.getElementById('mc' + principal.id + p); if (el) el.textContent = '00'; });
             if (wrap) wrap.classList.add('vencido');
             return;
           }
           var t = descomponerMs(ms);
           var totalH = t.d * 24 + t.h;
-          document.getElementById('mc' + activo.id + 'h').textContent = pad(totalH);
-          document.getElementById('mc' + activo.id + 'm').textContent = pad(t.m);
-          document.getElementById('mc' + activo.id + 's').textContent = pad(t.s);
-          // Urgencia
+          document.getElementById('mc' + principal.id + 'h').textContent = pad(totalH);
+          document.getElementById('mc' + principal.id + 'm').textContent = pad(t.m);
+          document.getElementById('mc' + principal.id + 's').textContent = pad(t.s);
           if (ms < 7200000 && wrap) { wrap.classList.add('urgente'); wrap.classList.remove('casi'); }
           else if (ms < 21600000 && wrap) { wrap.classList.add('casi'); wrap.classList.remove('urgente'); }
           else if (wrap) { wrap.classList.remove('urgente','casi'); }
@@ -2464,41 +2508,58 @@
         actualizarContadorPrincipal();
         _contadorInterval = setInterval(actualizarContadorPrincipal, 1000);
 
-        // Marcar cerrado si ya pasó
-        var cardEl = document.getElementById('card-sorteo-' + activo.id);
-        if (cardEl && getEstado(activo.id) === 'finalizado') {
-          cardEl.classList.add('cerrado');
-        }
-        if (cardEl) setupClickCerrado(cardEl, activo.id);
+        var cardEl = document.getElementById('card-sorteo-' + principal.id);
+        if (cardEl) setupClickCerrado(cardEl, principal.id);
       }
-      if (!activo) {
-        principalWrap.innerHTML = '<div style="text-align:center;color:#888;padding:30px;font-family:Poppins,sans-serif">No hay sorteo activo en este momento.</div>';
-        _principalActualId = null;
+      if (!principal) {
+        // Si no hay ningún próximo, mostrar el último finalizado
+        var ultFin = null;
+        SORTEO_DATA.forEach(function(s) {
+          if (getEstado(s.id) === 'finalizado') {
+            if (!ultFin || SORTEOS_CFG[s.id].ts > SORTEOS_CFG[ultFin.id].ts) ultFin = s;
+          }
+        });
+        if (ultFin && _principalActualId !== ultFin.id) {
+          _principalActualId = ultFin.id;
+          principalWrap.innerHTML = renderPrincipal(ultFin);
+          var cardFin = document.getElementById('card-sorteo-' + ultFin.id);
+          if (cardFin) { cardFin.classList.add('cerrado'); setupClickCerrado(cardFin, ultFin.id); }
+        } else if (!ultFin) {
+          principalWrap.innerHTML = '<div style="text-align:center;color:#888;padding:30px;font-family:Poppins,sans-serif">No hay sorteo activo en este momento.</div>';
+          _principalActualId = null;
+        }
       }
 
-      // Actualizar badge del principal en tiempo real
-      if (activo) {
+      // Actualizar badge en tiempo real
+      if (_principalActualId) {
         var badgeEl = principalWrap.querySelector('.badge-hoy');
-        if (badgeEl) badgeEl.textContent = getBadgeText(activo.id);
-        // Marcar cerrado si acaba de finalizar
-        var cardPrincipal = document.getElementById('card-sorteo-' + activo.id);
-        if (cardPrincipal && getEstado(activo.id) === 'finalizado') {
-          cardPrincipal.classList.add('cerrado');
-        }
+        if (badgeEl) badgeEl.innerHTML = getBadgeText(_principalActualId);
       }
 
-      // ── Renderizar SECUNDARIOS (finalizados primero, luego próximos) ──
-      finalizados.sort(function(a, b) { return SORTEOS_CFG[b.id].ts - SORTEOS_CFG[a.id].ts; }); // más reciente primero
+      // ── Renderizar SECUNDARIOS ──
+      renderSecundarios(secundariosWrap, _principalActualId);
+    }
+
+    // ── Función separada para renderizar secundarios ──
+    function renderSecundarios(wrap, principalId) {
+      var finalizados = [];
+      var proximos = [];
+      SORTEO_DATA.forEach(function(s) {
+        if (s.id === principalId) return; // el principal no va aquí
+        var est = getEstado(s.id);
+        if (est === 'finalizado') finalizados.push(s);
+        else if (est === 'proximo') proximos.push(s);
+        // 'activo' se queda en principal, no aquí
+      });
+      finalizados.sort(function(a, b) { return SORTEOS_CFG[b.id].ts - SORTEOS_CFG[a.id].ts; });
       proximos.sort(function(a, b) { return SORTEOS_CFG[a.id].ts - SORTEOS_CFG[b.id].ts; });
       var secHTML = '';
       finalizados.forEach(function(s) { secHTML += renderSecundario(s, true, false); });
       proximos.forEach(function(s, idx) { secHTML += renderSecundario(s, false, idx === 0); });
-      // Solo actualizar si cambió (para no romper animaciones)
       var secIds = finalizados.map(function(s) { return 'f' + s.id; }).concat(proximos.map(function(s) { return 'p' + s.id; })).join(',');
-      if (secundariosWrap.getAttribute('data-ids') !== secIds) {
-        secundariosWrap.innerHTML = secHTML;
-        secundariosWrap.setAttribute('data-ids', secIds);
-        // Setup click handlers para cerrados
+      if (wrap.getAttribute('data-ids') !== secIds) {
+        wrap.innerHTML = secHTML;
+        wrap.setAttribute('data-ids', secIds);
         finalizados.forEach(function(s) {
           var card = document.getElementById('card-sorteo-' + s.id);
           if (card) setupClickCerrado(card, s.id);
@@ -2506,10 +2567,16 @@
       }
     }
 
-    // Render inicial + re-render cada 5s para detectar cambios de estado
+    // ── Función para transición post-sorteo: principal baja, siguiente sube ──
+    function transicionPostSorteo(sorteoId) {
+      _sorteoEnVivo = false;
+      _principalActualId = null; // forzar re-render del principal
+      renderBloque3(); // el próximo sorteo subirá como principal
+    }
+
+    // Render inicial + re-render cada 5s
     renderBloque3();
     setInterval(renderBloque3, 5000);
-    // Pre-cargar ganadores reales desde Google Sheets (para mostrar en cards cerrados)
     setTimeout(precargarGanadores, 800);
 
     // PANELES
@@ -2588,7 +2655,7 @@
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxO6jFPkjWs8Sj_gWCLVpapAJG66ObNEHiDkmxiSDaDVuOAv9xjulH6ciM02SLgKH2b/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw0KbnUtJmJDhbbCDWDx97gcOsYD9YsiK_aqkmL02LhtpwUZK7TmrkYFJAr-Fnk7czd/exec';
     var _registroEnProceso = false; // Guardia global contra doble submit
     function enviarRegistro(e) {
       e.preventDefault();
@@ -2909,6 +2976,7 @@
       if (!cfg) return;
       if (ruletaSorteoYaEjecutado[sorteoId]) return;
       ruletaSorteoYaEjecutado[sorteoId] = true;
+      _sorteoEnVivo = true; // bloquear cambio de principal
 
       var card = document.getElementById('card-sorteo-' + sorteoId);
       var estadoEl = document.getElementById('card-estado-' + sorteoId);
@@ -2917,7 +2985,7 @@
       var ganadorNombre = document.getElementById('card-ganador-nombre-' + sorteoId);
       var ganadorDni = document.getElementById('card-ganador-dni-' + sorteoId);
 
-      if (!card) return;
+      if (!card) { _sorteoEnVivo = false; return; }
 
       // Scroll a la tarjeta
       card.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -2927,6 +2995,9 @@
         card.classList.add('flipped');
         estadoEl.textContent = 'Cargando participantes...';
         ganadorDiv.classList.remove('visible');
+        // Mostrar badge EN VIVO (en el card-back, orientación correcta)
+        var enVivoEl = card.querySelector('.en-vivo-badge');
+        if (enVivoEl) enVivoEl.style.display = 'flex';
       }, 300);
 
       // Obtener participantes
@@ -2942,25 +3013,18 @@
           .then(function(txt) {
             var data;
             try { data = JSON.parse(txt); }
-            catch(e) {
-              throw new Error('Apps Script no devuelve JSON');
-            }
+            catch(e) { throw new Error('Apps Script no devuelve JSON'); }
             if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
-              estadoEl.textContent = 'nadie quiere el rico chinchin';
+              estadoEl.textContent = 'Nadie se registró en este sorteo';
               estadoEl.style.color = 'var(--neon-rosa)';
-              estadoEl.style.textShadow = '0 0 8px var(--neon-rosa)';
+              var enVivoEl = card.querySelector('.en-vivo-badge');
+              if (enVivoEl) enVivoEl.style.display = 'none';
               setTimeout(function() {
                 card.classList.remove('flipped');
                 setTimeout(function() {
                   card.classList.add('cerrado');
-                  // Liberar a quien estaba registrado en este sorteo (no hubo ganador)
-                  try {
-                    var regActual = localStorage.getItem('tsp_registrado');
-                    if (regActual) {
-                      var regObj = JSON.parse(regActual);
-                      if (regObj.sorteoId === sorteoId) localStorage.removeItem('tsp_registrado');
-                    }
-                  } catch(e) {}
+                  _sorteoEnVivo = false;
+                  transicionPostSorteo(sorteoId);
                 }, 900);
               }, 5000);
               return;
@@ -2970,96 +3034,162 @@
             estadoEl.textContent = participantes.length + ' participantes...';
             dibujarRuleta(canvasId, participantes, 0);
 
-            // Seleccionar ganador (crypto random)
-            var ganadorIdx;
-            if (window.crypto && window.crypto.getRandomValues) {
-              var arr = new Uint32Array(1);
-              window.crypto.getRandomValues(arr);
-              ganadorIdx = arr[0] % participantes.length;
-            } else {
-              ganadorIdx = Math.floor(Math.random() * participantes.length);
-            }
+            // ══════════════════════════════════════════════════════
+            // SELECCIÓN DE GANADOR SERVER-SIDE
+            // El servidor elige al ganador y lo guarda. Todos los
+            // dispositivos reciben el MISMO ganador.
+            // ══════════════════════════════════════════════════════
+            estadoEl.textContent = 'Seleccionando ganador...';
+            var selUrl = GOOGLE_SHEETS_URL + '?action=seleccionarGanador&sorteo=' +
+              encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
-            var n = participantes.length;
-            var slice = (2 * Math.PI) / n;
-            var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
-            var vueltas = 8 + Math.floor(Math.random() * 5);
-            var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
-            var duracion = 6000;
-
-            setTimeout(function() {
-              estadoEl.textContent = '¡Girando la ruleta!';
-              var inicio = performance.now();
-
-              function animarRuleta(timestamp) {
-                var progreso = Math.min(1, (timestamp - inicio) / duracion);
-                var eased = 1 - Math.pow(1 - progreso, 3);
-                var anguloActual = anguloTotal * eased;
-                dibujarRuleta(canvasId, participantes, anguloActual);
-
-                if (progreso < 1) {
-                  requestAnimationFrame(animarRuleta);
-                } else {
-                  // ¡Ganador!
-                  var ganador = participantes[ganadorIdx];
-                  var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
-                  var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' +ganador.dni.substring(ganador.dni.length - 2) : '';
-
-                  estadoEl.textContent = '🎉 ¡GANADOR!';
-                  ganadorNombre.textContent = nombreCompleto.toUpperCase();
-                  ganadorDni.textContent = 'DNI: ' + dniMask;
-                  ganadorDiv.classList.add('visible');
-                  lanzarConfeti();
-
-                  // Guardar en localStorage
-                  var ahora = new Date();
-                  guardarGanador({
-                    nombres: ganador.nombres,
-                    apellidos: ganador.apellidos,
-                    dni: ganador.dni,
-                    sorteo: cfg.nombre,
-                    sorteoId: sorteoId,
-                    fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
-                  });
-                  renderGanadores();
-
-                  // Esperar 1 minuto, luego voltear de regreso con sello CERRADO
-                  setTimeout(function() {
-                    card.classList.remove('flipped');
-                    setTimeout(function() {
-                      card.classList.add('cerrado');
-                      // ── Liberar a los NO ganadores para que participen en otro sorteo ──
-                      try {
-                        var regActual = localStorage.getItem('tsp_registrado');
-                        if (regActual) {
-                          var regObj = JSON.parse(regActual);
-                          // Solo liberar si estaba registrado en ESTE sorteo y NO es el ganador
-                          if (regObj.sorteoId === sorteoId) {
-                            var regDni = regObj.dni || '';
-                            if (regDni !== ganador.dni) {
-                              localStorage.removeItem('tsp_registrado');
-                            }
-                          }
-                        }
-                      } catch(e) {}
-                    }, 900); // esperar que termine la animación de flip
-                  }, 60000); // 1 minuto
+            fetch(selUrl, { redirect: 'follow' })
+              .then(function(rSel) { return rSel.text(); })
+              .then(function(txtSel) {
+                var selData;
+                try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON'); }
+                if (selData.status !== 'ok' || !selData.ganador) {
+                  throw new Error(selData.mensaje || 'No se pudo seleccionar ganador');
                 }
-              }
-              inicio = performance.now();
-              requestAnimationFrame(animarRuleta);
-            }, 1500);
+
+                var ganadorServer = selData.ganador;
+                // Encontrar el índice del ganador en la lista de participantes
+                var ganadorIdx = -1;
+                for (var gi = 0; gi < participantes.length; gi++) {
+                  if (participantes[gi].dni === ganadorServer.dni &&
+                      participantes[gi].nombres.toLowerCase() === ganadorServer.nombres.toLowerCase()) {
+                    ganadorIdx = gi;
+                    break;
+                  }
+                }
+                // Si no se encontró por DNI+nombre exacto, buscar solo por DNI
+                if (ganadorIdx === -1) {
+                  for (var gi2 = 0; gi2 < participantes.length; gi2++) {
+                    if (participantes[gi2].dni === ganadorServer.dni) {
+                      ganadorIdx = gi2;
+                      break;
+                    }
+                  }
+                }
+                // Fallback: poner al ganador como primer elemento
+                if (ganadorIdx === -1) {
+                  participantes.unshift({
+                    nombres: ganadorServer.nombres,
+                    apellidos: ganadorServer.apellidos,
+                    dni: ganadorServer.dni
+                  });
+                  ganadorIdx = 0;
+                  dibujarRuleta(canvasId, participantes, 0);
+                }
+
+                var n = participantes.length;
+                var slice = (2 * Math.PI) / n;
+                var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
+                var vueltas = 8 + Math.floor(Math.random() * 5);
+                var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
+                var duracion = 6000;
+
+                setTimeout(function() {
+                  estadoEl.textContent = '¡Girando la ruleta!';
+                  var inicio = performance.now();
+
+                  function animarRuleta(timestamp) {
+                    var progreso = Math.min(1, (timestamp - inicio) / duracion);
+                    var eased = 1 - Math.pow(1 - progreso, 3);
+                    var anguloActual = anguloTotal * eased;
+                    dibujarRuleta(canvasId, participantes, anguloActual);
+
+                    if (progreso < 1) {
+                      requestAnimationFrame(animarRuleta);
+                    } else {
+                      // ¡Ganador! (del servidor — igual para todos)
+                      var ganador = { nombres: ganadorServer.nombres, apellidos: ganadorServer.apellidos, dni: ganadorServer.dni };
+                      var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
+                      var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' + ganador.dni.substring(ganador.dni.length - 2) : '';
+
+                      // Ocultar ruleta, mostrar solo ganador
+                      var ruletaContainer = card.querySelector('.card-ruleta-container');
+                      if (ruletaContainer) ruletaContainer.style.display = 'none';
+                      // Ocultar EN VIVO badge
+                      var enVivoEl = card.querySelector('.en-vivo-badge');
+                      if (enVivoEl) enVivoEl.style.display = 'none';
+
+                      estadoEl.textContent = '🎉 ¡GANADOR!';
+                      estadoEl.style.color = 'var(--neon-amarillo)';
+                      estadoEl.style.fontSize = '1.2rem';
+                      ganadorNombre.textContent = nombreCompleto.toUpperCase();
+                      ganadorDni.textContent = 'DNI: ' + dniMask;
+                      ganadorDiv.classList.add('visible');
+                      lanzarConfeti();
+
+                      // Guardar ganador localmente
+                      var ahora = new Date();
+                      guardarGanador({
+                        nombres: ganador.nombres,
+                        apellidos: ganador.apellidos,
+                        dni: ganador.dni,
+                        sorteo: cfg.nombre,
+                        sorteoId: sorteoId,
+                        fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
+                      });
+                      _ganadoresPreload[sorteoId] = {
+                        nombres: ganador.nombres, apellidos: ganador.apellidos,
+                        dni: ganador.dni, sorteoId: sorteoId, sorteo: cfg.nombre
+                      };
+                      guardarGanadorEnLocal(sorteoId, _ganadoresPreload[sorteoId]);
+                      renderGanadores();
+
+                      // NO registrar ganador en Sheets aquí — el servidor ya lo hizo
+                      // en el endpoint seleccionarGanador
+
+                      // ── 5 MINUTOS mostrando ganador, luego transición ──
+                      _transicionTimer = setTimeout(function() {
+                        card.classList.remove('flipped');
+                        setTimeout(function() {
+                          card.classList.add('cerrado');
+                          try {
+                            var regActual = localStorage.getItem('tsp_registrado');
+                            if (regActual) {
+                              var regObj = JSON.parse(regActual);
+                              if (regObj.sorteoId === sorteoId && regObj.dni !== ganador.dni) {
+                                localStorage.removeItem('tsp_registrado');
+                              }
+                            }
+                          } catch(e) {}
+                          transicionPostSorteo(sorteoId);
+                        }, 900);
+                      }, 300000);
+                    }
+                  }
+                  inicio = performance.now();
+                  requestAnimationFrame(animarRuleta);
+                }, 1500);
+              })
+              .catch(function(errSel) {
+                console.error('Error seleccionando ganador:', errSel);
+                estadoEl.textContent = 'Error al seleccionar ganador';
+                estadoEl.style.color = 'var(--neon-rosa)';
+                var enVivoEl2 = card.querySelector('.en-vivo-badge');
+                if (enVivoEl2) enVivoEl2.style.display = 'none';
+                setTimeout(function() {
+                  card.classList.remove('flipped');
+                  _sorteoEnVivo = false;
+                  ruletaSorteoYaEjecutado[sorteoId] = false;
+                }, 5000);
+              });
           })
           .catch(function(err) {
             console.error('Error cargando participantes:', err);
             estadoEl.innerHTML = 'Error: ' + err.message;
+            var enVivoEl = card.querySelector('.en-vivo-badge');
+            if (enVivoEl) enVivoEl.style.display = 'none';
             setTimeout(function() {
               card.classList.remove('flipped');
-              /* sorteo finalizado */
+              _sorteoEnVivo = false;
               ruletaSorteoYaEjecutado[sorteoId] = false;
             }, 5000);
           });
-      }, 1200); // esperar que el flip termine
+      }, 1200);
     }
 
     // ── Verificar si algún sorteo debe activarse ──
