@@ -2594,8 +2594,13 @@
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
     var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxO6jFPkjWs8Sj_gWCLVpapAJG66ObNEHiDkmxiSDaDVuOAv9xjulH6ciM02SLgKH2b/exec';
+    var _registroEnProceso = false; // Guardia global contra doble submit
     function enviarRegistro(e) {
       e.preventDefault();
+      // ── Bloquear doble submit ──
+      if (_registroEnProceso) { console.warn('Registro ya en proceso, ignorando'); return; }
+      _registroEnProceso = true;
+
       var form = e.target;
       var btnRegistro = form.querySelector('.btn-registro');
       var datos = {
@@ -2610,18 +2615,22 @@
       };
       if (btnRegistro) { btnRegistro.disabled = true; btnRegistro.textContent = 'VERIFICANDO...'; }
 
+      // Función para liberar el bloqueo y restaurar botón
+      function liberarRegistro() {
+        _registroEnProceso = false;
+        if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
+      }
+
       // Función que completa el registro (envía datos + muestra éxito)
       function completarRegistro() {
         var cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
         datos.codigo = cod;
-        // Enviar a Google Sheets
+        // Enviar a Google Sheets usando XMLHttpRequest para evitar doble POST por redirect
         if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
-          fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-          }).catch(function(err) { console.warn('Error Sheets:', err); });
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', GOOGLE_SHEETS_URL, true);
+          xhr.setRequestHeader('Content-Type', 'text/plain');
+          xhr.send(JSON.stringify(datos));
         }
         // Actualizar contador visual
         var id = document.getElementById('sorteo-id').value;
@@ -2640,14 +2649,14 @@
         cerrarPanel('panel-registro');
         document.getElementById('modal-exito').classList.add('activo');
         form.reset();
-        if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
+        liberarRegistro();
       }
 
       // Función que muestra "ya registrado"
       function mostrarYaRegistrado() {
         cerrarPanel('panel-registro');
         document.getElementById('modal-ya-registrado').classList.add('activo');
-        if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
+        liberarRegistro();
       }
 
       // ── Verificar DNI con timeout de seguridad ──
