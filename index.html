@@ -1216,10 +1216,9 @@
       /* ── Header ── */
       header { padding:18px 14px 14px; }
       .metele-tag { position:relative; top:auto; bottom:auto; left:auto; width:clamp(90px,24vw,130px); margin:-4px auto 0; transform:rotate(-4deg); transform-origin:center center; }
-      .logo-principal { padding-left:25px; font-size:clamp(3.2rem,14vw,6rem); }
+      .logo-principal { padding-left:0; font-size:clamp(3.2rem,14vw,6rem); text-align:center; }
       .logo-principal .logo-tu, .logo-principal .logo-suerte, .logo-principal .logo-pe { -webkit-text-stroke:2px #000; }
-      .logo-principal::before { left:-2.5em; font-size:.16em; letter-spacing:2px; }
-      .logo-principal::after { right:-2.5em; font-size:.16em; letter-spacing:2px; }
+      .logo-principal::before, .logo-principal::after { display:none; }
       .header-decoracion { gap:5px; margin-bottom:4px; }
       .estrella { font-size:.9rem; }
       .logo-sub { font-size:.7rem; letter-spacing:3px; }
