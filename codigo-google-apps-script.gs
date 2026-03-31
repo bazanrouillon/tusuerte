@@ -188,6 +188,201 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ══════════════════════════════════════════════════════════════
+    // ── SELECCIONAR GANADOR (server-side) ──
+    // Si ya existe un ganador para este sorteo, lo devuelve.
+    // Si no existe, selecciona uno al azar, lo guarda y lo devuelve.
+    // Esto garantiza que TODOS los dispositivos vean el MISMO ganador.
+    // Uso: GET ?action=seleccionarganador&sorteo=NOMBRE&sorteoId=ID
+    // ══════════════════════════════════════════════════════════════
+    if (action === 'seleccionarganador') {
+      var sorteoFiltro = (e.parameter.sorteo || '').trim();
+      var sorteoId = (e.parameter.sorteoId || '').trim();
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+      // 1) Verificar si ya hay un ganador registrado para este sorteo
+      var ganadorSheet = ss.getSheetByName('Ganadores');
+      if (ganadorSheet) {
+        var gData = ganadorSheet.getDataRange().getValues();
+        for (var gi = gData.length - 1; gi >= 1; gi--) {
+          var gSorteoId = String(gData[gi][2] || '').trim();
+          var gSorteo = String(gData[gi][1] || '').trim();
+          if ((sorteoId && gSorteoId === sorteoId) ||
+              (sorteoFiltro && gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1)) {
+            // Ya existe ganador — devolver el mismo
+            return ContentService
+              .createTextOutput(JSON.stringify({
+                status: 'ok',
+                yaExistia: true,
+                ganador: {
+                  nombres: String(gData[gi][3] || '').trim(),
+                  apellidos: String(gData[gi][4] || '').trim(),
+                  dni: String(gData[gi][5] || '').trim(),
+                  sorteoId: gSorteoId,
+                  sorteo: gSorteo
+                }
+              }))
+              .setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+      }
+
+      // 2) No hay ganador aún — obtener participantes y elegir uno al azar
+      var regSheet = ss.getActiveSheet();
+      var regData = regSheet.getDataRange().getValues();
+      var participantes = [];
+      for (var pi = 1; pi < regData.length; pi++) {
+        var sorteoCell = String(regData[pi][1] || '').trim();
+        if (sorteoFiltro && sorteoCell.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) === -1) {
+          continue;
+        }
+        participantes.push({
+          nombres: String(regData[pi][2] || '').trim(),
+          apellidos: String(regData[pi][3] || '').trim(),
+          dni: String(regData[pi][4] || '').trim(),
+          celular: String(regData[pi][5] || ''),
+          correo: String(regData[pi][6] || ''),
+          distrito: String(regData[pi][7] || ''),
+          codigo: String(regData[pi][9] || '')
+        });
+      }
+
+      if (participantes.length === 0) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            status: 'ok',
+            ganador: null,
+            mensaje: 'No hay participantes registrados para este sorteo'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      // 3) Selección aleatoria SERVER-SIDE
+      var idx = Math.floor(Math.random() * participantes.length);
+      var ganador = participantes[idx];
+
+      // 4) Guardar ganador en hoja Ganadores
+      if (!ganadorSheet) {
+        ganadorSheet = ss.insertSheet('Ganadores');
+        ganadorSheet.appendRow([
+          'FECHA Y HORA', 'SORTEO', 'SORTEO ID', 'NOMBRES', 'APELLIDOS',
+          'DNI', 'CELULAR', 'CORREO', 'DISTRITO', 'CODIGO'
+        ]);
+        var headerRange = ganadorSheet.getRange(1, 1, 1, 10);
+        headerRange.setBackground('#1a0a2a');
+        headerRange.setFontColor('#ffd700');
+        headerRange.setFontWeight('bold');
+      }
+
+      var ahora = new Date();
+      var fechaLima = Utilities.formatDate(ahora, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
+      ganadorSheet.appendRow([
+        fechaLima,
+        sorteoFiltro || '',
+        sorteoId || '',
+        ganador.nombres,
+        ganador.apellidos,
+        ganador.dni,
+        ganador.celular || '',
+        ganador.correo || '',
+        ganador.distrito || '',
+        ganador.codigo || ''
+      ]);
+
+      // 5) Marcar como ganador en hoja de registros (columna K)
+      if (regSheet.getLastColumn() < 11) {
+        regSheet.getRange(1, 11).setValue('GANADOR');
+        regSheet.getRange(1, 11).setBackground('#0d0d1f');
+        regSheet.getRange(1, 11).setFontColor('#ffd700');
+        regSheet.getRange(1, 11).setFontWeight('bold');
+      }
+      var dniGanador = ganador.dni;
+      for (var mj = 1; mj < regData.length; mj++) {
+        if (String(regData[mj][4] || '').trim() === dniGanador) {
+          regSheet.getRange(mj + 1, 11).setValue('SI');
+          regSheet.getRange(mj + 1, 11).setBackground('#1a4a1a');
+          regSheet.getRange(mj + 1, 11).setFontColor('#ffd700');
+          regSheet.getRange(mj + 1, 11).setFontWeight('bold');
+          break;
+        }
+      }
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          status: 'ok',
+          yaExistia: false,
+          ganador: {
+            nombres: ganador.nombres,
+            apellidos: ganador.apellidos,
+            dni: ganador.dni,
+            sorteoId: sorteoId,
+            sorteo: sorteoFiltro
+          }
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Obtener TODOS los ganadores (desde Registros TuSuerte, columna K = "SI") ──
+    // Solo 1 ganador por sorteo (el primero encontrado con K="SI" para ese sorteo)
+    if (action === 'obtenertodosganadores') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sheet = ss.getActiveSheet(); // Registros TuSuerte
+      var data = sheet.getDataRange().getValues();
+      var ganadores = [];
+      var sorteosYaVistos = {}; // para garantizar 1 ganador por sorteo
+      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ..., 10=GANADOR(K)
+      for (var i = 1; i < data.length; i++) {
+        var esGanador = String(data[i][10] || '').trim().toUpperCase();
+        if (esGanador !== 'SI') continue;
+        var sorteo = String(data[i][1] || '').trim();
+        if (sorteosYaVistos[sorteo]) continue; // ya hay ganador para este sorteo
+        sorteosYaVistos[sorteo] = true;
+        var nombres = String(data[i][2] || '').trim();
+        var apellidos = String(data[i][3] || '').trim();
+        if (!nombres && !apellidos) continue;
+        ganadores.push({
+          sorteo: sorteo,
+          sorteoId: '',
+          nombres: nombres,
+          apellidos: apellidos,
+          dni: String(data[i][4] || '').trim(),
+          fecha: String(data[i][0] || '').trim()
+        });
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', ganadores: ganadores }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Obtener ganador de un sorteo (desde Registros TuSuerte, columna K = "SI") ──
+    if (action === 'obtenerganador') {
+      var sorteoFiltro = (e.parameter.sorteo || '').trim();
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sheet = ss.getActiveSheet(); // Registros TuSuerte
+      var data = sheet.getDataRange().getValues();
+      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ..., 10=GANADOR(K)
+      var ganadorEncontrado = null;
+      for (var i = 1; i < data.length; i++) {
+        var esGanador = String(data[i][10] || '').trim().toUpperCase();
+        if (esGanador !== 'SI') continue;
+        var sorteoCell = String(data[i][1] || '').trim();
+        if (sorteoFiltro && sorteoCell.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1) {
+          ganadorEncontrado = {
+            nombres: String(data[i][2] || '').trim(),
+            apellidos: String(data[i][3] || '').trim(),
+            dni: String(data[i][4] || '').trim(),
+            sorteo: sorteoCell,
+            sorteoId: '',
+            fecha: String(data[i][0] || '').trim()
+          };
+          break;
+        }
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', ganador: ganadorEncontrado }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // ── Verificar si un DNI ya está registrado en un sorteo ──
     if (action === 'verificardni') {
       var dni = (e.parameter.dni || '').trim();

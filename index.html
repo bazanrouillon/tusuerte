@@ -40,16 +40,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --negro: #0a0a1a; --neon-rosa: #ff1493; --neon-verde: #39ff14;
+      --negro: #0a2a2d; --neon-rosa: #ff1493; --neon-verde: #39ff14;
       --neon-amarillo: #ffd700; --neon-naranja: #ff6a00;
       --neon-celeste: #00e5ff; --neon-violeta: #cc00ff; --blanco: #ffffff;
       --chicha-rosa: #ff1493; --chicha-naranja: #ff8c00; --chicha-amarillo: #ffd700;
-      --chicha-verde: #39ff14; --chicha-azul: #1a2a6c; --chicha-rojo: #ff2020;
+      --chicha-verde: #39ff14; --chicha-azul: #0d3840; --chicha-rojo: #ff2020;
     }
     html { scroll-behavior: smooth; }
     body { background-color: var(--negro); color: var(--blanco); font-family: 'Paytone One', sans-serif; overflow-x: hidden; }
     .bg-pattern { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
-      background: #0a0a1a; }
+      background: #0a2a2d; }
     .bg-pattern::before { content:''; position:absolute; inset:0;
       background:
         radial-gradient(circle at 15% 25%, rgba(255,20,147,.12) 0%, transparent 40%),
@@ -78,7 +78,7 @@
     /* HEADER */
     header { position:relative; text-align:center; padding:35px 20px 25px;
       border-bottom:4px solid var(--chicha-amarillo);
-      background:linear-gradient(180deg,#0f1a3a 0%,#0a1025 40%,#0d1530 100%);
+      background:linear-gradient(180deg,#0d3038 0%,#0a2830 40%,#0e3338 100%);
       overflow:visible;
       box-shadow: inset 0 0 60px rgba(26,42,108,.5), 0 4px 20px rgba(0,0,0,.6); }
     .header-decoracion { display:flex; justify-content:center; gap:10px; margin-bottom:8px; }
@@ -162,7 +162,7 @@
       margin-top:4px; text-transform:uppercase; }
     /* NAV — chicha peruano cartel */
     nav {
-      background: linear-gradient(180deg, #0a0e20 0%, #0d1530 50%, #0a0e20 100%);
+      background: linear-gradient(180deg, #0c2e33 0%, #0e3338 50%, #0c2e33 100%);
       display:flex; justify-content:center; align-items:center; flex-wrap:wrap;
       padding: 12px 16px; gap: 12px;
       position:relative;
@@ -171,7 +171,7 @@
     /* Contenedor chicha para los 2 botones principales */
     .nav-chicha-box {
       display:flex; align-items:center; gap:10px;
-      background:linear-gradient(135deg,#0d0a1a,#0d1530,#0d0a1a);
+      background:linear-gradient(135deg,#0a2a2d,#0e3338,#0a2a2d);
       border:1px solid rgba(255,255,255,.1);
       border-radius:0;
       padding:8px 20px;
@@ -252,7 +252,7 @@
       max-width:480px; margin:0 auto 30px;
     }
     .card-hoy {
-      background:linear-gradient(180deg,#0d1530 0%,#080c1a 50%,#0d1530 100%);
+      background:linear-gradient(180deg,#0e3338 0%,#082628 50%,#0e3338 100%);
       border:2px solid rgba(255,20,147,.35);
       border-radius:16px;
       box-shadow: 0 0 12px rgba(255,20,147,.1), 0 8px 30px rgba(0,0,0,.5);
@@ -266,7 +266,7 @@
       position:absolute; top:0; left:0; width:100%; height:100%;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
       transform:rotateY(180deg); -webkit-transform:rotateY(180deg);
-      background:linear-gradient(135deg,#0a0e20 0%,#0d1530 50%,#0a0e20 100%);
+      background:linear-gradient(135deg,#0c2e33 0%,#0e3338 50%,#0c2e33 100%);
       display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px;
       border-radius:16px; overflow:hidden; z-index:2;
     }
@@ -351,7 +351,7 @@
       gap:10px;
     }
     .semana-card {
-      background:linear-gradient(180deg,#0d1530,#0a0e20);
+      background:linear-gradient(180deg,#0e3338,#0c2e33);
       border:2px solid rgba(255,255,255,.12);
       border-radius:10px; padding:14px 12px; text-align:center;
       transition:border-color .2s;
@@ -361,7 +361,7 @@
       border-color:#ff1493;
       box-shadow: 0 0 20px rgba(255,20,147,.4);
       transform:scale(1.06);
-      background:linear-gradient(180deg,#1a0a25,#0d0a1a);
+      background:linear-gradient(180deg,#0d3538,#0a2a2d);
     }
     .semana-card.activa .semana-card-emoji { font-size:1.9rem; }
     .semana-card.cerrada { opacity:.3; filter:grayscale(.6); }
@@ -410,7 +410,7 @@
        ══════════════════════════════════════════ */
     .bloque2 {
       text-align:center; padding:28px 20px 22px; position:relative;
-      background: linear-gradient(180deg, #050505 0%, #0a0a0a 40%, #050505 100%);
+      background: linear-gradient(180deg, #0a2a2d 0%, #0c2e33 40%, #0a2a2d 100%);
       border-bottom:4px solid var(--chicha-celeste, #00e5ff);
       overflow:hidden;
     }
@@ -510,7 +510,7 @@
     }
     /* Contenedor 3D para flip */
     .card-sorteo-wrap { perspective:1200px; -webkit-perspective:1200px; position:relative; }
-    .card-sorteo { background:linear-gradient(180deg,#0a0e20 0%,#080c18 50%,#0a0e20 100%);
+    .card-sorteo { background:linear-gradient(180deg,#0c2e33 0%,#082628 50%,#0c2e33 100%);
       border:1px solid rgba(255,255,255,.08);
       border-radius:14px;
       box-shadow:none;
@@ -526,7 +526,7 @@
       position:absolute; top:0; left:0; width:100%; height:100%;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
       transform:rotateY(180deg); -webkit-transform:rotateY(180deg);
-      background:linear-gradient(135deg,#0a0e20 0%,#0d1530 50%,#0a0e20 100%);
+      background:linear-gradient(135deg,#0c2e33 0%,#0e3338 50%,#0c2e33 100%);
       display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:16px;
       border-radius:14px; overflow:hidden;
@@ -617,9 +617,8 @@
     .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
     .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.35; filter:grayscale(.5) brightness(.5); }
     .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
-    .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
+    .card-sorteo.cerrado:not(.flipped) { cursor:default; pointer-events:none; }
     .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(255,255,255,.08); box-shadow:none; }
-    .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 6px rgba(255,255,255,.05); transform:translateY(-2px); }
     /* Ganador preview en FRONT del card cerrado */
     .card-ganador-preview {
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:6;
@@ -645,7 +644,7 @@
     .card-sorteo.cerrado.flipped { border-color:rgba(255,215,0,.2); box-shadow:0 0 8px rgba(255,215,0,.08); }
     /* Back cerrado: fondo sólido, solo ganador */
     .card-back-cerrado {
-      background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2a 50%,#0a0a1a 100%);
+      background:linear-gradient(135deg,#0a2a2d 0%,#0d3538 50%,#0a2a2d 100%);
       display:flex; align-items:center; justify-content:center;
       text-align:center; padding:20px;
     }
@@ -656,9 +655,9 @@
       font-size:.85rem; letter-spacing:2px; padding:3px 14px 3px 12px;
       box-shadow:none; clip-path:polygon(0 0,100% 0,100% 100%,0 100%,6% 50%); }
     .card-img { width:100%; height:190px; display:flex; align-items:center; justify-content:center;
-      font-size:5rem; background:linear-gradient(135deg,#0a0e20,#12082a);
+      font-size:5rem; background:linear-gradient(135deg,#0c2e33,#0a3035);
       border-bottom:1px solid rgba(255,20,147,.15); }
-    .card-body { padding:18px; background:linear-gradient(180deg,#0d1530,#0a0e20); }
+    .card-body { padding:18px; background:linear-gradient(180deg,#0e3338,#0c2e33); }
     /* ── Cards compactas dentro del grid ── */
     /* ── Cards secundarias ── */
     .grid-sorteos .card-sorteo {
@@ -666,7 +665,7 @@
       border-color:rgba(255,255,255,.06);
       box-shadow:none;
       opacity:.7;
-      background:linear-gradient(180deg,#080c18 0%,#060a14 100%);
+      background:linear-gradient(180deg,#082628 0%,#062224 100%);
     }
     /* Cerrados: visibles pero apagados */
     .grid-sorteos .card-sorteo.cerrado { opacity:.75; }
@@ -674,7 +673,7 @@
     .grid-sorteos .card-sorteo:not(.cerrado) {
       opacity:1;
       border-color:rgba(255,255,255,.1);
-      background:linear-gradient(180deg,#0c1225 0%,#080e1e 100%);
+      background:linear-gradient(180deg,#0c2e33 0%,#082628 100%);
     }
     .grid-sorteos .card-sorteo:not(.cerrado) .card-front {
       filter:saturate(.8) brightness(.88);
@@ -750,12 +749,12 @@
     .card-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
     .card-participantes { font-family:'Righteous',cursive; font-size:.82rem; color:#7dffb3; }
     .card-fecha { font-family:'Righteous',cursive; font-size:.85rem; color:#ffb347; letter-spacing:0.5px; }
-    .barra-wrap { background:#111528; border-radius:4px; height:8px; margin-bottom:10px; border:1px solid #1a2040; }
+    .barra-wrap { background:#111528; border-radius:4px; height:8px; margin-bottom:10px; border:1px solid #1a4045; }
     .barra-fill { height:100%; border-radius:4px;
       background:linear-gradient(90deg,rgba(255,20,147,.6),rgba(255,106,0,.5));
       box-shadow:none; transition:width 1s ease; }
     /* Mini-contador por sorteo — ARMA PRINCIPAL */
-    .mini-cnt-wrap { margin-bottom:10px; background:#020408; border-radius:10px; border:1px solid rgba(255,215,0,.15); overflow:hidden; }
+    .mini-cnt-wrap { margin-bottom:10px; background:#062224; border-radius:10px; border:1px solid rgba(255,215,0,.15); overflow:hidden; }
     .mini-contador { display:flex; align-items:center; justify-content:center; gap:8px; padding:14px 10px 16px; }
     .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:48px; }
     .mc-num { font-family:'Bebas Neue','Poppins',sans-serif; font-weight:400; font-size:2.8rem; line-height:1; color:#fff; letter-spacing:1px;
@@ -788,7 +787,7 @@
     .panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82);
       z-index:900; align-items:center; justify-content:center; padding:20px; }
     .panel-overlay.activo { display:flex; }
-    .panel-box { background:linear-gradient(135deg,#0a0e20,#0d1530); border-radius:10px; width:100%; max-width:820px;
+    .panel-box { background:linear-gradient(135deg,#0c2e33,#0e3338); border-radius:10px; width:100%; max-width:820px;
       max-height:88vh; overflow-y:auto; animation:popin .3s cubic-bezier(.34,1.56,.64,1); position:relative; }
     @keyframes popin { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
     .panel-header { display:flex; justify-content:space-between; align-items:center;
@@ -798,7 +797,7 @@
     .panel-cerrar:hover { color:var(--neon-rosa); }
     .panel-body { padding:10px 28px 32px; }
     /* PANEL COMO */
-    #panel-como .panel-header { background:#080c1a; border-bottom:2px solid rgba(255,20,147,.4); padding:18px 28px; }
+    #panel-como .panel-header { background:#082628; border-bottom:2px solid rgba(255,20,147,.4); padding:18px 28px; }
     #panel-como .panel-titulo { color:#fff; font-size:1.8rem; letter-spacing:3px;
       text-shadow:2px 2px 0 #000; }
     #panel-como .panel-titulo .titulo-acento { color:var(--chicha-rosa); }
@@ -807,7 +806,7 @@
     #panel-como .panel-cerrar { font-size:1.4rem; opacity:.5; }
     #panel-como .panel-cerrar:hover { opacity:1; color:var(--chicha-rosa); }
     .pasos { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:8px; }
-    .paso { background:linear-gradient(135deg,#0d1530,#0a0e20); border:1px solid rgba(255,106,0,.15); border-radius:12px;
+    .paso { background:linear-gradient(135deg,#0e3338,#0c2e33); border:1px solid rgba(255,106,0,.15); border-radius:12px;
       padding:20px 18px 18px; text-align:center; transition:transform .2s, border-color .2s; }
     .paso:hover { transform:translateY(-3px); border-color:rgba(255,106,0,.35); }
     .paso-top { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; }
@@ -827,12 +826,34 @@
       box-shadow:0 4px 16px rgba(255,20,147,.3); transition:transform .2s, box-shadow .2s; }
     .paso-cierre-btn:hover { transform:translateY(-2px) scale(1.03);
       box-shadow:0 6px 24px rgba(255,20,147,.45); }
+    /* BOTÓN GANADORES GRANDE */
+    #btn-ganadores-grande {
+      display:inline-flex; align-items:center; gap:10px;
+      background:linear-gradient(135deg,#ff8c00,#ff6a00);
+      color:#fff; font-family:'Bangers',cursive;
+      font-size:1.4rem; letter-spacing:3px;
+      padding:14px 36px; border:none; border-radius:12px;
+      border-bottom:5px solid #b34700;
+      cursor:pointer;
+      box-shadow:0 0 20px rgba(255,106,0,.5), 0 0 60px rgba(255,106,0,.15);
+      text-shadow:1px 1px 0 rgba(0,0,0,.4);
+      transition:transform .15s, box-shadow .15s;
+      animation: btnGanadoresPulse 2s ease-in-out infinite alternate;
+    }
+    #btn-ganadores-grande:hover {
+      transform:translateY(-3px) scale(1.03);
+      box-shadow:0 0 30px rgba(255,106,0,.7), 0 0 80px rgba(255,106,0,.25);
+    }
+    @keyframes btnGanadoresPulse {
+      from { box-shadow:0 0 16px rgba(255,106,0,.4), 0 0 40px rgba(255,106,0,.1); }
+      to   { box-shadow:0 0 28px rgba(255,106,0,.6), 0 0 70px rgba(255,106,0,.2); }
+    }
     /* PANEL GANADORES */
-    #panel-ganadores .panel-header { background:#0a0e20; border-bottom:3px solid var(--chicha-naranja); }
+    #panel-ganadores .panel-header { background:#0c2e33; border-bottom:3px solid var(--chicha-naranja); }
     #panel-ganadores .panel-titulo { color:var(--chicha-naranja); text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,106,0,.35); }
     #panel-ganadores .panel-box { border:3px solid var(--chicha-naranja); }
     .ganador-entry {
-      background:linear-gradient(135deg,#0d1530,#1a1040); border:2px solid var(--chicha-amarillo);
+      background:linear-gradient(135deg,#0e3338,#0d3840); border:2px solid var(--chicha-amarillo);
       border-radius:8px; padding:14px 18px; margin-bottom:12px;
       display:flex; align-items:center; gap:14px;
     }
@@ -850,24 +871,24 @@
       text-decoration:none; border-bottom:4px solid #7a3300; transition:transform .15s,box-shadow .15s; }
     .btn-fotos-ganadores:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-naranja); }
     /* PANEL FAQ */
-    #panel-faq .panel-header { background:#0a0e20; border-bottom:3px solid var(--chicha-amarillo); }
+    #panel-faq .panel-header { background:#0c2e33; border-bottom:3px solid var(--chicha-amarillo); }
     #panel-faq .panel-titulo { color:var(--chicha-amarillo); text-shadow:2px 2px 0 #000, 0 0 16px rgba(255,215,0,.3); }
     #panel-faq .panel-box { border:3px solid var(--chicha-amarillo); }
     .faq-item { border:2px solid #2a2a2a; border-radius:2px; margin-bottom:12px; overflow:hidden; transition:border-color .2s; }
     .faq-item.activo { border-color:var(--neon-naranja); }
-    .faq-preg { width:100%; background:#0d1530; border:none; padding:16px 20px; text-align:left; cursor:pointer;
+    .faq-preg { width:100%; background:#0e3338; border:none; padding:16px 20px; text-align:left; cursor:pointer;
       display:flex; justify-content:space-between; align-items:center;
       font-family:'Righteous',cursive; font-size:.95rem; color:var(--neon-amarillo); transition:background .2s; }
     .faq-preg:hover { background:#1a1a1a; }
     .faq-icon { color:var(--neon-naranja); font-size:1.2rem; transition:transform .3s; }
     .faq-item.activo .faq-icon { transform:rotate(45deg); }
     .faq-resp { max-height:0; overflow:hidden; transition:max-height .4s ease,padding .3s;
-      background:#0a0e20; color:#bbb; font-family:'Righteous',cursive; font-size:.88rem; line-height:1.7; }
+      background:#0c2e33; color:#bbb; font-family:'Righteous',cursive; font-size:.88rem; line-height:1.7; }
     .faq-item.activo .faq-resp { max-height:200px; padding:16px 20px; }
     /* PANEL TERMINOS */
     /* ── PANEL REGISTRO REDISEÑADO ── */
     .reg-box { max-width:440px!important; border:2px solid rgba(57,255,20,.35)!important; border-radius:16px!important; }
-    .reg-header { background:#080c1a!important; border-bottom:2px solid rgba(57,255,20,.3)!important; padding:16px 22px!important; }
+    .reg-header { background:#082628!important; border-bottom:2px solid rgba(57,255,20,.3)!important; padding:16px 22px!important; }
     .reg-header .panel-titulo { color:var(--neon-verde)!important; font-size:1.5rem!important; letter-spacing:3px;
       text-shadow:1px 1px 0 #000!important; }
     .reg-cerrar { font-size:1.3rem!important; opacity:.4; }
@@ -875,22 +896,6 @@
     .reg-premio-bar { background:var(--neon-verde); color:#000; font-family:'Bangers',cursive;
       font-size:1rem; letter-spacing:2px; padding:8px 16px; text-align:center;
       margin-bottom:20px; border-radius:8px; }
-    .reg-tiktok-inner { text-align:center; padding:8px 0 18px; }
-    .reg-paso-label { font-family:'Bangers',cursive; font-size:1.1rem; letter-spacing:2px;
-      color:var(--neon-amarillo); margin-bottom:4px; }
-    .reg-texto { font-family:'Poppins',sans-serif; font-size:.88rem; color:#aaa;
-      line-height:1.5; margin-bottom:18px; }
-    .reg-btn-tiktok { display:inline-flex; align-items:center; gap:8px;
-      background:#ff0050; color:#fff; font-family:'Bangers',cursive;
-      font-size:1.15rem; letter-spacing:2px; padding:12px 24px;
-      border-radius:10px; text-decoration:none;
-      border-bottom:4px solid #8a0030;
-      box-shadow:0 0 14px rgba(255,0,80,.4);
-      transition:transform .15s, box-shadow .15s; }
-    .reg-btn-tiktok:hover { transform:translateY(-2px);
-      box-shadow:0 0 24px rgba(255,0,80,.6); }
-    .reg-nota-mini { font-family:'Poppins',sans-serif; font-size:.72rem;
-      color:#555; margin-top:12px; line-height:1.4; }
     .reg-btn-siguiente { display:block; width:100%; padding:14px;
       font-family:'Bangers',cursive; font-size:1.1rem; letter-spacing:2px;
       border:none; border-radius:10px; margin-top:16px; transition:all .3s; }
@@ -905,11 +910,11 @@
       0% { box-shadow:0 0 16px rgba(255,20,147,.4); }
       100% { box-shadow:0 0 24px rgba(255,20,147,.55); }
     }
-    #panel-terminos .panel-header { background:#0a0e20; border-bottom:3px solid var(--neon-celeste); }
+    #panel-terminos .panel-header { background:#0c2e33; border-bottom:3px solid var(--neon-celeste); }
     #panel-terminos .panel-titulo { color:var(--neon-celeste); text-shadow:2px 2px 0 #000, 0 0 16px rgba(0,229,255,.3); }
     #panel-terminos .panel-box { border:3px solid var(--neon-celeste); }
     .terminos-wrap { margin-top:10px; }
-    .termino-bloque { background:#0d1530; border-left:4px solid var(--neon-celeste); border-radius:0 4px 4px 0; padding:18px 20px; margin-bottom:16px; }
+    .termino-bloque { background:#0e3338; border-left:4px solid var(--neon-celeste); border-radius:0 4px 4px 0; padding:18px 20px; margin-bottom:16px; }
     .termino-bloque h3 { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
     .termino-bloque p, .termino-bloque li { font-family:'Righteous',cursive; font-size:.85rem; color:#ccc; line-height:1.8; }
     .termino-bloque ul { padding-left:18px; }
@@ -920,13 +925,13 @@
       padding:14px 18px; margin-top:20px; text-align:center;
       font-family:'Righteous',cursive; font-size:.82rem; color:#bbb; line-height:1.7; }
     /* PANEL REGISTRO */
-    .form-chicha { background:linear-gradient(135deg,#0a0e20,#0d1530); border:3px solid var(--chicha-verde); border-radius:12px; padding:36px 32px;
+    .form-chicha { background:linear-gradient(135deg,#0c2e33,#0e3338); border:3px solid var(--chicha-verde); border-radius:12px; padding:36px 32px;
       box-shadow:0 0 40px rgba(57,255,20,.15), inset 0 0 30px rgba(26,42,108,.3); }
     .form-grupo { margin-bottom:22px; }
     .form-grupo label { display:block; font-family:'Righteous',cursive; font-size:1.05rem; letter-spacing:1px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .form-grupo input, .form-grupo select { width:100%; background:#080c1a; border:2px solid #1a2040; border-radius:6px; color:#fff; font-family:'Righteous',cursive; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
+    .form-grupo input, .form-grupo select { width:100%; background:#082628; border:2px solid #1a4045; border-radius:6px; color:#fff; font-family:'Righteous',cursive; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
     .form-grupo input:focus, .form-grupo select:focus { border-color:var(--neon-verde); box-shadow:0 0 10px rgba(57,255,20,.4); }
-    .form-grupo select option { background:#0d1530; }
+    .form-grupo select option { background:#0e3338; }
     .form-doble { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .btn-registro { display:block; width:100%;
       background:linear-gradient(135deg,#39ff14,#7fff00,#ffd700);
@@ -942,13 +947,13 @@
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
       z-index:1000; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.activo { display:flex; }
-    .modal-box { background:linear-gradient(135deg,#0a0e20,#0d1530); border:4px solid var(--chicha-verde); border-radius:12px;
+    .modal-box { background:linear-gradient(135deg,#0c2e33,#0e3338); border:4px solid var(--chicha-verde); border-radius:12px;
       padding:40px 32px; text-align:center; max-width:450px; width:100%;
       box-shadow:0 0 60px rgba(57,255,20,.4); animation:popin .3s cubic-bezier(.34,1.56,.64,1); }
     .modal-icono { font-size:4rem; margin-bottom:16px; }
     .modal-titulo { font-family:'Bangers',cursive; font-size:2.5rem; color:var(--neon-verde); text-shadow:0 0 20px var(--neon-verde); letter-spacing:3px; margin-bottom:12px; }
     .modal-texto { font-family:'Righteous',cursive; color:#ccc; font-size:.9rem; line-height:1.6; margin-bottom:20px; }
-    .modal-codigo { background:#080c1a; border:2px dashed var(--chicha-verde); border-radius:2px;
+    .modal-codigo { background:#082628; border:2px dashed var(--chicha-verde); border-radius:2px;
       font-family:'Bangers',cursive; font-size:2rem; letter-spacing:8px;
       color:var(--neon-amarillo); text-shadow:0 0 10px var(--neon-amarillo); padding:14px; margin-bottom:20px; }
     .btn-cerrar { background:var(--neon-verde); color:#000; border:none; font-family:'Bangers',cursive;
@@ -1193,7 +1198,7 @@
     }
     .ruleta-ganador-card {
       display:none; margin-top:20px; padding:20px 30px;
-      background:linear-gradient(135deg,#0d1530,#1a1040);
+      background:linear-gradient(135deg,#0e3338,#0d3840);
       border:3px solid var(--neon-amarillo); border-radius:12px;
       text-align:center;
       box-shadow:0 0 30px rgba(255,230,0,.3);
@@ -1236,7 +1241,7 @@
     /* APP COMING SOON — OCULTO */
     .app-coming-soon { display:none !important; }
     /* FOOTER — chicha con carácter */
-    footer { background:linear-gradient(180deg,#0d1530 0%,#080818 100%); border-top:4px solid;
+    footer { background:linear-gradient(180deg,#0e3338 0%,#082628 100%); border-top:4px solid;
       border-image:linear-gradient(90deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde)) 1;
       padding:40px 20px 20px; text-align:center;
       box-shadow:inset 0 20px 40px rgba(255,20,147,.03); }
@@ -1335,7 +1340,6 @@
       .btn-registro { font-size:1.4rem; letter-spacing:2px; padding:16px; }
       /* ── Panel registro ── */
       .reg-box { max-width:100%!important; }
-      .reg-btn-tiktok { font-size:1rem; padding:11px 20px; }
       .reg-btn-siguiente { font-size:1rem; }
       .reg-paso-label { font-size:1rem; }
       .reg-texto { font-size:.82rem; }
@@ -1352,9 +1356,6 @@
       .card-ganador-preview { padding:8px 12px; }
       .ganador-preview-nombre { font-size:.8rem; }
       .ganador-preview-icon { font-size:1.2rem; }
-      /* ── Audio: reducido 1/3 en móvil ── */
-      #btn-musica { width:36px !important; height:36px !important; font-size:1rem !important; border-width:2px !important; bottom:14px !important; left:14px !important; }
-      #musica-label { font-size:.5rem !important; bottom:52px !important; left:8px !important; width:50px !important; }
       /* ── Footer ── */
       footer { padding:24px 14px 14px; }
       .footer-tiktok-btn { font-size:1rem; padding:12px 22px; }
@@ -1367,7 +1368,7 @@
   <!-- BANNER PROTOTIPO -->
   <div id="banner-prototipo" style="
     position:sticky; top:0; z-index:500;
-    background:linear-gradient(90deg,#0d1530,#1a1040,#0d1530);
+    background:linear-gradient(90deg,#0e3338,#0d3840,#0e3338);
     padding:7px 16px; text-align:center; border-bottom:2px solid rgba(255,20,147,.3);">
     <span style="font-family:'Bangers',cursive;font-size:.95rem;letter-spacing:2px;color:rgba(255,230,0,.6);">
       🚧 Marcha blanca — Ya puedes participar en sorteos de prueba mientras afinamos la plataforma.
@@ -1475,6 +1476,10 @@
     -->
     <!-- CONTENEDOR PRINCIPAL: JS decide qué sorteo va aquí -->
     <div id="principal-wrap" class="card-hoy-wrap"></div>
+    <!-- ═══ BOTÓN GANADORES ═══ -->
+    <div style="text-align:center;margin:20px auto 8px;">
+      <button id="btn-ganadores-grande" onclick="abrirPanelGanadores()">🏆 VER GANADORES</button>
+    </div>
     <!-- ═══ GRID DE SORTEOS ═══ -->
     <div class="semana-titulo" style="margin-top:24px;opacity:.5;font-size:clamp(.75rem,2vw,.9rem);letter-spacing:3px;color:#888">SORTEOS DE LA SEMANA</div>
     <div class="semana-habito" style="opacity:1;font-size:.85rem;color:#ffe082;letter-spacing:1.5px;font-weight:600">Todos los días hay yape a las 4PM 🔥</div>
@@ -1637,7 +1642,7 @@
           </g>
         </svg>
       </div>
-      <span class="bocadillo-cinta">SUBE PE, AL FONDO ENTRAN</span>
+      <span class="bocadillo-cinta">OE APURATE Y REGISTRATE!</span>
     </div>
   </div>
   <!-- CONFETI -->
@@ -1678,7 +1683,7 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.79 1.52V6.75a4.85 4.85 0 0 1-1.02-.06z"/></svg>
         @TUSUERTE.PE.OFICIAL
       </a>
-      <div class="footer-tiktok-sub">Los ganadores se anuncian en vivo por TikTok</div>
+      <div class="footer-tiktok-sub">Revisa si ganaste en nuestra cuenta oficial de TikTok</div>
     </div>
     <div class="footer-micro">Todo es real, sin floro.</div>
     <div class="footer-cierre">Hoy te puede caer tu yape 👀</div>
@@ -1696,7 +1701,6 @@
     <input name="celular"/>
     <input name="correo"/>
     <input name="distrito"/>
-    <input name="tiktok"/>
   </form>
   <div class="panel-overlay" id="panel-registro" onclick="cerrarPanelFuera(event,'panel-registro')">
     <div class="panel-box reg-box">
@@ -1706,24 +1710,8 @@
       </div>
       <div class="panel-body">
         <div class="reg-premio-bar" id="registro-sorteo-label">SORTEO SELECCIONADO</div>
-        <!-- ── PASO 1: TikTok ── -->
-        <div id="paso-tiktok">
-          <div class="reg-tiktok-inner">
-            <p class="reg-paso-label">Paso obligatorio</p>
-            <p class="reg-texto">Sigue la cuenta y dale like para participar</p>
-            <a href="https://tiktok.com/@tusuerte.pe.oficial" target="_blank" rel="noopener"
-               onclick="activarConfirmacion()" class="reg-btn-tiktok">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.78a4.85 4.85 0 0 1-1.01-.09z"/></svg>
-              IR A TIKTOK
-            </a>
-            <p class="reg-nota-mini">Se abre en otra pestaña. Vuelve después de seguir.</p>
-          </div>
-          <button id="btn-confirmar-tiktok" class="reg-btn-siguiente" disabled onclick="irAlFormulario()">
-            YA SEGUÍ Y DI LIKE
-          </button>
-        </div>
-        <!-- ── PASO 2: Formulario ── -->
-        <div id="paso-formulario" style="display:none;">
+        <!-- ── Formulario de registro ── -->
+        <div id="paso-formulario">
           <form id="form-registro" name="registro-sorteo" data-netlify="true" netlify-honeypot="bot-field" onsubmit="enviarRegistro(event)" style="border:none;padding:0;box-shadow:none;background:transparent;">
             <input type="hidden" name="form-name" value="registro-sorteo"/>
             <input type="hidden" name="bot-field" style="display:none"/>
@@ -1872,7 +1860,7 @@
         </div>
         <div class="paso-cierre">
           <div class="paso-cierre-txt">Fácil pe causa. Sigue los pasos y entra</div>
-          <button class="paso-cierre-btn" onclick="cerrarPanel('panel-como')">YA, QUIERO PARTICIPAR</button>
+          <button class="paso-cierre-btn" onclick="cerrarPanel('panel-como');setTimeout(function(){var c=document.querySelector('#principal-wrap .card-hoy,#principal-wrap .card-sorteo');if(c)c.scrollIntoView({behavior:'auto',block:'center'});},50);">YA, QUIERO PARTICIPAR</button>
         </div>
       </div>
     </div>
@@ -2234,10 +2222,47 @@
       var ahora = new Date();
       var estado = getEstado(sorteoId);
       if (estado === 'activo') return '🔴 EN VIVO 🔥';
-      if (d.getDate() === ahora.getDate() && d.getMonth() === ahora.getMonth()) {
-        return 'HOY ' + horaCorta + ' — SE JUEGA 🔥';
+      var esHoy = (d.getDate() === ahora.getDate() && d.getMonth() === ahora.getMonth() && d.getFullYear() === ahora.getFullYear());
+      if (esHoy) {
+        return 'HOY ' + horaCorta + '<br>SE JUEGA 🔥';
       }
-      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + ' 🔥';
+      var mañana = new Date(ahora); mañana.setDate(mañana.getDate() + 1);
+      var esMañana = (d.getDate() === mañana.getDate() && d.getMonth() === mañana.getMonth() && d.getFullYear() === mañana.getFullYear());
+      if (esMañana) {
+        return 'MAÑANA ' + horaCorta + '<br>SE JUEGA 🔥';
+      }
+      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + '<br>SE JUEGA 🔥';
+    }
+
+    // ── Descripción dinámica: "HOY" solo si el sorteo es hoy (desde las 12am), sino "MAÑANA" ──
+    var _frasesSorteo = [
+      'SE VA ESTE YAPE. NO LO DEJES PASAR CAUSA',
+      'SE VA ESTE YAPE. ESTO VUELA',
+      'SE VA ESTE YAPE. SE ACABA {DIA}',
+      'SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?',
+      'SE VA ESTE YAPE. ESTO VUELA',
+      'SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?'
+    ];
+    function getDescPrincipal(s) {
+      var cfg = SORTEOS_CFG[s.id];
+      if (!cfg) return s.desc;
+      var ahora = new Date();
+      var sorteoDate = new Date(cfg.ts);
+      var esHoy = (sorteoDate.getDate() === ahora.getDate() &&
+                   sorteoDate.getMonth() === ahora.getMonth() &&
+                   sorteoDate.getFullYear() === ahora.getFullYear());
+      var esMañana = false;
+      if (!esHoy) {
+        var mañana = new Date(ahora);
+        mañana.setDate(mañana.getDate() + 1);
+        esMañana = (sorteoDate.getDate() === mañana.getDate() &&
+                    sorteoDate.getMonth() === mañana.getMonth() &&
+                    sorteoDate.getFullYear() === mañana.getFullYear());
+      }
+      var dia = esHoy ? 'HOY' : (esMañana ? 'MAÑANA' : DIAS_NOMBRE[sorteoDate.getDay()].toUpperCase());
+      var idx = parseInt(s.id) - 1;
+      var frase = _frasesSorteo[idx] || _frasesSorteo[0];
+      return (dia + ' ' + frase.replace('{DIA}', dia)).replace('HOY HOY', 'HOY').replace('MAÑANA MAÑANA', 'MAÑANA');
     }
 
     // ── Generar HTML del card PRINCIPAL ──
@@ -2250,7 +2275,7 @@
           '<div class="card-img" style="padding:0;border-bottom-color:#ff1493"><div class="yape-logo">' + yapeSVG('ypBg' + s.id) + '</div></div>' +
           '<div class="card-body">' +
             '<div class="card-titulo">' + s.nombre + '</div>' +
-            '<div class="card-desc">' + s.desc + '</div>' +
+            '<div class="card-desc">' + getDescPrincipal(s) + '</div>' +
             '<div class="mini-cnt-wrap" id="mini-cnt-' + s.id + '">' +
               '<div class="mini-contador">' +
                 '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 'h">--</div><div class="mc-lbl">Hrs</div></div>' +
@@ -2560,10 +2585,8 @@
       if (wrap.getAttribute('data-ids') !== secIds) {
         wrap.innerHTML = secHTML;
         wrap.setAttribute('data-ids', secIds);
-        finalizados.forEach(function(s) {
-          var card = document.getElementById('card-sorteo-' + s.id);
-          if (card) setupClickCerrado(card, s.id);
-        });
+        // Secundarias: sin click ni flip (solo informativas)
+
       }
     }
 
@@ -2585,10 +2608,9 @@
       document.getElementById(id).classList.add('activo');
       document.body.style.overflow = 'hidden';
       _panelAbierto = true;
-      // Ocultar llama y silenciar silbido
+      // Ocultar llama
       var llama = document.getElementById('llama-saludo');
       if (llama) llama.style.visibility = 'hidden';
-      // Silbido ahora usa Web Audio API, no necesita silenciar <audio>
     }
     function cerrarPanel(id) {
       document.getElementById(id).classList.remove('activo');
@@ -2618,44 +2640,21 @@
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
-      // Siempre abrir el panel — la validación real es por DNI contra Google Sheets
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
-      // Paso 1: TikTok primero, luego formulario
-      document.getElementById('paso-tiktok').style.display = 'block';
-      document.getElementById('paso-formulario').style.display = 'none';
-      document.getElementById('panel-reg-titulo').textContent = '¡APÚNTATE AL TOQUE!';
-      var btnConfirmar = document.getElementById('btn-confirmar-tiktok');
-      btnConfirmar.disabled = true;
-      btnConfirmar.textContent = 'YA SEGUÍ Y DI LIKE';
-      _fueATikTok = false;
-      abrirPanel('panel-registro');
-    }
-    var _fueATikTok = false;
-    function activarConfirmacion() {
-      _fueATikTok = true;
-      setTimeout(activarBtnRegistro, 2000);
-    }
-    function activarBtnRegistro() {
-      var btn = document.getElementById('btn-confirmar-tiktok');
-      if (!btn || !btn.disabled) return;
-      btn.disabled = false;
-      btn.textContent = 'IR AL REGISTRO';
-    }
-    window.addEventListener('focus', function() {
-      if (_fueATikTok) activarBtnRegistro();
-    });
-    function irAlFormulario() {
-      document.getElementById('paso-tiktok').style.display = 'none';
+      // Mostrar formulario directo (sin paso TikTok)
+      var pasoTiktok = document.getElementById('paso-tiktok');
+      if (pasoTiktok) pasoTiktok.style.display = 'none';
       document.getElementById('paso-formulario').style.display = 'block';
       document.getElementById('panel-reg-titulo').textContent = 'COMPLETA TUS DATOS';
+      abrirPanel('panel-registro');
     }
     // ══════════════════════════════════════════════════════
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw0KbnUtJmJDhbbCDWDx97gcOsYD9YsiK_aqkmL02LhtpwUZK7TmrkYFJAr-Fnk7czd/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyVLv01AUoV32oeuZG9-TjdwtEBsMQ5JcP2R-5OKU72dv_GvV5yve3fIfVFGNIOptR6/exec';
     var _registroEnProceso = false; // Guardia global contra doble submit
     function enviarRegistro(e) {
       e.preventDefault();
@@ -2838,8 +2837,8 @@
     }
 
     // ── Renderizar lista de ganadores en el panel ──
-    function renderGanadores() {
-      var lista = cargarGanadores();
+    function renderGanadores(listaOverride) {
+      var lista = listaOverride || cargarGanadores();
       var container = document.getElementById('ganadores-lista');
       var empty = document.getElementById('ganadores-empty');
       if (!container) return;
@@ -2852,7 +2851,7 @@
       lista.forEach(function(g) {
         var div = document.createElement('div');
         div.className = 'ganador-entry';
-        var dniMask = g.dni ? g.dni.substring(0,2) + '****' +g.dni.substring(g.dni.length - 2) : '---';
+        var dniMask = g.dni ? g.dni.substring(0,2) + '****' + g.dni.substring(g.dni.length - 2) : '---';
         div.innerHTML =
           '<div class="ganador-entry-icon">🏆</div>' +
           '<div class="ganador-entry-info">' +
@@ -2865,6 +2864,53 @@
       });
     }
     renderGanadores();
+
+    // ── Abrir panel ganadores con fetch en vivo desde Google Sheets ──
+    function abrirPanelGanadores() {
+      var container = document.getElementById('ganadores-lista');
+      var empty = document.getElementById('ganadores-empty');
+      if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-family:Poppins,sans-serif;">Cargando ganadores...</div>';
+      if (empty) empty.style.display = 'none';
+      abrirPanel('panel-ganadores');
+
+      fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
+          if (data.status === 'ok' && data.ganadores && data.ganadores.length > 0) {
+            var lista = data.ganadores.map(function(g) {
+              return {
+                nombres: g.nombres || '',
+                apellidos: g.apellidos || '',
+                dni: g.dni || '',
+                sorteo: g.sorteo || '',
+                sorteoId: g.sorteoId || '',
+                fecha: g.fecha || ''
+              };
+            });
+            renderGanadores(lista);
+          } else {
+            // Sin ganadores en servidor, intentar datos locales
+            var locales = cargarGanadores();
+            if (locales.length > 0) {
+              renderGanadores(locales);
+            } else {
+              if (container) container.innerHTML = '';
+              if (empty) empty.style.display = '';
+            }
+          }
+        })
+        .catch(function() {
+          // Si falla el fetch, mostrar datos locales
+          var locales = cargarGanadores();
+          if (locales.length > 0) {
+            renderGanadores(locales);
+          } else {
+            if (container) container.innerHTML = '';
+            if (empty) empty.style.display = '';
+          }
+        });
+    }
 
     // ── Consultar flag de liberación al cargar la página ──
     (function() {
@@ -2923,7 +2969,7 @@
         ctx.closePath();
         ctx.fillStyle = COLORES_RULETA[i % COLORES_RULETA.length];
         ctx.fill();
-        ctx.strokeStyle = '#0d0d1f';
+        ctx.strokeStyle = '#0a2a2d';
         ctx.lineWidth = 1;
         ctx.stroke();
         if (n <= 30) {
@@ -3219,52 +3265,6 @@
       }
     });
   </script>
-  <!-- ══════════════ MÚSICA PERUANA ══════════════ -->
-  <style>
-    #btn-musica {
-      position: fixed;
-      bottom: 22px;
-      left: 22px;
-      z-index: 9998;
-      width: 54px; height: 54px;
-      border-radius: 50%;
-      background: #0d0d1f;
-      border: 3px solid var(--neon-verde);
-      color: var(--neon-verde);
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 14px rgba(57,255,20,.35);
-      transition: box-shadow .2s, transform .15s;
-    }
-    #btn-musica:hover { transform: scale(1.1); box-shadow: 0 0 28px var(--neon-verde); }
-    #btn-musica.sonando {
-      border-color: var(--neon-rosa);
-      color: var(--neon-rosa);
-      box-shadow: 0 0 18px var(--neon-rosa);
-      animation: musicPulse 1s ease-in-out infinite alternate;
-    }
-    @keyframes musicPulse {
-      from { box-shadow: 0 0 12px var(--neon-rosa); }
-      to   { box-shadow: 0 0 32px var(--neon-rosa), 0 0 60px rgba(255,0,128,.3); }
-    }
-    #musica-label {
-      position: fixed;
-      bottom: 80px;
-      left: 14px;
-      z-index: 9998;
-      font-family: 'Righteous', cursive;
-      font-size: .65rem;
-      letter-spacing: 1px;
-      color: #555;
-      text-align: center;
-      width: 70px;
-    }
-  </style>
-  <button id="btn-musica" title="Silenciar / Activar sonido" onclick="toggleMusica()">🔊</button>
-  <div id="musica-label">SONIDO</div>
-  <!-- Audio -->
-  <!-- Silbidos generados con Web Audio API usando el contexto de la música -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
     /* ═══ LLAMA GUÍA — Neon Chicha Style ═══ */
@@ -3419,17 +3419,17 @@
       <ellipse cx="90" cy="232" rx="52" ry="7" fill="#000" opacity=".35" filter="url(#sg-glow)"/>
       <!-- Patas traseras (más atrás) -->
       <rect x="36" y="170" width="23" height="56" rx="9" fill="#b8a468" filter="url(#sg-shadow)"/>
-      <rect x="36" y="208" width="23" height="16" rx="6" fill="#1a0a2a" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
+      <rect x="36" y="208" width="23" height="16" rx="6" fill="#0d3538" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
       <rect x="120" y="170" width="23" height="56" rx="9" fill="#b8a468" filter="url(#sg-shadow)"/>
-      <rect x="120" y="208" width="23" height="16" rx="6" fill="#1a0a2a" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
+      <rect x="120" y="208" width="23" height="16" rx="6" fill="#0d3538" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
       <!-- Cuerpo -->
       <ellipse cx="90" cy="165" rx="54" ry="48" fill="url(#sg-body)" filter="url(#sg-shadow)"/>
       <ellipse cx="90" cy="152" rx="44" ry="24" fill="url(#sg-belly)" opacity=".6"/>
       <!-- Patas delanteras -->
       <rect x="52" y="184" width="21" height="48" rx="9" fill="#ccba80" filter="url(#sg-shadow)"/>
-      <rect x="52" y="216" width="21" height="16" rx="6" fill="#1a0a2a" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
+      <rect x="52" y="216" width="21" height="16" rx="6" fill="#0d3538" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
       <rect x="106" y="184" width="21" height="48" rx="9" fill="#ccba80" filter="url(#sg-shadow)"/>
-      <rect x="106" y="216" width="21" height="16" rx="6" fill="#1a0a2a" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
+      <rect x="106" y="216" width="21" height="16" rx="6" fill="#0d3538" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
       <!-- Cola peluda (detalle) -->
       <ellipse cx="142" cy="152" rx="13" ry="22" fill="#d8c890" opacity=".8" transform="rotate(28 142 152)"/>
       <ellipse cx="148" cy="148" rx="6" ry="10" fill="#efe8d0" opacity=".5" transform="rotate(28 148 148)"/>
@@ -3465,8 +3465,8 @@
       <ellipse cx="96" cy="88" rx="3.2" ry="2.8" fill="#6a4a20"/>
       <path d="M82 95 Q90 101 98 95" stroke="#6a4a20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
       <!-- Ojos neón (lentes de sol estilo chicha) -->
-      <rect class="llama-eye" x="60" y="59" width="25" height="16" rx="8" fill="#0a0a1a" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
-      <rect class="llama-eye" x="94" y="59" width="25" height="16" rx="8" fill="#0a0a1a" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
+      <rect class="llama-eye" x="60" y="59" width="25" height="16" rx="8" fill="#0a2a2d" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
+      <rect class="llama-eye" x="94" y="59" width="25" height="16" rx="8" fill="#0a2a2d" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
       <!-- Puente de los lentes -->
       <rect x="84" y="65" width="11" height="2.8" rx="1.4" fill="#ffe600" opacity=".8"/>
       <!-- Patillas de lentes -->
@@ -3689,266 +3689,6 @@
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 18000);
     })();
-    /* ─── SILBIDOS REMOVIDOS ─── */
-    var audioMuteado = false;
-    var silbidosCargados = true;
-    function cargarSilbidosMp3() {}
-    function tocarSilbido() {}
-
-    /* ─── MÚSICA PERUANA (Web Audio API) ─── */
-    var musica = (function() {
-      var ctx, master, playing = false, step = 0, nextTime = 0, timer = null;
-      var BPM = 118;
-      function sDur() { return 60 / BPM / 2; } // corcheas
-      // Escala pentatónica andina en La menor
-      var N = {
-        '_':0,
-        'A2':110,'E3':164.81,'G3':196,'A3':220,
-        'C4':261.63,'D4':293.66,'E4':329.63,'G4':392,
-        'A4':440,'C5':523.25,'D5':587.33,'E5':659.25,
-        'G5':783.99,'A5':880
-      };
-      // Patrones de 8 pasos (1 compás de corcheas)
-      var MEL  = ['A4','C5','E5','D5','A4','G4','C5','E5'];
-      var MEL2 = ['E5','D5','C5','A4','G4','A4','D5','E5'];
-      var BASS = ['A2','_','A3','_','G2','_','A3','_'];
-      var KICK = [1,0,1,0,1,0,1,0];
-      var SNAR = [0,1,0,1,0,1,0,1];
-      var HIHT = [1,1,1,1,1,1,1,1];
-      var COWB = [0,0,1,0,0,0,1,0];
-      var bar  = 0;
-      function noise(dur) {
-        var len = Math.ceil(ctx.sampleRate * dur);
-        var buf = ctx.createBuffer(1, len, ctx.sampleRate);
-        var d = buf.getChannelData(0);
-        for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-        var src = ctx.createBufferSource();
-        src.buffer = buf;
-        return src;
-      }
-      function distCurve(amount) {
-        var c = new Float32Array(256);
-        for (var i = 0; i < 256; i++) {
-          var x = i * 2 / 256 - 1;
-          c[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
-        }
-        return c;
-      }
-      function kick(t) {
-        var o = ctx.createOscillator(), g = ctx.createGain();
-        o.connect(g); g.connect(master);
-        o.frequency.setValueAtTime(160, t);
-        o.frequency.exponentialRampToValueAtTime(40, t + 0.1);
-        g.gain.setValueAtTime(1.6, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
-        o.start(t); o.stop(t + 0.3);
-      }
-      function snare(t) {
-        var src = noise(0.18);
-        var bp = ctx.createBiquadFilter();
-        bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.7;
-        var g = ctx.createGain();
-        src.connect(bp); bp.connect(g); g.connect(master);
-        g.gain.setValueAtTime(0.8, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
-        src.start(t); src.stop(t + 0.2);
-      }
-      function hihat(t) {
-        var src = noise(0.06);
-        var hp = ctx.createBiquadFilter();
-        hp.type = 'highpass'; hp.frequency.value = 9000;
-        var g = ctx.createGain();
-        src.connect(hp); hp.connect(g); g.connect(master);
-        g.gain.setValueAtTime(0.25, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-        src.start(t); src.stop(t + 0.07);
-      }
-      function cowbell(t) {
-        [540, 800].forEach(function(f) {
-          var o = ctx.createOscillator(), g = ctx.createGain();
-          o.type = 'square'; o.frequency.value = f;
-          var bp = ctx.createBiquadFilter();
-          bp.type = 'bandpass'; bp.frequency.value = 680;
-          o.connect(bp); bp.connect(g); g.connect(master);
-          g.gain.setValueAtTime(0.22, t);
-          g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-          o.start(t); o.stop(t + 0.16);
-        });
-      }
-      function bass(freq, t) {
-        if (!freq) return;
-        var o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
-        o.type = 'sawtooth'; o.frequency.value = freq;
-        lp.type = 'lowpass'; lp.frequency.value = 380;
-        o.connect(lp); lp.connect(g); g.connect(master);
-        var d = sDur();
-        g.gain.setValueAtTime(0.55, t);
-        g.gain.setValueAtTime(0.35, t + 0.04);
-        g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.7);
-        o.start(t); o.stop(t + d * 2);
-      }
-      function melody(freq, t) {
-        if (!freq) return;
-        var o = ctx.createOscillator();
-        var ws = ctx.createWaveShaper(); ws.curve = distCurve(60);
-        var bp = ctx.createBiquadFilter();
-        bp.type = 'bandpass'; bp.frequency.value = freq * 2.5; bp.Q.value = 1.8;
-        var g = ctx.createGain();
-        o.type = 'sawtooth'; o.frequency.value = freq;
-        o.connect(ws); ws.connect(bp); bp.connect(g); g.connect(master);
-        var d = sDur();
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(0.2, t + 0.012);
-        g.gain.setValueAtTime(0.16, t + d * 0.65);
-        g.gain.exponentialRampToValueAtTime(0.001, t + d * 1.1);
-        o.start(t); o.stop(t + d * 1.2);
-      }
-      function schedule() {
-        var d = sDur();
-        while (nextTime < ctx.currentTime + 0.18) {
-          var s = step % 8;
-          if (s === 0) bar++;
-          var mel = (bar % 2 === 0) ? MEL : MEL2;
-          if (KICK[s]) kick(nextTime);
-          if (SNAR[s]) snare(nextTime);
-          if (HIHT[s]) hihat(nextTime);
-          if (COWB[s]) cowbell(nextTime);
-          bass(N[BASS[s]], nextTime);
-          melody(N[mel[s]], nextTime);
-          nextTime += d;
-          step++;
-        }
-        timer = setTimeout(schedule, 18);
-      }
-      return {
-        start: function() {
-          if (ctx && ctx.state === 'running' && playing) return; // ya suena
-          // Abandonar ctx previo (puede estar suspended si se llamó fuera de gesto)
-          clearTimeout(timer);
-          ctx = null; master = null; playing = false;
-          // Crear contexto fresco — debe ejecutarse dentro de un gesto de usuario
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          master = ctx.createGain();
-          master.gain.value = 0.18;
-          master.connect(ctx.destination);
-          playing = true; step = 0; bar = 0;
-          nextTime = ctx.currentTime + 0.08;
-          schedule();
-        },
-        stop: function() {
-          playing = false;
-          clearTimeout(timer);
-          if (ctx) { ctx.close(); ctx = null; master = null; }
-        },
-        isPlaying: function() { return playing && ctx && ctx.state === 'running'; },
-        getCtx: function() { return ctx; },
-        setVolume: function(v) {
-          if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.5);
-        },
-        getVolume: function() {
-          return master ? master.gain.value : 0.18;
-        },
-        // Suspende el AudioContext al ir al fondo (no destruye el estado)
-        pausar: function() {
-          if (ctx && ctx.state === 'running') {
-            clearTimeout(timer);
-            ctx.suspend();
-          }
-        },
-        // Reactiva el AudioContext al volver al frente
-        reanudar: function() {
-          if (ctx && ctx.state === 'suspended' && playing) {
-            ctx.resume().then(function() {
-              // Reiniciar scheduler con tiempo actualizado
-              clearTimeout(timer);
-              nextTime = ctx.currentTime + 0.08;
-              schedule();
-            }).catch(function() {});
-          }
-        }
-      };
-    })();
-    function iniciarMusica() {
-      var btn = document.getElementById('btn-musica');
-      musica.start();
-      audioMuteado = false;
-      btn.textContent = '🔊';
-      btn.classList.add('sonando');
-      btn.title = 'Silenciar sonido';
-    }
-    function toggleMusica() {
-      var btn = document.getElementById('btn-musica');
-      var ctx = musica.getCtx();
-      var estaSonando = ctx && ctx.state === 'running';
-
-      if (estaSonando && !audioMuteado) {
-        // MUTE: pausar música y silbidos
-        audioMuteado = true;
-        musica.pausar();
-        btn.textContent = '🔇';
-        btn.classList.remove('sonando');
-        btn.title = 'Activar sonido';
-      } else {
-        // UNMUTE o INICIAR: reanudar o arrancar música
-        audioMuteado = false;
-        if (ctx && ctx.state === 'suspended') {
-          musica.reanudar();
-        } else {
-          iniciarMusica();
-        }
-        // Cargar silbidos si aún no se cargaron
-        if (musica.getCtx() && !silbidosCargados) {
-          cargarSilbidosMp3();
-        }
-        btn.textContent = '🔊';
-        btn.classList.add('sonando');
-        btn.title = 'Silenciar sonido';
-      }
-    }
-    // Escritorio: intento de autoplay al cargar
-    window.addEventListener('load', function() {
-      try {
-        iniciarMusica();
-      } catch(e) {}
-      // Si no arrancó (móvil), mostrar botón como apagado
-      setTimeout(function() {
-        var btn = document.getElementById('btn-musica');
-        if (!musica.isPlaying()) {
-          btn.textContent = '🔇';
-          btn.classList.remove('sonando');
-          btn.title = 'Activar sonido';
-        }
-      }, 300);
-    });
-    // Móvil: el AudioContext requiere crearse dentro de un gesto real (click/touch).
-    // Primero arranca la música, luego desbloquea los silbidos.
-    // Los listeners se mantienen hasta confirmar que la música está corriendo.
-    function arrancarEnInteraccion() {
-      if (!musica.isPlaying()) {
-        iniciarMusica();
-      }
-      // Cargar silbidos mp3 apenas la música esté activa
-      if (musica.getCtx() && !silbidosCargados) {
-        cargarSilbidosMp3();
-      }
-      if (musica.isPlaying()) {
-        document.removeEventListener('click',      arrancarEnInteraccion);
-        document.removeEventListener('touchstart', arrancarEnInteraccion);
-      }
-    }
-    document.addEventListener('click',      arrancarEnInteraccion);
-    document.addEventListener('touchstart', arrancarEnInteraccion);
-    // Pausar todo cuando el móvil se bloquea o cambia de app (Page Visibility API)
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        musica.pausar();
-      } else {
-        // Solo reanudar si NO está muteado por el usuario
-        if (!audioMuteado) {
-          musica.reanudar();
-        }
-      }
-    });
   </script>
 </body>
 </html>
