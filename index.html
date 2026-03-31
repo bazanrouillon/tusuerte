@@ -2111,7 +2111,7 @@
                 '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 's">--</div><div class="mc-lbl">Seg</div></div>' +
               '</div>' +
             '</div>' +
-            '<button class="btn-participar" onclick="abrirRegistro(\'' + s.nombre + ' – ' + s.monto + '\',\'' + s.id + '\')">PARTICIPAR GRATIS</button>' +
+            '<button class="btn-participar" data-sorteo-nombre="' + s.nombre + ' – ' + s.monto + '" data-sorteo-id="' + s.id + '">PARTICIPAR GRATIS</button>' +
             '<div class="card-confianza">Solo con tu número de Yape. Sin pago, sin floro.</div>' +
           '</div>' +
         '</div>' +
@@ -2182,7 +2182,9 @@
     function setupClickCerrado(card, sorteoId) {
       if (card._cerradoClickBound) return;
       card._cerradoClickBound = true;
-      card.addEventListener('click', function() {
+      card.addEventListener('click', function(ev) {
+        // No interceptar clicks en botones dentro del card
+        if (ev.target.closest('.btn-participar')) return;
         if (!card.classList.contains('cerrado')) return;
         if (card.classList.contains('flipped')) { card.classList.remove('flipped'); return; }
         if (card._busy) return;
@@ -2221,23 +2223,25 @@
           return;
         }
 
-        // Fetch de Google Sheets
+        // Fetch ganador REAL de Google Sheets (hoja Ganadores)
         var cfg = SORTEOS_CFG[sorteoId];
         if (!cfg) { setTimeout(function() { mostrarEnCard(null); }, 400); return; }
         var nombreSorteo = cfg.nombre.split('–')[0].trim();
-        fetch(GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
+        fetch(GOOGLE_SHEETS_URL + '?action=obtenerGanador&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
           .then(function(r) { return r.text(); })
           .then(function(txt) {
             var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
-            if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
-              mostrarEnCard(null);
-            } else {
-              var p = data.participantes;
-              var idx = window.crypto ? (new Uint32Array(1), window.crypto.getRandomValues(new Uint32Array(1))[0] % p.length) : Math.floor(Math.random() * p.length);
-              var g = p[idx];
+            if (data.status === 'ok' && data.ganador) {
+              var g = data.ganador;
               var obj = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sorteoId, sorteo:cfg.nombre };
-              guardarGanador(obj);
+              // Guardar en localStorage para no volver a pedir
+              var lista = cargarGanadores();
+              var yaExiste = false;
+              for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sorteoId) { yaExiste = true; break; } }
+              if (!yaExiste) { lista.unshift(obj); localStorage.setItem(GANADORES_KEY, JSON.stringify(lista)); }
               mostrarEnCard(obj);
+            } else {
+              mostrarEnCard(null);
             }
           }).catch(function() { mostrarEnCard(null); });
       });
@@ -2282,7 +2286,16 @@
         window._hoyCardId = activo.id;
         principalWrap.innerHTML = renderPrincipal(activo);
 
-        // Participar
+        // Participar — delegated click handler (evita problemas de emojis en onclick)
+        var btnParticipar = principalWrap.querySelector('.btn-participar[data-sorteo-id]');
+        if (btnParticipar) {
+          btnParticipar.addEventListener('click', function(ev) {
+            ev.stopPropagation();
+            var nombre = this.getAttribute('data-sorteo-nombre');
+            var id = this.getAttribute('data-sorteo-id');
+            abrirRegistro(nombre, id);
+          });
+        }
         window.participarHoy = function() {
           abrirRegistro(activo.nombre + ' – ' + activo.monto, activo.id);
         };
