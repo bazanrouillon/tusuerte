@@ -1183,29 +1183,8 @@
       100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
     }
     /* APP COMING SOON */
-    .app-coming-soon {
-      position:fixed; bottom:18px; right:18px; z-index:9990;
-      background:rgba(10,14,32,0.95); border:2px solid var(--chicha-rosa);
-      border-radius:12px; padding:12px 16px; text-align:center;
-      box-shadow:0 0 20px rgba(204,0,255,.25);
-      backdrop-filter:blur(8px);
-      animation:appBadgePulse 3s ease-in-out infinite alternate;
-    }
-    @keyframes appBadgePulse {
-      0%{box-shadow:0 0 12px rgba(204,0,255,.2)} 100%{box-shadow:0 0 25px rgba(204,0,255,.4)}
-    }
-    .app-coming-soon p {
-      font-family:'Bangers',cursive; font-size:0.85rem; letter-spacing:2px;
-      color:var(--neon-violeta); text-shadow:0 0 8px var(--neon-violeta);
-      margin-bottom:8px; line-height:1.3;
-    }
-    .app-badges { display:flex; gap:8px; justify-content:center; align-items:center; }
-    .app-badges svg { opacity:0.7; transition:opacity .2s; cursor:pointer; }
-    .app-badges svg:hover { opacity:1; }
-    @media(max-width:480px){
-      .app-coming-soon { bottom:10px; right:10px; padding:8px 12px; }
-      .app-coming-soon p { font-size:.75rem; }
-    }
+    /* APP COMING SOON — OCULTO */
+    .app-coming-soon { display:none !important; }
     /* FOOTER — chicha con carácter */
     footer { background:linear-gradient(180deg,#0d1530 0%,#080818 100%); border-top:4px solid;
       border-image:linear-gradient(90deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde)) 1;
@@ -1236,7 +1215,7 @@
       #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
       /* ── Header ── */
       header { padding:18px 14px 14px; }
-      .metele-tag { top:2px; left:2px; width:clamp(90px,24vw,140px); }
+      .metele-tag { top:auto; bottom:2px; left:2px; width:clamp(90px,24vw,140px); }
       .logo-principal { padding-left:25px; font-size:clamp(3.2rem,14vw,6rem); }
       .logo-principal .logo-tu, .logo-principal .logo-suerte, .logo-principal .logo-pe { -webkit-text-stroke:2px #000; }
       .logo-principal::before { left:-2.5em; font-size:.16em; letter-spacing:2px; }
@@ -1320,6 +1299,9 @@
       /* ── Llama: tamaño reducido en móvil ── */
       #llama-saludo svg { width:85px !important; height:108px !important; }
       #llama-burbuja, #llama-burbuja2 { font-size:clamp(.6rem,2.5vw,.85rem); padding:6px 10px; white-space:normal; max-width:145px; text-align:center; word-break:break-word; }
+      /* ── Audio: reducido 1/3 en móvil ── */
+      #btn-musica { width:36px !important; height:36px !important; font-size:1rem !important; border-width:2px !important; bottom:14px !important; left:14px !important; }
+      #musica-label { font-size:.5rem !important; bottom:52px !important; left:8px !important; width:50px !important; }
       /* ── Footer ── */
       footer { padding:24px 14px 14px; }
       .footer-tiktok-btn { font-size:1rem; padding:12px 22px; }
@@ -2996,6 +2978,7 @@
   <!-- Silbidos generados con Web Audio API usando el contexto de la música -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
+    /* ═══ LLAMA GUÍA — Neon Chicha Style ═══ */
     #llama-saludo {
       position: fixed;
       z-index: 9999;
@@ -3005,24 +2988,32 @@
       pointer-events: none;
       left: -300px; bottom: 10px;
       visibility: hidden;
+      cursor: pointer;
     }
-    /* Lado derecho: llama espejada */
+    #llama-saludo.visible { pointer-events: auto; }
+    #llama-saludo svg {
+      filter: drop-shadow(0 0 10px rgba(255,0,128,.5)) drop-shadow(0 0 22px rgba(57,255,20,.25)) drop-shadow(0 4px 14px rgba(0,0,0,.7));
+      transition: filter .3s ease;
+    }
+    #llama-saludo:hover svg {
+      filter: drop-shadow(0 0 14px rgba(255,0,128,.7)) drop-shadow(0 0 28px rgba(57,255,20,.4)) drop-shadow(0 4px 14px rgba(0,0,0,.7));
+    }
     #llama-saludo.lado-derecho svg { transform: scaleX(-1); }
-    /* Solo animaciones de esquinas inferiores */
-    #llama-saludo.animando.lado-izq    { animation: peekIzq    9s cubic-bezier(.4,0,.6,1) forwards; }
-    #llama-saludo.animando.lado-derecho{ animation: peekDer    9s cubic-bezier(.4,0,.6,1) forwards; }
-    /* Estilos compartidos para ambas burbujas */
-    #llama-burbuja, #llama-burbuja2 {
+    #llama-saludo.animando.lado-izq    { animation: peekIzq 9s cubic-bezier(.4,0,.6,1) forwards; }
+    #llama-saludo.animando.lado-derecho{ animation: peekDer 9s cubic-bezier(.4,0,.6,1) forwards; }
+    /* Burbuja — estilo cartel neón */
+    #llama-burbuja {
       position: relative;
-      background: #fff;
-      color: #0d0d1f;
+      background: linear-gradient(135deg, rgba(10,14,32,.95), rgba(20,10,40,.92));
+      color: var(--neon-amarillo);
       font-family: 'Bangers', cursive;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       letter-spacing: 2px;
-      padding: 10px 20px;
-      border-radius: 18px;
-      border: 3px solid var(--neon-amarillo);
-      box-shadow: 0 0 20px var(--neon-amarillo), 0 0 6px #000;
+      padding: 9px 18px 8px;
+      border-radius: 10px;
+      border: 2px solid var(--chicha-rosa);
+      box-shadow: 0 0 14px rgba(255,20,147,.5), 0 0 4px rgba(0,0,0,.8), inset 0 0 10px rgba(255,20,147,.12);
+      text-shadow: 0 0 8px rgba(255,215,0,.5);
       margin-bottom: 6px;
       text-align: center;
       white-space: normal;
@@ -3030,154 +3021,274 @@
       word-break: break-word;
       opacity: 0;
     }
-    #llama-burbuja2 {
-      border-color: var(--neon-celeste);
-      box-shadow: 0 0 20px var(--neon-celeste), 0 0 6px #000;
-      position: absolute;
-      top: -60px;
-    }
-    #llama-burbuja::after, #llama-burbuja2::after {
+    #llama-burbuja.ctx-urgente { border-color: #ff2020; box-shadow: 0 0 16px rgba(255,32,32,.5), 0 0 4px rgba(0,0,0,.8); animation: burbujaUrgente 0.6s ease infinite; }
+    #llama-burbuja.ctx-celeste { border-color: var(--neon-celeste); box-shadow: 0 0 14px rgba(0,229,255,.4), 0 0 4px rgba(0,0,0,.8); }
+    #llama-burbuja.ctx-verde   { border-color: #39ff14; box-shadow: 0 0 14px rgba(57,255,20,.4), 0 0 4px rgba(0,0,0,.8); }
+    @keyframes burbujaUrgente { 0%,100%{transform:scale(1)}50%{transform:scale(1.04)} }
+    #llama-burbuja::after {
       content: '';
       position: absolute;
-      bottom: -13px;
+      bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
-      border: 7px solid transparent;
-      border-top-color: var(--neon-amarillo);
+      border: 6px solid transparent;
+      border-top-color: var(--chicha-rosa);
     }
-    #llama-burbuja2::after {
-      border-top-color: var(--neon-celeste);
-    }
-    #llama-saludo.animando #llama-burbuja {
-      animation: burbujaAppear 9s ease forwards;
-    }
+    #llama-burbuja.ctx-urgente::after { border-top-color: #ff2020; }
+    #llama-burbuja.ctx-celeste::after { border-top-color: var(--neon-celeste); }
+    #llama-burbuja.ctx-verde::after   { border-top-color: #39ff14; }
+    #llama-saludo.animando #llama-burbuja { animation: burbujaAppear 9s ease forwards; }
+    #llama-burbuja.ctx-urgente.llama-bubble-visible { animation: burbujaUrgente 0.6s ease infinite !important; opacity:1 !important; }
     #llama-burbuja2 { display:none; }
-    /* ── Peek izquierda: entra, wiggle, se retira por donde vino ── */
+    /* Respiración sutil */
+    #llama-saludo.animando svg {
+      animation: llamaBreath 2.5s ease-in-out infinite;
+    }
+    @keyframes llamaBreath {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    #llama-saludo.animando.lado-derecho svg {
+      animation: llamaBreathFlip 2.5s ease-in-out infinite;
+    }
+    @keyframes llamaBreathFlip {
+      0%,100% { transform: scaleX(-1) translateY(0); }
+      50% { transform: scaleX(-1) translateY(-4px); }
+    }
+    /* Hover micro-reaction */
+    #llama-saludo:hover svg {
+      animation-duration: 1s !important;
+    }
     @keyframes peekIzq {
       0%   { transform: translateX(-300px) rotate(0deg); }
-      20%  { transform: translateX(0)      rotate(0deg); }
-      28%  { transform: translateX(0)      rotate(-8deg); }
-      36%  { transform: translateX(0)      rotate(7deg); }
-      44%  { transform: translateX(0)      rotate(-6deg); }
-      52%  { transform: translateX(0)      rotate(5deg); }
-      62%  { transform: translateX(0)      rotate(0deg); }
-      75%  { transform: translateX(0)      rotate(0deg); }
+      20%  { transform: translateX(0) rotate(0deg); }
+      28%  { transform: translateX(0) rotate(-6deg); }
+      36%  { transform: translateX(0) rotate(5deg); }
+      44%  { transform: translateX(0) rotate(-4deg); }
+      52%  { transform: translateX(0) rotate(3deg); }
+      62%  { transform: translateX(0) rotate(0deg); }
+      78%  { transform: translateX(0) rotate(0deg); }
       100% { transform: translateX(-300px) rotate(0deg); }
     }
-    /* ── Peek derecha ── */
     @keyframes peekDer {
-      0%   { transform: translateX(300px)  rotate(0deg); }
-      20%  { transform: translateX(0)      rotate(0deg); }
-      28%  { transform: translateX(0)      rotate(8deg); }
-      36%  { transform: translateX(0)      rotate(-7deg); }
-      44%  { transform: translateX(0)      rotate(6deg); }
-      52%  { transform: translateX(0)      rotate(-5deg); }
-      62%  { transform: translateX(0)      rotate(0deg); }
-      75%  { transform: translateX(0)      rotate(0deg); }
-      100% { transform: translateX(300px)  rotate(0deg); }
+      0%   { transform: translateX(300px) rotate(0deg); }
+      20%  { transform: translateX(0) rotate(0deg); }
+      28%  { transform: translateX(0) rotate(6deg); }
+      36%  { transform: translateX(0) rotate(-5deg); }
+      44%  { transform: translateX(0) rotate(4deg); }
+      52%  { transform: translateX(0) rotate(-3deg); }
+      62%  { transform: translateX(0) rotate(0deg); }
+      78%  { transform: translateX(0) rotate(0deg); }
+      100% { transform: translateX(300px) rotate(0deg); }
     }
-    /* (peekBottom y peekTop eliminados — llama solo aparece en esquinas inferiores) */
-    /* ── Burbuja: aparece, se mueve con el wiggle, desaparece ── */
     @keyframes burbujaAppear {
-      0%   { opacity:0; transform:scale(0.2) rotate(8deg); }
-      18%  { opacity:0; transform:scale(0.2) rotate(8deg); }
-      26%  { opacity:1; transform:scale(1.15) rotate(-4deg); }
-      32%  { opacity:1; transform:scale(0.95) rotate(3deg); }
-      40%  { opacity:1; transform:scale(1) rotate(-5deg); }
-      48%  { opacity:1; transform:scale(1) rotate(4deg); }
-      58%  { opacity:1; transform:scale(1) rotate(-2deg); }
+      0%   { opacity:0; transform:scale(0.2) rotate(6deg); }
+      18%  { opacity:0; transform:scale(0.2) rotate(6deg); }
+      26%  { opacity:1; transform:scale(1.1) rotate(-3deg); }
+      32%  { opacity:1; transform:scale(0.97) rotate(2deg); }
+      40%  { opacity:1; transform:scale(1) rotate(-1deg); }
       68%  { opacity:1; transform:scale(1) rotate(0deg); }
-      75%  { opacity:1; transform:scale(1) rotate(0deg); }
-      88%  { opacity:0; transform:scale(0.3) rotate(-6deg); }
+      78%  { opacity:1; transform:scale(1) rotate(0deg); }
+      90%  { opacity:0; transform:scale(0.3) rotate(-4deg); }
       100% { opacity:0; }
     }
+    /* Llama neon eye blink */
+    @keyframes llamaEyeBlink {
+      0%,42%,58%,100% { opacity:1; }
+      50% { opacity:0.1; }
+    }
+    #llama-saludo .llama-eye { animation: llamaEyeBlink 4s ease-in-out infinite; }
+    #llama-saludo .llama-eye:last-of-type { animation-delay: 0.1s; }
+    /* Neon sparkle pulse on necklace */
+    @keyframes neonSparkle {
+      0%,100% { opacity:.7; }
+      50% { opacity:1; filter:url(#sg-glow); }
+    }
+    #llama-saludo .llama-collar { animation: neonSparkle 2s ease-in-out infinite; }
+    #llama-saludo .llama-collar:nth-child(2) { animation-delay:.4s; }
+    #llama-saludo .llama-collar:nth-child(3) { animation-delay:.8s; }
+    #llama-saludo .llama-collar:nth-child(4) { animation-delay:1.2s; }
+    #llama-saludo .llama-collar:nth-child(5) { animation-delay:1.6s; }
   </style>
   <div id="llama-saludo">
-    <div id="llama-burbuja2">¡APÚNTATE AL TOQUE!</div>
-    <div id="llama-burbuja">¡OE CHOLO MÉTELE!</div>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" width="145" height="185">
+    <div id="llama-burbuja2" style="display:none">¡APÚNTATE AL TOQUE!</div>
+    <div id="llama-burbuja">¡OE CAUSA MÉTELE!</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 240" width="145" height="192">
       <defs>
         <radialGradient id="sg-body" cx="45%" cy="40%" r="55%">
-          <stop offset="0%" stop-color="#f2ecd5"/><stop offset="100%" stop-color="#c8b87a"/>
+          <stop offset="0%" stop-color="#f5f0dd"/><stop offset="70%" stop-color="#d4c48a"/><stop offset="100%" stop-color="#a08850"/>
         </radialGradient>
-        <filter id="sg-glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="sg-belly" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stop-color="#efe8d0"/><stop offset="100%" stop-color="#cbb880"/>
+        </radialGradient>
+        <filter id="sg-glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="sg-neon-pink"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#ff0080" flood-opacity=".6"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="sg-neon-green"><feGaussianBlur stdDeviation="3" result="b"/><feFlood flood-color="#39ff14" flood-opacity=".5"/><feComposite in2="b" operator="in"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="sg-shadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".5"/></filter>
       </defs>
-      <ellipse cx="90" cy="226" rx="48" ry="6" fill="#111" opacity=".4"/>
-      <rect x="38" y="168" width="22" height="54" rx="8" fill="#c8b87a"/>
-      <rect x="38" y="204" width="22" height="14" rx="5" fill="#3a2008"/>
-      <rect x="118" y="168" width="22" height="54" rx="8" fill="#c8b87a"/>
-      <rect x="118" y="204" width="22" height="14" rx="5" fill="#3a2008"/>
-      <ellipse cx="90" cy="162" rx="52" ry="46" fill="url(#sg-body)"/>
-      <ellipse cx="90" cy="144" rx="50" ry="28" fill="#ede5c8"/>
-      <rect x="52" y="180" width="20" height="46" rx="8" fill="#ccba80"/>
-      <rect x="52" y="210" width="20" height="14" rx="5" fill="#3a2008"/>
-      <rect x="106" y="180" width="20" height="46" rx="8" fill="#ccba80"/>
-      <rect x="106" y="210" width="20" height="14" rx="5" fill="#3a2008"/>
-      <ellipse cx="142" cy="148" rx="12" ry="20" fill="#ece7d0" transform="rotate(25 142 148)"/>
-      <path d="M70 170 Q66 122 72 96 Q76 82 90 78 Q104 82 108 96 Q114 122 110 170Z" fill="#d4c48a"/>
-      <path d="M73 168 Q70 128 75 104 Q79 90 90 86 Q101 90 105 104 Q110 128 107 168Z" fill="#ede5c8" opacity=".5"/>
-      <ellipse cx="90" cy="66" rx="30" ry="34" fill="url(#sg-body)"/>
-      <ellipse cx="64" cy="76" rx="10" ry="8" fill="#ede5c2" opacity=".7"/>
-      <ellipse cx="116" cy="76" rx="10" ry="8" fill="#ede5c2" opacity=".7"/>
-      <ellipse cx="66" cy="43" rx="8" ry="19" fill="#ccba80" transform="rotate(-10 66 43)"/>
-      <ellipse cx="66" cy="43" rx="5" ry="13" fill="#f0a0a0" transform="rotate(-10 66 43)"/>
-      <ellipse cx="114" cy="43" rx="8" ry="19" fill="#ccba80" transform="rotate(10 114 43)"/>
-      <ellipse cx="114" cy="43" rx="5" ry="13" fill="#f0a0a0" transform="rotate(10 114 43)"/>
-      <ellipse cx="90" cy="84" rx="16" ry="12" fill="#c0aa70"/>
-      <ellipse cx="84" cy="86" rx="3" ry="2.5" fill="#8a6a38"/>
-      <ellipse cx="96" cy="86" rx="3" ry="2.5" fill="#8a6a38"/>
-      <path d="M82 93 Q90 99 98 93" stroke="#8a6a38" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <rect x="61" y="58" width="24" height="15" rx="7" fill="#0a0a14" stroke="#ffe600" stroke-width="2" filter="url(#sg-glow)"/>
-      <rect x="93" y="58" width="24" height="15" rx="7" fill="#0a0a14" stroke="#ffe600" stroke-width="2" filter="url(#sg-glow)"/>
-      <rect x="84" y="63" width="10" height="2.5" rx="1" fill="#ffe600"/>
-      <rect x="49" y="63" width="13" height="2.5" rx="1" fill="#ffe600"/>
-      <rect x="117" y="63" width="13" height="2.5" rx="1" fill="#ffe600"/>
-      <ellipse cx="70" cy="63" rx="5" ry="3" fill="#ff0080" opacity=".4"/>
-      <ellipse cx="102" cy="63" rx="5" ry="3" fill="#39ff14" opacity=".4"/>
-      <path d="M62 50 Q64 22 90 12 Q116 22 118 50 Q108 44 90 46 Q72 44 62 50Z" fill="#cc0000"/>
-      <path d="M64 47 Q68 30 90 20 Q112 30 116 47 Q108 41 90 43 Q72 41 64 47Z" fill="#ff6600"/>
-      <path d="M68 41 Q74 28 90 22 Q106 28 112 41 Q105 36 90 38 Q75 36 68 41Z" fill="#ffe600"/>
-      <path d="M73 35 Q79 26 90 23 Q101 26 107 35 Q101 31 90 33 Q79 31 73 35Z" fill="#39ff14"/>
-      <path d="M79 29 Q84 23 90 21 Q96 23 101 29 Q96 27 90 28 Q84 27 79 29Z" fill="#00e5ff"/>
-      <ellipse cx="90" cy="14" rx="14" ry="9" fill="#cc0000"/>
-      <path d="M62 50 Q54 52 50 62 Q49 70 54 73 Q58 68 61 58Z" fill="#cc0000"/>
-      <line x1="50" y1="72" x2="46" y2="82" stroke="#ffe600" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="54" y1="74" x2="51" y2="84" stroke="#ff0080" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M118 50 Q126 52 130 62 Q131 70 126 73 Q122 68 119 58Z" fill="#cc0000"/>
-      <line x1="130" y1="72" x2="134" y2="82" stroke="#ffe600" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="126" y1="74" x2="129" y2="84" stroke="#ff0080" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="90" cy="8" r="9" fill="#ff0080" filter="url(#sg-glow)"/>
-      <circle cx="86" cy="5" r="3.5" fill="#ff80c0" opacity=".7"/>
-      <circle cx="72" cy="112" r="5" fill="#ff0080" filter="url(#sg-glow)"/>
-      <circle cx="82" cy="118" r="5" fill="#ffe600" filter="url(#sg-glow)"/>
-      <circle cx="90" cy="120" r="5" fill="#39ff14" filter="url(#sg-glow)"/>
-      <circle cx="98" cy="118" r="5" fill="#ff6600" filter="url(#sg-glow)"/>
-      <circle cx="108" cy="112" r="5" fill="#00e5ff" filter="url(#sg-glow)"/>
+      <!-- Sombra en piso -->
+      <ellipse cx="90" cy="232" rx="52" ry="7" fill="#000" opacity=".35" filter="url(#sg-glow)"/>
+      <!-- Patas traseras (más atrás) -->
+      <rect x="36" y="170" width="23" height="56" rx="9" fill="#b8a468" filter="url(#sg-shadow)"/>
+      <rect x="36" y="208" width="23" height="16" rx="6" fill="#1a0a2a" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
+      <rect x="120" y="170" width="23" height="56" rx="9" fill="#b8a468" filter="url(#sg-shadow)"/>
+      <rect x="120" y="208" width="23" height="16" rx="6" fill="#1a0a2a" stroke="#ff0080" stroke-width="1.2" opacity=".9"/>
+      <!-- Cuerpo -->
+      <ellipse cx="90" cy="165" rx="54" ry="48" fill="url(#sg-body)" filter="url(#sg-shadow)"/>
+      <ellipse cx="90" cy="152" rx="44" ry="24" fill="url(#sg-belly)" opacity=".6"/>
+      <!-- Patas delanteras -->
+      <rect x="52" y="184" width="21" height="48" rx="9" fill="#ccba80" filter="url(#sg-shadow)"/>
+      <rect x="52" y="216" width="21" height="16" rx="6" fill="#1a0a2a" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
+      <rect x="106" y="184" width="21" height="48" rx="9" fill="#ccba80" filter="url(#sg-shadow)"/>
+      <rect x="106" y="216" width="21" height="16" rx="6" fill="#1a0a2a" stroke="#39ff14" stroke-width="1.2" opacity=".9"/>
+      <!-- Cola peluda (detalle) -->
+      <ellipse cx="142" cy="152" rx="13" ry="22" fill="#d8c890" opacity=".8" transform="rotate(28 142 152)"/>
+      <ellipse cx="148" cy="148" rx="6" ry="10" fill="#efe8d0" opacity=".5" transform="rotate(28 148 148)"/>
+      <!-- Cuello con textura -->
+      <path d="M70 172 Q66 124 72 98 Q76 84 90 80 Q104 84 108 98 Q114 124 110 172Z" fill="#d4c48a" filter="url(#sg-shadow)"/>
+      <path d="M74 170 Q71 130 76 106 Q80 92 90 88 Q100 92 104 106 Q109 130 106 170Z" fill="#ede5c8" opacity=".45"/>
+      <!-- Collar neón (5 bolitas que brillan) -->
+      <circle cx="72" cy="116" r="5.5" fill="#ff0080" class="llama-collar" filter="url(#sg-neon-pink)"/>
+      <circle cx="82" cy="121" r="5.5" fill="#ffe600" class="llama-collar" filter="url(#sg-glow)"/>
+      <circle cx="90" cy="123" r="5.5" fill="#39ff14" class="llama-collar" filter="url(#sg-neon-green)"/>
+      <circle cx="98" cy="121" r="5.5" fill="#ff6600" class="llama-collar" filter="url(#sg-glow)"/>
+      <circle cx="108" cy="116" r="5.5" fill="#00e5ff" class="llama-collar" filter="url(#sg-glow)"/>
+      <!-- Hilo del collar -->
+      <path d="M72 116 Q77 124 82 121 Q86 126 90 123 Q94 126 98 121 Q103 124 108 116" stroke="#ffd700" stroke-width="1.2" fill="none" opacity=".5"/>
+      <!-- Cabeza -->
+      <ellipse cx="90" cy="68" rx="32" ry="36" fill="url(#sg-body)" filter="url(#sg-shadow)"/>
+      <!-- Mejillas -->
+      <ellipse cx="63" cy="78" rx="11" ry="9" fill="#ede5c2" opacity=".6"/>
+      <ellipse cx="117" cy="78" rx="11" ry="9" fill="#ede5c2" opacity=".6"/>
+      <!-- Rubor neon -->
+      <ellipse cx="63" cy="82" rx="8" ry="4" fill="#ff0080" opacity=".18"/>
+      <ellipse cx="117" cy="82" rx="8" ry="4" fill="#ff0080" opacity=".18"/>
+      <!-- Orejas -->
+      <ellipse cx="64" cy="43" rx="9" ry="20" fill="#ccba80" transform="rotate(-12 64 43)" filter="url(#sg-shadow)"/>
+      <ellipse cx="64" cy="43" rx="5.5" ry="14" fill="#ff80a0" transform="rotate(-12 64 43)" opacity=".7"/>
+      <ellipse cx="64" cy="38" rx="3" ry="8" fill="#ff0080" transform="rotate(-12 64 38)" opacity=".25"/>
+      <ellipse cx="116" cy="43" rx="9" ry="20" fill="#ccba80" transform="rotate(12 116 43)" filter="url(#sg-shadow)"/>
+      <ellipse cx="116" cy="43" rx="5.5" ry="14" fill="#ff80a0" transform="rotate(12 116 43)" opacity=".7"/>
+      <ellipse cx="116" cy="38" rx="3" ry="8" fill="#ff0080" transform="rotate(12 116 38)" opacity=".25"/>
+      <!-- Hocico -->
+      <ellipse cx="90" cy="86" rx="17" ry="13" fill="#c8b070"/>
+      <ellipse cx="84" cy="88" rx="3.2" ry="2.8" fill="#6a4a20"/>
+      <ellipse cx="96" cy="88" rx="3.2" ry="2.8" fill="#6a4a20"/>
+      <path d="M82 95 Q90 101 98 95" stroke="#6a4a20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <!-- Ojos neón (lentes de sol estilo chicha) -->
+      <rect class="llama-eye" x="60" y="59" width="25" height="16" rx="8" fill="#0a0a1a" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
+      <rect class="llama-eye" x="94" y="59" width="25" height="16" rx="8" fill="#0a0a1a" stroke="#ffe600" stroke-width="2.2" filter="url(#sg-glow)"/>
+      <!-- Puente de los lentes -->
+      <rect x="84" y="65" width="11" height="2.8" rx="1.4" fill="#ffe600" opacity=".8"/>
+      <!-- Patillas de lentes -->
+      <rect x="48" y="65" width="13" height="2.5" rx="1" fill="#ffe600" opacity=".6"/>
+      <rect x="118" y="65" width="13" height="2.5" rx="1" fill="#ffe600" opacity=".6"/>
+      <!-- Reflejo en lentes (neon) -->
+      <ellipse cx="70" cy="65" rx="6" ry="3.5" fill="#ff0080" opacity=".35"/>
+      <ellipse cx="70" cy="64" rx="3" ry="1.5" fill="#fff" opacity=".2"/>
+      <ellipse cx="104" cy="65" rx="6" ry="3.5" fill="#39ff14" opacity=".35"/>
+      <ellipse cx="104" cy="64" rx="3" ry="1.5" fill="#fff" opacity=".2"/>
+      <!-- Chullo peruano (más detallado, con borla) -->
+      <path d="M60 52 Q62 22 90 12 Q118 22 120 52 Q108 45 90 47 Q72 45 60 52Z" fill="#cc0000"/>
+      <path d="M63 48 Q67 28 90 18 Q113 28 117 48 Q108 42 90 44 Q72 42 63 48Z" fill="#ff6600"/>
+      <path d="M66 43 Q72 28 90 22 Q108 28 114 43 Q106 38 90 40 Q74 38 66 43Z" fill="#ffe600"/>
+      <path d="M70 38 Q77 27 90 23 Q103 27 110 38 Q103 34 90 36 Q77 34 70 38Z" fill="#39ff14"/>
+      <path d="M76 32 Q82 24 90 22 Q98 24 104 32 Q98 29 90 30 Q82 29 76 32Z" fill="#00e5ff"/>
+      <!-- Punta del chullo -->
+      <ellipse cx="90" cy="14" rx="14" ry="10" fill="#cc0000"/>
+      <!-- Borla grande neon -->
+      <circle cx="90" cy="6" r="10" fill="#ff0080" filter="url(#sg-neon-pink)"/>
+      <circle cx="86" cy="3" r="4" fill="#ff80c0" opacity=".6"/>
+      <circle cx="93" cy="8" r="2.5" fill="#fff" opacity=".3"/>
+      <!-- Orejeras del chullo -->
+      <path d="M60 52 Q52 54 48 64 Q47 73 52 76 Q57 70 60 60Z" fill="#cc0000"/>
+      <circle cx="48" cy="78" r="7" fill="#ffe600" filter="url(#sg-glow)" opacity=".8"/>
+      <circle cx="48" cy="78" r="4" fill="#ff6600" opacity=".7"/>
+      <path d="M120 52 Q128 54 132 64 Q133 73 128 76 Q123 70 120 60Z" fill="#cc0000"/>
+      <circle cx="132" cy="78" r="7" fill="#39ff14" filter="url(#sg-neon-green)" opacity=".8"/>
+      <circle cx="132" cy="78" r="4" fill="#00e5ff" opacity=".7"/>
+      <!-- Flecos de orejera (borlas pequeñas) -->
+      <line x1="46" y1="84" x2="42" y2="96" stroke="#ffe600" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="42" cy="97" r="3" fill="#ff0080" opacity=".6"/>
+      <line x1="50" y1="84" x2="48" y2="95" stroke="#ff0080" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="48" cy="96" r="3" fill="#ffe600" opacity=".6"/>
+      <line x1="134" y1="84" x2="138" y2="96" stroke="#39ff14" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="138" cy="97" r="3" fill="#ff0080" opacity=".6"/>
+      <line x1="130" y1="84" x2="132" y2="95" stroke="#ff0080" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="132" cy="96" r="3" fill="#39ff14" opacity=".6"/>
     </svg>
   </div>
   <script>
-    /* ─── LLAMA ─── */
+    /* ─── LLAMA GUÍA CONTEXTUAL ─── */
     (function() {
-      var frases = [
-        'Habla, causa',
-        'No seas palta',
-        'Que fue!',
-        'La hiciste linda',
-        'Ponte pilas',
-        'Estas misio?',
-        'Poco floro',
-        'Oe, no seas\ngil!',
-        'Oh ño!',
-        'No seas sapo\ny registrate!',
-        'Somos!'
-      ];
-      var el      = document.getElementById('llama-saludo');
-      var burbuja = document.getElementById('llama-burbuja');
-      var DUR     = 9000;
-      var CLASES  = ['animando','lado-izq','lado-derecho'];
-      // Oculta la llama completamente
+      /* ── Frases por contexto ── */
+      var frasesContexto = {
+        idle: [
+          'Habla causa!',
+          'No seas palta',
+          'Que fue pe!',
+          'Ponte pilas!',
+          'Poco floro',
+          'Somos!',
+          'Tas misio?\noh \u00f1o!'
+        ],
+        registro: [
+          'Oe, apuntate\nal toque!',
+          'No seas sapo\ny registrate!',
+          'Dale click y\napuntate causa!',
+          'Registrate pe,\nno cuesta nada!',
+          'Solo necesitas\ntu numero pe',
+          'Oe causa, dale\nclick arriba \ud83d\udc46',
+          'Apuntate antes\nde las 4pm \ud83d\udd25'
+        ],
+        sorteo_pronto: [
+          'Ya casi\nempieza!',
+          'Falta poco\ncausa!',
+          'Estate mosca\nque ya viene!',
+          'Preparate\nque arranca!',
+          'Apuntate antes\nde las 4pm \ud83d\udd25'
+        ],
+        sorteo_ahora: [
+          'ARRANCAMOS\nCAUSA!!!',
+          'YA ES HORA\nPE!!!',
+          'SUERTE\nPA TODOS!!!'
+        ],
+        scroll_arriba: [
+          'Oe causa, dale\nclick arriba \ud83d\udc46',
+          'Sube pe,\narriba estan\nlos sorteos!',
+          'Dale pa arriba\ncausa!'
+        ],
+        bienvenida: [
+          'Bienvenido\na TuSuerte!',
+          'Oe, hoy es\ntu dia causa!'
+        ],
+        inactivo: [
+          'Sigues ahi\ncausa?',
+          'No te vayas\npe!',
+          'Despierta\ncausa!',
+          'Tas misio?\noh \u00f1o!'
+        ]
+      };
+
+      var el       = document.getElementById('llama-saludo');
+      var burbuja  = document.getElementById('llama-burbuja');
+      var DUR      = 9000;
+      var CLASES   = ['animando','lado-izq','lado-derecho'];
+      var CTX_CLS  = ['ctx-urgente','ctx-celeste','ctx-verde'];
+      var _ultimoCtx = '';
+      var _lastActivity = Date.now();
+      var _bienvenidaMostrada = false;
+
+      /* Track user activity */
+      ['scroll','touchstart','click','mousemove'].forEach(function(ev) {
+        document.addEventListener(ev, function() { _lastActivity = Date.now(); }, { passive:true });
+      });
+
       function resetLlama() {
         CLASES.forEach(function(c) { el.classList.remove(c); });
+        CTX_CLS.forEach(function(c) { burbuja.classList.remove(c); });
+        el.classList.remove('visible');
+        burbuja.classList.remove('llama-bubble-visible');
         el.style.visibility      = 'hidden';
         el.style.transform       = '';
         el.style.transformOrigin = '';
@@ -3186,39 +3297,108 @@
         el.style.top    = 'auto';
         el.style.bottom = '10px';
       }
-      resetLlama(); // estado inicial
+      resetLlama();
+
+      /* ── Decide contexto actual ── */
+      function detectarContexto() {
+        // Bienvenida (solo una vez)
+        if (!_bienvenidaMostrada) {
+          _bienvenidaMostrada = true;
+          return 'bienvenida';
+        }
+        // Inactivo >45s
+        if (Date.now() - _lastActivity > 45000) {
+          return 'inactivo';
+        }
+        // Sorteo activo? Verificar si hay card principal con hora cercana
+        var cardPrincipal = document.querySelector('.card-sorteo.principal:not(.cerrado):not(.flipped)');
+        if (cardPrincipal) {
+          var horaEl = cardPrincipal.querySelector('.card-hora');
+          if (horaEl) {
+            var txt = horaEl.textContent || '';
+            var match = txt.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+            if (match) {
+              var h = parseInt(match[1]), m = parseInt(match[2]);
+              var ampm = match[3].toLowerCase();
+              if (ampm === 'pm' && h !== 12) h += 12;
+              if (ampm === 'am' && h === 12) h = 0;
+              var ahora = new Date();
+              var sorteoDate = new Date(ahora);
+              sorteoDate.setHours(h, m, 0, 0);
+              var diffMin = (sorteoDate - ahora) / 60000;
+              if (diffMin > 0 && diffMin <= 5) return 'sorteo_ahora';
+              if (diffMin > 5 && diffMin <= 30) return 'sorteo_pronto';
+            }
+          }
+        }
+        // User ha scrolleado lejos del top?
+        if (window.scrollY > 800) {
+          return 'scroll_arriba';
+        }
+        // Hay sorteo abierto → sugerir registro
+        var sorteoAbierto = document.querySelector('.card-sorteo.principal:not(.cerrado)');
+        if (sorteoAbierto && Math.random() < 0.5) {
+          return 'registro';
+        }
+        return 'idle';
+      }
+
+      function getFraseYEstilo() {
+        var ctx = detectarContexto();
+        _ultimoCtx = ctx;
+        var lista = frasesContexto[ctx] || frasesContexto.idle;
+        var frase = lista[Math.floor(Math.random() * lista.length)];
+        var estilo = '';
+        if (ctx === 'sorteo_ahora') estilo = 'ctx-urgente';
+        else if (ctx === 'bienvenida' || ctx === 'sorteo_pronto') estilo = 'ctx-celeste';
+        else if (ctx === 'registro') estilo = 'ctx-verde';
+        return { frase: frase, estilo: estilo };
+      }
+
       function mostrarLlama() {
         if (typeof _panelAbierto !== 'undefined' && _panelAbierto) return;
-        burbuja.innerHTML = frases[Math.floor(Math.random() * frases.length)].replace(/\n/g, '<br>');
-        // 1) Reset completo
+        var info = getFraseYEstilo();
+        burbuja.innerHTML = info.frase.replace(/\n/g, '<br>');
+        CTX_CLS.forEach(function(c) { burbuja.classList.remove(c); });
+        if (info.estilo) burbuja.classList.add(info.estilo);
+
         resetLlama();
-        // 2) Esquina inferior izquierda o derecha (aleatorio)
+        if (info.estilo) burbuja.classList.add(info.estilo);
+
         var lado = Math.random() < 0.5 ? 0 : 1;
         if (lado === 0) {
-          // Esquina inferior izquierda
           el.style.left   = '10px';
           el.style.bottom = '10px';
           el.style.top    = 'auto';
           el.style.transformOrigin = 'left bottom';
           el.classList.add('lado-izq');
         } else {
-          // Esquina inferior derecha
           el.style.left   = 'calc(100vw - 165px)';
           el.style.bottom = '10px';
           el.style.top    = 'auto';
           el.style.transformOrigin = 'right bottom';
           el.classList.add('lado-derecho');
         }
-        // 3) Hacer visible y forzar reflow; la animación arranca desde el keyframe 0%
         el.style.visibility = 'visible';
+        el.classList.add('visible');
         void el.offsetWidth;
         el.classList.add('animando');
-        // (silbidos removidos)
-        // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
       }
+
+      /* ── Click en la llama: abre registro o scroll arriba ── */
+      el.addEventListener('click', function() {
+        if (_ultimoCtx === 'scroll_arriba') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (_ultimoCtx === 'registro') {
+          var cardP = document.querySelector('.card-sorteo.principal:not(.cerrado)');
+          if (cardP) cardP.click();
+        }
+      });
+
+      /* ── Timing: bienvenida a los 2s, luego cada 18s ── */
       setTimeout(mostrarLlama, 2000);
-      setInterval(mostrarLlama, 20000);
+      setInterval(mostrarLlama, 18000);
     })();
     /* ─── SILBIDOS REMOVIDOS ─── */
     var audioMuteado = false;
