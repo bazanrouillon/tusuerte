@@ -2112,51 +2112,89 @@
     };
 
     function precargarGanadores() {
-      // 1) Cargar ganadores oficiales hardcodeados (siempre disponibles)
+      // 1) Cargar ganadores oficiales hardcodeados
       Object.keys(GANADORES_OFICIALES).forEach(function(sid) {
         _ganadoresPreload[sid] = GANADORES_OFICIALES[sid];
       });
-      // 2) Cargar de localStorage (puede sobreescribir con datos más completos)
+      // 2) Cargar de localStorage
       var locales = cargarGanadores();
       locales.forEach(function(g) {
         if (g.sorteoId && g.nombres) {
           _ganadoresPreload[g.sorteoId] = g;
         }
       });
-      // 3) Fetch de Google Sheets para obtener ganadores reales (sobreescribe todo con datos frescos)
+
+      // 3) Intentar endpoint obtenerTodosGanadores (nuevo, puede no estar desplegado)
       fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
           var data; try { data = JSON.parse(txt); } catch(e) { return; }
           if (data.status === 'ok' && data.ganadores && data.ganadores.length > 0) {
             data.ganadores.forEach(function(g) {
-              // Buscar a qué sorteoId corresponde
               var sid = g.sorteoId || '';
               if (!sid) {
-                // Intentar match por nombre
                 Object.keys(SORTEOS_CFG).forEach(function(id) {
                   var cfgNombre = SORTEOS_CFG[id].nombre.split('–')[0].trim().toLowerCase();
-                  if (g.sorteo && g.sorteo.toLowerCase().indexOf(cfgNombre) !== -1) {
-                    sid = id;
-                  }
+                  if (g.sorteo && g.sorteo.toLowerCase().indexOf(cfgNombre) !== -1) sid = id;
                 });
               }
               if (sid) {
-                _ganadoresPreload[sid] = { nombres: g.nombres, apellidos: g.apellidos, dni: g.dni, sorteoId: sid, sorteo: g.sorteo };
-                // También guardar en localStorage para futuras visitas
-                var lista = cargarGanadores();
-                var yaExiste = false;
-                for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sid) { yaExiste = true; break; } }
-                if (!yaExiste) { lista.unshift(_ganadoresPreload[sid]); localStorage.setItem(GANADORES_KEY, JSON.stringify(lista)); }
+                _ganadoresPreload[sid] = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sid, sorteo:g.sorteo };
+                guardarGanadorEnLocal(sid, _ganadoresPreload[sid]);
               }
             });
-            // Re-render para mostrar los ganadores en los cards cerrados
-            _ganadoresPreloadDone = true;
-            var secWrap = document.getElementById('secundarios-wrap');
-            if (secWrap) secWrap.setAttribute('data-ids', ''); // forzar re-render
-            renderBloque3();
+            forzarReRender();
           }
-        }).catch(function() { /* silencioso */ });
+        }).catch(function() { /* silencioso — probablemente no está desplegado aún */ });
+
+      // 4) Para cada ganador oficial sin DNI, buscar en el endpoint 'participantes' (YA desplegado)
+      Object.keys(GANADORES_OFICIALES).forEach(function(sid) {
+        var g = _ganadoresPreload[sid];
+        if (g && g.dni) return; // ya tiene DNI, no buscar
+        var cfg = SORTEOS_CFG[sid];
+        if (!cfg) return;
+        var nombreSorteo = cfg.nombre.split('–')[0].trim();
+        fetch(GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            var data; try { data = JSON.parse(txt); } catch(e) { return; }
+            if (data.status !== 'ok' || !data.participantes) return;
+            // Buscar al ganador por nombre+apellido en la lista de participantes
+            var nombreBuscar = (g.nombres || '').trim().toLowerCase();
+            var apellidoBuscar = (g.apellidos || '').trim().toLowerCase();
+            for (var i = 0; i < data.participantes.length; i++) {
+              var p = data.participantes[i];
+              var pNom = (p.nombres || '').trim().toLowerCase();
+              var pApe = (p.apellidos || '').trim().toLowerCase();
+              if (pNom.indexOf(nombreBuscar) !== -1 && pApe.indexOf(apellidoBuscar) !== -1) {
+                // Encontrado — actualizar con DNI real
+                _ganadoresPreload[sid] = { nombres:p.nombres, apellidos:p.apellidos, dni:p.dni, sorteoId:sid, sorteo:cfg.nombre };
+                guardarGanadorEnLocal(sid, _ganadoresPreload[sid]);
+                forzarReRender();
+                break;
+              }
+            }
+          }).catch(function() {});
+      });
+
+      // Render inicial con lo que tengamos
+      forzarReRender();
+    }
+
+    function guardarGanadorEnLocal(sid, obj) {
+      var lista = cargarGanadores();
+      // Reemplazar si ya existe, o agregar
+      var idx = -1;
+      for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sid) { idx = x; break; } }
+      if (idx >= 0) { lista[idx] = obj; } else { lista.unshift(obj); }
+      localStorage.setItem(GANADORES_KEY, JSON.stringify(lista));
+    }
+
+    function forzarReRender() {
+      _ganadoresPreloadDone = true;
+      var secWrap = document.getElementById('secundarios-wrap');
+      if (secWrap) secWrap.setAttribute('data-ids', '');
+      renderBloque3();
     }
 
     // ── Badge text para el principal ──
