@@ -602,11 +602,33 @@
       letter-spacing:5px;
     }
     .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
-    .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.15; filter:grayscale(1) brightness(.3); }
+    .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.2; filter:grayscale(.8) brightness(.35); }
     .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
     .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
     .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(57,255,20,.3); box-shadow:0 0 12px rgba(57,255,20,.1); }
     .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 16px rgba(57,255,20,.15); transform:translateY(-2px); }
+    /* Ganador preview en FRONT del card cerrado */
+    .card-ganador-preview {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:6;
+      text-align:center; pointer-events:none;
+      font-family:'Bangers',cursive;
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      background:rgba(0,0,0,.85); border:2px solid var(--neon-amarillo);
+      border-radius:10px; padding:12px 16px;
+      box-shadow:0 0 18px rgba(255,215,0,.35), 0 0 6px rgba(0,0,0,.8);
+    }
+    .ganador-preview-icon { font-size:1.6rem; }
+    .ganador-preview-nombre {
+      color:var(--neon-amarillo); font-size:1rem; letter-spacing:1.5px;
+      text-shadow:0 0 8px rgba(255,215,0,.5);
+      line-height:1.2;
+    }
+    .ganador-preview-dni {
+      color:#aaa; font-size:.7rem; letter-spacing:1px;
+      font-family:'Poppins',sans-serif;
+    }
+    .card-sorteo.cerrado:not(.flipped) .card-ganador-preview { display:flex; }
+    .card-sorteo.cerrado.flipped .card-ganador-preview { display:none; }
     .card-sorteo.cerrado.flipped { border-color:var(--chicha-amarillo); box-shadow:0 0 30px rgba(255,215,0,.4); }
     /* Back cerrado: fondo sólido, solo ganador */
     .card-back-cerrado {
@@ -1298,6 +1320,10 @@
       /* ── Llama: tamaño reducido en móvil ── */
       #llama-saludo svg { width:85px !important; height:108px !important; }
       #llama-burbuja, #llama-burbuja2 { font-size:clamp(.6rem,2.5vw,.85rem); padding:6px 10px; white-space:normal; max-width:145px; text-align:center; word-break:break-word; }
+      /* ── Ganador preview en móvil ── */
+      .card-ganador-preview { padding:8px 12px; }
+      .ganador-preview-nombre { font-size:.8rem; }
+      .ganador-preview-icon { font-size:1.2rem; }
       /* ── Audio: reducido 1/3 en móvil ── */
       #btn-musica { width:36px !important; height:36px !important; font-size:1rem !important; border-width:2px !important; bottom:14px !important; left:14px !important; }
       #musica-label { font-size:.5rem !important; bottom:52px !important; left:8px !important; width:50px !important; }
@@ -2076,6 +2102,54 @@
       return 'finalizado';
     }
 
+    // ── PRE-CARGA DE GANADORES REALES (desde Google Sheets) ──
+    var _ganadoresPreload = {}; // { sorteoId: { nombres, apellidos, dni } }
+    var _ganadoresPreloadDone = false;
+
+    function precargarGanadores() {
+      // Primero cargar de localStorage
+      var locales = cargarGanadores();
+      locales.forEach(function(g) {
+        if (g.sorteoId && !_ganadoresPreload[g.sorteoId]) {
+          _ganadoresPreload[g.sorteoId] = g;
+        }
+      });
+      // Luego fetch de Google Sheets para obtener ganadores reales
+      fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          var data; try { data = JSON.parse(txt); } catch(e) { return; }
+          if (data.status === 'ok' && data.ganadores && data.ganadores.length > 0) {
+            data.ganadores.forEach(function(g) {
+              // Buscar a qué sorteoId corresponde
+              var sid = g.sorteoId || '';
+              if (!sid) {
+                // Intentar match por nombre
+                Object.keys(SORTEOS_CFG).forEach(function(id) {
+                  var cfgNombre = SORTEOS_CFG[id].nombre.split('–')[0].trim().toLowerCase();
+                  if (g.sorteo && g.sorteo.toLowerCase().indexOf(cfgNombre) !== -1) {
+                    sid = id;
+                  }
+                });
+              }
+              if (sid) {
+                _ganadoresPreload[sid] = { nombres: g.nombres, apellidos: g.apellidos, dni: g.dni, sorteoId: sid, sorteo: g.sorteo };
+                // También guardar en localStorage para futuras visitas
+                var lista = cargarGanadores();
+                var yaExiste = false;
+                for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sid) { yaExiste = true; break; } }
+                if (!yaExiste) { lista.unshift(_ganadoresPreload[sid]); localStorage.setItem(GANADORES_KEY, JSON.stringify(lista)); }
+              }
+            });
+            // Re-render para mostrar los ganadores en los cards cerrados
+            _ganadoresPreloadDone = true;
+            var secWrap = document.getElementById('secundarios-wrap');
+            if (secWrap) secWrap.setAttribute('data-ids', ''); // forzar re-render
+            renderBloque3();
+          }
+        }).catch(function() { /* silencioso */ });
+    }
+
     // ── Badge text para el principal ──
     function getBadgeText(sorteoId) {
       var cfg = SORTEOS_CFG[sorteoId];
@@ -2134,6 +2208,17 @@
         (d.getHours() >= 12 ? 'PM' : 'AM');
       var claseExtra = esCerrado ? ' cerrado' : '';
       if (esSiguiente) claseExtra += ' siguiente';
+      // Buscar ganador pre-cargado para cards cerrados
+      var ganadorPreview = '';
+      if (esCerrado && _ganadoresPreload[s.id]) {
+        var gp = _ganadoresPreload[s.id];
+        var dniM = gp.dni ? gp.dni.substring(0,3) + '***' + gp.dni.substring(gp.dni.length - 2) : '';
+        ganadorPreview = '<div class="card-ganador-preview">' +
+          '<span class="ganador-preview-icon">🏆</span> ' +
+          '<span class="ganador-preview-nombre">' + (gp.nombres + ' ' + gp.apellidos).toUpperCase() + '</span>' +
+          '<span class="ganador-preview-dni">DNI: ' + dniM + '</span>' +
+        '</div>';
+      }
       var btnHTML = esCerrado
         ? '<button class="btn-participar" style="pointer-events:none;opacity:.3">FINALIZADO</button>'
         : '<button class="btn-participar" style="pointer-events:none">EN BREVE CAUSA</button>';
@@ -2147,6 +2232,7 @@
             '<div class="card-body">' +
               '<div class="card-titulo">¡' + s.nombre + '!</div>' +
               '<div class="card-desc" style="color:#999">' + s.lukitas + ' directo a tu Yape</div>' +
+              ganadorPreview +
               metaHTML +
               btnHTML +
             '</div>' +
@@ -2370,6 +2456,8 @@
     // Render inicial + re-render cada 5s para detectar cambios de estado
     renderBloque3();
     setInterval(renderBloque3, 5000);
+    // Pre-cargar ganadores reales desde Google Sheets (para mostrar en cards cerrados)
+    setTimeout(precargarGanadores, 800);
 
     // PANELES
     var _panelAbierto = false;
@@ -2410,15 +2498,7 @@
       // NO restaurar visibility: la llama solo aparece durante su animación
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
-      // Verificar si ya se registró en ESTE sorteo específico
-      var regs = {};
-      try { regs = JSON.parse(localStorage.getItem('tsp_registrados_por_sorteo')) || {}; } catch(e) {}
-      if (regs[sorteoId]) {
-        document.getElementById('modal-ya-registrado').classList.add('activo');
-        var llama = document.getElementById('llama-saludo');
-        if (llama) llama.style.visibility = 'hidden';
-        return;
-      }
+      // Siempre abrir el panel — la validación real es por DNI contra Google Sheets
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
       document.getElementById('sorteo-id').value = sorteoId;
       document.getElementById('form-registro').reset();
@@ -2481,7 +2561,8 @@
         })
         .then(function(res) {
           if (res.yaRegistrado) {
-            alert('¡Este DNI ya está registrado en este sorteo! No seas hábil pe causa.');
+            cerrarPanel('panel-registro');
+            document.getElementById('modal-ya-registrado').classList.add('activo');
             if (btnRegistro) { btnRegistro.disabled = false; btnRegistro.textContent = '¡INSCRIBIRME!'; }
             return;
           }
