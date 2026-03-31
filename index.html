@@ -35,91 +35,512 @@
     }
   }
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bangers&family=Righteous&family=Paytone+One&family=Permanent+Marker&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bangers&family=Righteous&family=Paytone+One&family=Permanent+Marker&family=Bungee+Shade&family=Passion+One:wght@700;900&family=Lobster&family=Pacifico&family=Bebas+Neue&family=Poppins:wght@600;700;800&family=Luckiest+Guy&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --negro: #0d0d1f; --neon-rosa: #ff0080; --neon-verde: #39ff14;
-      --neon-amarillo: #ffe600; --neon-naranja: #ff6a00;
+      --negro: #0a0a1a; --neon-rosa: #ff1493; --neon-verde: #39ff14;
+      --neon-amarillo: #ffd700; --neon-naranja: #ff6a00;
       --neon-celeste: #00e5ff; --neon-violeta: #cc00ff; --blanco: #ffffff;
+      --chicha-rosa: #ff1493; --chicha-naranja: #ff8c00; --chicha-amarillo: #ffd700;
+      --chicha-verde: #39ff14; --chicha-azul: #1a2a6c; --chicha-rojo: #ff2020;
     }
     html { scroll-behavior: smooth; }
     body { background-color: var(--negro); color: var(--blanco); font-family: 'Paytone One', sans-serif; overflow-x: hidden; }
     .bg-pattern { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
-      background: repeating-linear-gradient(45deg,#0d0d1f 0px,#0d0d1f 20px,#13132e 20px,#13132e 40px); }
-    .bg-pattern::after { content:''; position:absolute; inset:0;
-      background: radial-gradient(ellipse at 20% 50%,rgba(255,0,128,.13) 0%,transparent 60%),
-                  radial-gradient(ellipse at 80% 20%,rgba(57,255,20,.10) 0%,transparent 60%),
-                  radial-gradient(ellipse at 50% 90%,rgba(0,229,255,.08) 0%,transparent 55%);
-      animation: bgpulse 6s ease-in-out infinite alternate; }
-    @keyframes bgpulse { 0%{opacity:.6} 100%{opacity:1} }
-    /* METELE TAG */
-    .metele-tag {
-      position:absolute; top:14px; left:18px;
-      font-family:'Permanent Marker',cursive; font-size:clamp(1.3rem,3.8vw,2.1rem);
-      color:var(--neon-amarillo); text-shadow:2px 2px 0 #7a3300,0 0 8px rgba(255,106,0,.35);
-      transform:rotate(-4deg); transform-origin:left center;
-      animation:metele-pulse 2.4s ease-in-out infinite alternate;
-      letter-spacing:1px; line-height:1.25; z-index:10;
+      background: #0a0a1a; }
+    .bg-pattern::before { content:''; position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 15% 25%, rgba(255,20,147,.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 15%, rgba(255,140,0,.1) 0%, transparent 35%),
+        radial-gradient(circle at 50% 80%, rgba(57,255,20,.08) 0%, transparent 40%),
+        radial-gradient(circle at 75% 60%, rgba(0,229,255,.06) 0%, transparent 35%);
     }
-    @keyframes metele-pulse { 0%{transform:rotate(-4deg) scale(1)} 100%{transform:rotate(-4deg) scale(1.15)} }
+    .bg-pattern::after { content:''; position:absolute; inset:0;
+      background-image:
+        radial-gradient(circle, rgba(255,215,0,.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,20,147,.12) 1px, transparent 1px);
+      background-size: 80px 80px, 120px 120px;
+      background-position: 0 0, 40px 40px;
+      animation: bgStars 4s ease-in-out infinite alternate; }
+    @keyframes bgStars { 0%{opacity:.3} 100%{opacity:.6} }
+    /* METELE TAG — SVG chicha */
+    .metele-tag {
+      position:absolute; top:6px; left:8px;
+      width:clamp(130px,32vw,220px);
+      transform:rotate(-6deg); transform-origin:left center;
+      animation:metele-pulse 2.4s ease-in-out infinite alternate;
+      z-index:10;
+    }
+    .metele-tag svg { width:100%; height:auto; display:block; }
+    @keyframes metele-pulse { 0%{transform:rotate(-6deg) scale(1)} 100%{transform:rotate(-6deg) scale(1.08)} }
     /* HEADER */
-    header { position:relative; text-align:center; padding:30px 20px 20px;
-      border-bottom:4px solid var(--neon-rosa);
-      background:linear-gradient(180deg,#1a0010 0%,#0a0a0a 100%); overflow:hidden; }
+    header { position:relative; text-align:center; padding:35px 20px 25px;
+      border-bottom:4px solid var(--chicha-amarillo);
+      background:linear-gradient(180deg,#0f1a3a 0%,#0a1025 40%,#0d1530 100%);
+      overflow:visible;
+      box-shadow: inset 0 0 60px rgba(26,42,108,.5), 0 4px 20px rgba(0,0,0,.6); }
     .header-decoracion { display:flex; justify-content:center; gap:10px; margin-bottom:8px; }
     .estrella { font-size:1.4rem; animation:girar 4s linear infinite; }
     .estrella:nth-child(even) { animation-direction:reverse; }
     @keyframes girar { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    .logo-principal { font-family:'Bangers',cursive; font-size:clamp(3.5rem,12vw,8rem);
-      letter-spacing:4px; line-height:1; color:var(--neon-amarillo);
-      text-shadow:0 0 6px rgba(255,230,0,.4),0 0 18px rgba(255,106,0,.3),0 0 35px rgba(255,0,128,.15),4px 4px 0 #7a0040,8px 8px 0 #3d0020;
-      animation:logopulse 2s ease-in-out infinite alternate; }
+    .logo-principal {
+      font-family:'Passion One','Bangers',cursive; font-weight:900;
+      font-size:clamp(4.5rem,16vw,10rem);
+      letter-spacing:3px; line-height:.95;
+      position:relative;
+      display:inline-block;
+      animation:logopulse 3s ease-in-out infinite alternate;
+    }
+    .logo-principal .logo-tu {
+      background: linear-gradient(180deg, #d4b840 0%, #c07800 40%, #b04800 70%, #903500 100%);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+      -webkit-text-stroke: 3px #1a0800;
+      filter: drop-shadow(2px 3px 0 #000) drop-shadow(4px 6px 0 rgba(0,0,0,.6));
+      font-style:italic;
+    }
+    .logo-principal .logo-suerte {
+      background: linear-gradient(180deg, #d05080 0%, #c01070 30%, #a01068 60%, #800c58 100%);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+      -webkit-text-stroke: 3px #2a0020;
+      filter: drop-shadow(2px 3px 0 #000) drop-shadow(4px 6px 0 rgba(0,0,0,.6));
+      font-style:italic;
+    }
+    .logo-principal .logo-pe {
+      background: linear-gradient(180deg, #50c000 0%, #28b010 30%, #009850 60%, #008038 100%);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+      -webkit-text-stroke: 3px #002a00;
+      filter: drop-shadow(2px 3px 0 #000) drop-shadow(4px 6px 0 rgba(0,0,0,.6));
+      font-size:.85em; font-style:italic;
+    }
+    /* Decorative stars around logo — alejadas */
+    .logo-principal::before {
+      content:'★ ✦ ★';
+      position:absolute; left:-3.5em; top:50%; transform:translateY(-50%);
+      font-size:.2em; color:var(--chicha-amarillo); letter-spacing:4px;
+      -webkit-text-fill-color:var(--chicha-amarillo);
+      -webkit-text-stroke:0;
+      filter: drop-shadow(0 0 6px rgba(255,215,0,.6));
+      animation: chichaStarPulse 1.5s ease-in-out infinite alternate;
+    }
+    .logo-principal::after {
+      content:'★ ✦ ★';
+      position:absolute; right:-3.5em; top:50%; transform:translateY(-50%);
+      font-size:.2em; color:var(--chicha-rosa); letter-spacing:4px;
+      -webkit-text-fill-color:var(--chicha-rosa);
+      -webkit-text-stroke:0;
+      filter: drop-shadow(0 0 6px rgba(255,20,147,.6));
+      animation: chichaStarPulse 1.5s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes chichaStarPulse {
+      0%{ opacity:.4; transform:translateY(-50%) scale(.9); }
+      100%{ opacity:1; transform:translateY(-50%) scale(1.1); }
+    }
     @keyframes logopulse {
-      0%{text-shadow:0 0 6px rgba(255,230,0,.4),0 0 18px rgba(255,106,0,.3),0 0 35px rgba(255,0,128,.15),4px 4px 0 #7a0040,8px 8px 0 #3d0020}
-      100%{text-shadow:0 0 10px rgba(255,230,0,.5),0 0 30px rgba(255,106,0,.35),0 0 50px rgba(255,0,128,.2),4px 4px 0 #7a0040,8px 8px 0 #3d0020} }
+      0%{ transform:scale(1); }
+      100%{ transform:scale(1.02); }
+    }
+    /* Chicha decorative line below header */
+    .header-chicha-line {
+      margin-top:12px; display:flex; justify-content:center; align-items:center; gap:8px;
+    }
+    .header-chicha-line span {
+      font-size:1.2rem; animation:chichaStarSpin 3s linear infinite;
+    }
+    .header-chicha-line .chicha-line-bar {
+      height:3px; width:60px; border-radius:2px;
+      background: linear-gradient(90deg, var(--chicha-rosa), var(--chicha-naranja), var(--chicha-amarillo), var(--chicha-verde));
+    }
+    @keyframes chichaStarSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .logo-sub { font-family:'Black Ops One',cursive; font-size:clamp(.9rem,3vw,1.5rem);
       letter-spacing:6px; color:var(--neon-verde);
       text-shadow:0 0 5px rgba(57,255,20,.3),0 0 12px rgba(57,255,20,.2);
       margin-top:4px; text-transform:uppercase; }
-    /* NAV */
-    nav { background:#0d0d0d; border-bottom:2px solid rgba(255,230,0,.5);
-      display:flex; justify-content:center; flex-wrap:wrap; }
-    nav a { font-family:'Bangers',cursive; color:var(--neon-amarillo); text-decoration:none;
-      font-size:1.2rem; letter-spacing:2px; padding:14px 24px;
-      transition:background .2s,color .2s; border-right:1px solid #1a1a1a; cursor:pointer; }
-    nav a:hover { background:var(--neon-amarillo); color:#000; }
-    /* TICKER */
-    .ticker-wrap { background:var(--neon-rosa); padding:10px 0; overflow:hidden; border-bottom:3px solid #7a0040; }
+    /* NAV — chicha peruano cartel */
+    nav {
+      background: linear-gradient(180deg, #0a0e20 0%, #0d1530 50%, #0a0e20 100%);
+      display:flex; justify-content:center; align-items:center; flex-wrap:wrap;
+      padding: 12px 16px; gap: 12px;
+      position:relative;
+      border-top:none; border-bottom:none;
+    }
+    /* Contenedor chicha para los 2 botones principales */
+    .nav-chicha-box {
+      display:flex; align-items:center; gap:10px;
+      background:linear-gradient(135deg,#1a0a30,#0d1530,#1a0a30);
+      border:3px solid; border-image:linear-gradient(135deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde)) 1;
+      border-radius:0; /* border-image doesn't support radius, we use outline trick */
+      padding:8px 20px;
+      position:relative;
+      box-shadow:
+        0 0 20px rgba(255,20,147,.2),
+        0 0 40px rgba(255,106,0,.1),
+        inset 0 0 30px rgba(255,20,147,.08);
+    }
+    /* Decorative stars on the chicha box */
+    .nav-chicha-box::before {
+      content:'✦';
+      position:absolute; left:-18px; top:50%; transform:translateY(-50%);
+      font-size:1.3rem; color:var(--chicha-amarillo);
+      text-shadow:0 0 10px var(--chicha-amarillo);
+      animation:chichaNavStar 1.5s ease-in-out infinite alternate;
+    }
+    .nav-chicha-box::after {
+      content:'✦';
+      position:absolute; right:-18px; top:50%; transform:translateY(-50%);
+      font-size:1.3rem; color:var(--chicha-verde);
+      text-shadow:0 0 10px var(--chicha-verde);
+      animation:chichaNavStar 1.5s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes chichaNavStar { 0%{transform:translateY(-50%) scale(.8);opacity:.5} 100%{transform:translateY(-50%) scale(1.2);opacity:1} }
+    nav a.nav-btn-chicha {
+      font-family:'Passion One','Bangers',cursive; font-weight:900;
+      color:#fff; text-decoration:none;
+      font-size:clamp(1rem,3vw,1.35rem); letter-spacing:3px;
+      padding:10px 22px;
+      transition:all .25s; cursor:pointer;
+      border:2px solid var(--chicha-rosa);
+      border-radius:8px;
+      background:linear-gradient(135deg,rgba(255,20,147,.15),rgba(255,106,0,.1));
+      text-shadow: 2px 2px 0 #000, 0 0 12px rgba(255,20,147,.4);
+      text-transform:uppercase;
+      position:relative; overflow:hidden;
+    }
+    nav a.nav-btn-chicha:hover {
+      background:linear-gradient(135deg,rgba(255,20,147,.3),rgba(255,106,0,.2));
+      border-color:var(--chicha-amarillo);
+      color:var(--chicha-amarillo);
+      text-shadow: 2px 2px 0 #000, 0 0 18px rgba(255,215,0,.5);
+      transform:scale(1.05);
+      box-shadow:0 0 20px rgba(255,20,147,.3);
+    }
+    /* Footer links for FAQ and Terms */
+    .footer-nav-links { margin-bottom:26px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+    .footer-nav-links a {
+      font-family:'Righteous',cursive; color:#ffd700; text-decoration:none;
+      font-size:.85rem; letter-spacing:1.5px; padding:12px 26px;
+      border:2px solid rgba(255,215,0,.45); border-radius:10px;
+      transition:all .2s ease; cursor:pointer;
+      text-shadow:0 0 8px rgba(255,215,0,.2);
+      background:linear-gradient(135deg,rgba(255,215,0,.06) 0%,rgba(255,215,0,.1) 100%);
+      box-shadow:0 0 12px rgba(255,215,0,.1), inset 0 1px 0 rgba(255,215,0,.08);
+    }
+    .footer-nav-links a:hover {
+      border-color:#ffe44d;
+      background:linear-gradient(135deg,rgba(255,215,0,.18) 0%,rgba(255,215,0,.28) 100%);
+      box-shadow:0 0 35px rgba(255,215,0,.45), 0 0 12px rgba(255,215,0,.25), inset 0 1px 0 rgba(255,255,255,.1);
+      transform:translateY(-4px) scale(1.03);
+      color:#fff;
+      text-shadow:0 0 14px rgba(255,215,0,.6);
+    }
+    /* TICKER — chicha */
+    .ticker-wrap { background:linear-gradient(90deg,#ff1493,#ff6a00,#ffd700,#39ff14,#00e5ff,#ff1493);
+      background-size:300% 100%; animation:tickerBg 8s linear infinite;
+      padding:10px 0; overflow:hidden; border-bottom:3px solid #000; }
+    @keyframes tickerBg { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
     .ticker { display:flex; width:max-content; animation:ticker 30s linear infinite; }
-    .ticker span { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px; color:#000; white-space:nowrap; padding:0 100px; }
+    .ticker span { font-family:'Bangers',cursive; font-size:1.3rem; letter-spacing:4px; color:#000;
+      white-space:nowrap; padding:0 100px; font-weight:900;
+      text-shadow:1px 1px 0 rgba(255,255,255,.3); }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-    /* SORTEOS */
-    #sorteos { padding:50px 20px; max-width:1200px; margin:0 auto; }
-    .seccion-titulo { font-family:'Bangers',cursive; font-size:clamp(2.2rem,6vw,4rem);
-      letter-spacing:3px; text-align:center; margin-bottom:40px; }
-    .seccion-titulo::after { content:''; display:block; height:4px; width:120px; margin:8px auto 0; border-radius:2px; }
-    #sorteos .seccion-titulo { color:var(--neon-rosa); text-shadow:0 0 8px rgba(255,0,128,.35); }
-    #sorteos .seccion-titulo::after { display:none; }
-    .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
+    /* ══════════════════════════════════════════
+       BLOQUE 3 — SORTEOS (marcha blanca)
+       ══════════════════════════════════════════ */
+    #sorteos { padding:30px 20px 40px; max-width:900px; margin:0 auto; }
+    /* Encabezado del bloque */
+    .sorteos-header { text-align:center; margin-bottom:14px; }
+    .sorteos-header-titulo {
+      font-family:'Poppins',sans-serif; font-weight:800;
+      font-size:clamp(1.3rem,4vw,1.8rem);
+      color:#fff; letter-spacing:1px; margin-bottom:6px;
+    }
+    .sorteos-header-sub {
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:clamp(.85rem,2.5vw,1.05rem);
+      color:#ffe082; letter-spacing:.5px; line-height:1.5;
+    }
+    /* ── CARD HOY — protagonista ── */
+    .card-hoy-wrap {
+      perspective:1200px; -webkit-perspective:1200px;
+      max-width:480px; margin:0 auto 30px;
+    }
+    .card-hoy {
+      background:linear-gradient(180deg,#0d1530 0%,#0a0e20 50%,#0d1530 100%);
+      border:3px solid #ff1493;
+      border-radius:16px;
+      box-shadow: 0 0 30px rgba(255,20,147,.25), 0 8px 30px rgba(0,0,0,.4);
+      position:relative;
+      transform-style:preserve-3d; -webkit-transform-style:preserve-3d;
+      transition:transform .8s ease-in-out;
+    }
+    .card-hoy.flipped { transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+    .card-hoy .card-front { backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; border-radius:16px; }
+    .card-hoy .card-back {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      transform:rotateY(180deg); -webkit-transform:rotateY(180deg);
+      background:linear-gradient(135deg,#0a0e20 0%,#0d1530 50%,#0a0e20 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px;
+      border-radius:16px; overflow:hidden; z-index:2;
+    }
+    /* Badge HOY */
+    .badge-hoy {
+      position:absolute; top:14px; left:14px; z-index:3;
+      background:#ff1493; color:#fff;
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:.85rem; letter-spacing:1px;
+      padding:6px 14px; border-radius:8px;
+      box-shadow: 0 4px 12px rgba(255,20,147,.4);
+    }
+    .card-hoy .card-img { height:160px; }
+    .card-hoy .card-titulo { font-size:1.8rem; }
+    .card-hoy .card-desc { font-size:.92rem; }
+    .card-hoy .btn-participar {
+      background:#ff1493; color:#fff; border-bottom-color:#a00050;
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:1.3rem; letter-spacing:2px;
+      border-radius:10px;
+      box-shadow: 0 15px 35px rgba(255,0,128,.9), 0 5px 15px rgba(255,0,128,.4);
+      transition:transform .2s ease, box-shadow .2s ease;
+      animation: btnRespira 2.5s ease-in-out infinite;
+    }
+    @keyframes btnRespira {
+      0%   { transform:translateY(-2px) scale(1);    box-shadow:0 15px 35px rgba(255,0,128,.8), 0 5px 15px rgba(255,0,128,.3); }
+      50%  { transform:translateY(-4px) scale(1.03);  box-shadow:0 18px 40px rgba(255,0,128,1),  0 8px 20px rgba(255,0,128,.5); }
+      100% { transform:translateY(-2px) scale(1);    box-shadow:0 15px 35px rgba(255,0,128,.8), 0 5px 15px rgba(255,0,128,.3); }
+    }
+    .card-hoy .btn-participar:hover {
+      animation:none;
+      transform:translateY(-5px) scale(1.05);
+      box-shadow: 0 20px 45px rgba(255,0,128,1), 0 8px 20px rgba(255,0,128,.6);
+    }
+    .card-confianza {
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:.9rem; color:rgba(255,255,255,.85);
+      text-align:center; margin-top:4px; margin-bottom:6px;
+      letter-spacing:.3px;
+    }
+    /* Card protagonista cerrado */
+    .card-hoy.cerrado:not(.flipped) .card-front { opacity:.15; filter:grayscale(1) brightness(.3); }
+    .card-hoy.cerrado:not(.flipped) .sello-cerrado {
+      display:block; opacity:.7; color:#cc2020; border-color:#cc2020;
+      background:rgba(0,0,0,.6); box-shadow:0 0 10px rgba(200,0,0,.15); text-shadow:0 0 4px rgba(200,0,0,.3);
+    }
+    .card-hoy.cerrado.flipped .sello-cerrado { display:none; }
+    .card-hoy.cerrado .btn-participar { pointer-events:none; opacity:.1; }
+    .card-hoy.cerrado:not(.flipped) { cursor:pointer; border-color:#1a1a1a; }
+    .card-hoy.cerrado.flipped { border-color:var(--chicha-amarillo); box-shadow:0 0 30px rgba(255,215,0,.4); }
+    /* ── FRANJA SEMANAL — próximos sorteos ── */
+    .semana-titulo {
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:clamp(.9rem,2.5vw,1.1rem);
+      color:rgba(255,255,255,.6); letter-spacing:2px; text-transform:uppercase;
+      text-align:center; margin-bottom:14px;
+    }
+    .semana-habito {
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:clamp(.75rem,2vw,.85rem);
+      color:rgba(255,255,255,.4); text-align:center;
+      margin-bottom:12px; letter-spacing:.5px;
+    }
+    .semana-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+      gap:10px;
+    }
+    .semana-card {
+      background:linear-gradient(180deg,#0d1530,#0a0e20);
+      border:2px solid rgba(255,255,255,.12);
+      border-radius:10px; padding:14px 12px; text-align:center;
+      transition:border-color .2s;
+      position:relative; overflow:hidden;
+    }
+    .semana-card.activa {
+      border-color:#ff1493;
+      box-shadow: 0 0 20px rgba(255,20,147,.4);
+      transform:scale(1.06);
+      background:linear-gradient(180deg,#1a0a25,#0d0a1a);
+    }
+    .semana-card.activa .semana-card-emoji { font-size:1.9rem; }
+    .semana-card.cerrada { opacity:.3; filter:grayscale(.6); }
+    .semana-card.proxima { opacity:.4; }
+    .semana-card-dia {
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:.75rem; color:rgba(255,255,255,.5);
+      letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;
+    }
+    .semana-card.activa .semana-card-dia { color:#ff1493; }
+    .semana-card-emoji { font-size:1.6rem; margin-bottom:4px; }
+    .semana-card-nombre {
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:.78rem; color:#fff; line-height:1.3; margin-bottom:6px;
+    }
+    .semana-card-estado {
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:.65rem; letter-spacing:1px; text-transform:uppercase;
+      padding:3px 8px; border-radius:4px; display:inline-block;
+    }
+    .semana-card-estado.proximo { background:rgba(255,255,255,.08); color:rgba(255,255,255,.4); }
+    .semana-card-estado.hoy-badge { background:#ff1493; color:#fff; }
+    .semana-card-estado.cerrado-badge { background:rgba(255,255,255,.05); color:rgba(255,255,255,.3); }
+    /* Contador casi (< 2h) */
+    .mini-cnt-wrap.casi .mc-num { color:#ffd700 !important; }
+    /* Contador urgente (< 30 min) */
+    .mini-cnt-wrap.urgente .mc-num {
+      color:#ff4444 !important;
+      animation: urgentePulse 1s ease-in-out infinite alternate;
+    }
+    @keyframes urgentePulse {
+      0%{ opacity:.7; transform:scale(1); }
+      100%{ opacity:1; transform:scale(1.08); }
+    }
+    /* Grid sorteos */
+    .grid-sorteos { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-top:16px; padding:0 20px; }
+    /* ══════════════════════════════════════════
+       BLOQUE 2 — Banner chicha + CTA
+       ══════════════════════════════════════════ */
+    .bloque2 {
+      text-align:center; padding:28px 20px 22px; position:relative;
+      background: linear-gradient(180deg, #050505 0%, #0a0a0a 40%, #050505 100%);
+      border-bottom:4px solid var(--chicha-celeste, #00e5ff);
+      overflow:hidden;
+    }
+    .bloque2::before {
+      content:''; position:absolute; inset:0; z-index:0;
+      background:
+        radial-gradient(circle at 20% 40%, rgba(255,0,128,.08) 0%, transparent 45%),
+        radial-gradient(circle at 80% 30%, rgba(255,204,0,.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(0,255,204,.06) 0%, transparent 40%);
+    }
+    .bloque2 > * { position:relative; z-index:1; }
+    /* Línea 1: ¡HOY TE PUEDE — rojo fuego a magenta */
+    .chicha-line1 {
+      display:block;
+      font-family:'Luckiest Guy',cursive; font-weight:400;
+      font-style:normal;
+      font-size:clamp(1.8rem,6.2vw,3.4rem);
+      line-height:.9;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:#ffd700;
+      -webkit-text-fill-color:#ffd700;
+      -webkit-text-stroke: 0;
+      text-shadow:
+        3px 3px 0 #c45200,
+        5px 5px 0 rgba(0,0,0,.5);
+      background:none;
+    }
+    @keyframes chichaGradMove {
+      0%{background-position:0% 50%}
+      100%{background-position:100% 50%}
+    }
+    /* Línea 2: CAER TU YAPE! */
+    .chicha-line2 {
+      display:block;
+      font-family:'Lobster',cursive; font-weight:400;
+      font-style:normal;
+      font-size:clamp(3.1rem,10.5vw,5.8rem);
+      line-height:1;
+      letter-spacing:2px;
+      text-transform:none;
+      margin-top:4px;
+      color:#ff1493;
+      -webkit-text-fill-color:#ff1493;
+      -webkit-text-stroke: 1px #000;
+      text-shadow:
+        3px 3px 0 #000,
+        6px 6px 12px rgba(0,0,0,.7);
+      background:none;
+    }
+    /* Estrellas animadas */
+    .chicha-banner-stars {
+      display:flex; justify-content:center; gap:14px; margin-top:6px;
+    }
+    .chicha-banner-stars span {
+      font-size:1.1rem;
+      animation: chichaStarBanner 1.8s ease-in-out infinite alternate;
+    }
+    .chicha-banner-stars span:nth-child(1) { color:#ff1744; animation-delay:0s; }
+    .chicha-banner-stars span:nth-child(2) { color:#00e5ff; animation-delay:.3s; }
+    .chicha-banner-stars span:nth-child(3) { color:#cc00ff; animation-delay:.6s; }
+    .chicha-banner-stars span:nth-child(4) { color:#ffd700; animation-delay:.9s; }
+    .chicha-banner-stars span:nth-child(5) { color:#ff1744; animation-delay:1.2s; }
+    @keyframes chichaStarBanner {
+      0% { opacity:.3; transform:scale(.7) rotate(0deg); }
+      50% { opacity:1; transform:scale(1.2) rotate(180deg); }
+      100% { opacity:.3; transform:scale(.7) rotate(360deg); }
+    }
+    /* Subtítulo blanco */
+    .bloque2-subtitulo {
+      font-family:'Poppins',sans-serif; font-weight:600; font-size:clamp(.95rem,3vw,1.3rem);
+      color:#ffe082; letter-spacing:2px; margin-top:6px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,.4);
+      line-height:1.4;
+    }
+    /* Botón CÓMO FUNCIONA dentro del bloque 2 */
+    .bloque2-btn {
+      display:inline-block; margin-top:8px;
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:clamp(1.1rem,3.5vw,1.5rem); letter-spacing:2px;
+      color:#ffffff; text-decoration:none; cursor:pointer;
+      padding:14px 36px;
+      background:#ff1493;
+      border:none;
+      border-radius:10px;
+      border-bottom:4px solid #a00050;
+      text-shadow: none;
+      box-shadow: 0 12px 30px rgba(255,0,128,.8);
+      transform:scale(1);
+      transition:.2s ease;
+      transition:all .25s;
+      text-transform:uppercase;
+      -webkit-font-smoothing:antialiased;
+    }
+    .bloque2-btn:hover {
+      transform:translateY(-3px) scale(1.03);
+      transform:scale(1.06);
+      box-shadow: 0 12px 35px rgba(255,0,128,.8);
+      background:#ff69b4;
+    }
+    /* Texto urgencia debajo del botón */
+    .bloque2-urgencia {
+      margin-top:6px;
+      font-family:'Poppins',sans-serif; font-weight:700;
+      font-size:clamp(1rem,3vw,1.3rem);
+      color:#ffd700; letter-spacing:3px; text-transform:uppercase;
+      text-shadow: 0 0 4px rgba(255,215,0,.3);
+      animation: urgenciaPulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes urgenciaPulse {
+      0%{ opacity:.7; }
+      100%{ opacity:1; }
+    }
     /* Contenedor 3D para flip */
-    .card-sorteo-wrap { perspective:1200px; position:relative; }
-    .card-sorteo { background:#111; border:2px solid var(--neon-rosa); border-radius:14px;
-      box-shadow:0 0 12px rgba(255,0,128,.15); overflow:hidden;
+    .card-sorteo-wrap { perspective:1200px; -webkit-perspective:1200px; position:relative; }
+    .card-sorteo { background:linear-gradient(180deg,#0d1530 0%,#0a0e20 50%,#0d1530 100%);
+      border:3px solid var(--chicha-rosa);
+      border-radius:14px;
+      box-shadow:0 0 15px rgba(255,20,147,.15), inset 0 0 20px rgba(26,42,108,.3);
       transition:transform .8s ease-in-out,box-shadow .25s; position:relative;
-      transform-style:preserve-3d; }
-    .card-sorteo:hover { box-shadow:0 0 50px rgba(255,0,128,.5); }
+      transform-style:preserve-3d;
+      -webkit-transform-style:preserve-3d; }
+    .card-sorteo:hover { box-shadow:0 0 40px rgba(255,20,147,.4), 0 0 60px rgba(255,106,0,.2); }
     .card-sorteo:not(.flipped):hover { transform:translateY(-8px); }
-    .card-sorteo.flipped { transform:rotateY(180deg); }
-    .card-front { position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; }
+    .card-sorteo.flipped { transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
+    .card-front { position:relative; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+      overflow:hidden; border-radius:14px; }
     .card-back {
       position:absolute; top:0; left:0; width:100%; height:100%;
       backface-visibility:hidden; -webkit-backface-visibility:hidden;
-      transform:rotateY(180deg);
-      background:linear-gradient(135deg,#0a0a2a 0%,#0d0d1f 50%,#0a001a 100%);
+      transform:rotateY(180deg); -webkit-transform:rotateY(180deg);
+      background:linear-gradient(135deg,#0a0e20 0%,#0d1530 50%,#0a0e20 100%);
       display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:16px;
       border-radius:14px; overflow:hidden;
+      z-index:2;
     }
     .card-back-titulo {
       font-family:'Bangers',cursive; font-size:1.1rem; color:var(--neon-amarillo);
@@ -163,59 +584,161 @@
     }
     /* Sello CERRADO */
     .sello-cerrado {
-      display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-15deg);
+      display:none; position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%) rotate(-15deg) translateZ(2px);
       font-family:'Bangers',cursive; font-size:clamp(2rem,6vw,3.5rem); letter-spacing:6px;
       color:#ff2020; border:5px solid #ff2020; padding:8px 24px; border-radius:8px;
       text-shadow:0 0 10px rgba(255,0,0,.5);
       box-shadow:0 0 20px rgba(255,0,0,.3);
       background:rgba(0,0,0,.7); z-index:5;
       pointer-events:none;
+      backface-visibility:hidden; -webkit-backface-visibility:hidden;
     }
-    .card-sorteo.cerrado .sello-cerrado { display:block; }
-    .card-sorteo.cerrado .card-front { opacity:.5; }
-    .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.4; }
+    .card-sorteo.cerrado:not(.flipped) .sello-cerrado {
+      display:block; opacity:.85; font-size:clamp(1.4rem,5vw,2.2rem);
+      border-width:3px; color:#ff2020; border-color:#ff2020;
+      background:rgba(0,0,0,.7); box-shadow:0 0 15px rgba(255,0,0,.25); text-shadow:0 0 8px rgba(255,0,0,.4);
+      transform:translate(-50%,-50%) rotate(-22deg) translateZ(2px);
+      letter-spacing:5px;
+    }
+    .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
+    .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.15; filter:grayscale(1) brightness(.3); }
+    .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
+    .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
+    .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(57,255,20,.3); box-shadow:0 0 12px rgba(57,255,20,.1); }
+    .card-sorteo.cerrado:not(.flipped):hover { box-shadow:0 0 16px rgba(57,255,20,.15); transform:translateY(-2px); }
+    .card-sorteo.cerrado.flipped { border-color:var(--chicha-amarillo); box-shadow:0 0 30px rgba(255,215,0,.4); }
+    /* Back cerrado: fondo sólido, solo ganador */
+    .card-back-cerrado {
+      background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2a 50%,#0a0a1a 100%);
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:20px;
+    }
+    .card-back-cerrado .card-ganador-nombre { color:var(--chicha-amarillo); font-family:'Bangers',cursive; letter-spacing:2px; text-shadow:0 0 10px rgba(255,215,0,.4); }
+    .card-back-cerrado .card-ganador-dni { color:#888; font-family:'Poppins',sans-serif; }
     .badge-gratis { position:absolute; top:12px; right:-8px;
       background:var(--neon-verde); color:#000; font-family:'Bangers',cursive;
       font-size:1rem; letter-spacing:2px; padding:4px 18px 4px 14px;
       box-shadow:0 0 12px var(--neon-verde); clip-path:polygon(0 0,100% 0,100% 100%,0 100%,6% 50%); }
     .card-img { width:100%; height:190px; display:flex; align-items:center; justify-content:center;
-      font-size:5rem; background:#1a1a1a; border-bottom:3px solid var(--neon-rosa); }
-    .card-body { padding:18px; }
+      font-size:5rem; background:linear-gradient(135deg,#0a0e20,#1a1040);
+      border-bottom:3px solid var(--chicha-rosa); }
+    .card-body { padding:18px; background:linear-gradient(180deg,#0d1530,#0a0e20); }
+    /* ── Cards compactas dentro del grid ── */
+    /* ── Cards secundarias: peso visual bajo ── */
+    .grid-sorteos .card-sorteo {
+      border-width:2px; border-radius:10px;
+      border-color:rgba(57,255,20,.35);
+      box-shadow:0 0 14px rgba(57,255,20,.12), 0 0 4px rgba(255,20,147,.08);
+      opacity:1;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+      background-size:150px 150px;
+    }
+    .grid-sorteos .card-sorteo:not(.cerrado) .card-front {
+      filter:saturate(.8) brightness(.9);
+    }
+    .grid-sorteos .card-sorteo:not(.cerrado):hover .card-front {
+      filter:saturate(.85) brightness(.95);
+    }
+    .grid-sorteos .card-sorteo:not(.cerrado):hover {
+      opacity:1;
+      border-color:rgba(57,255,20,.3);
+      box-shadow:0 0 10px rgba(57,255,20,.1);
+      transform:translateY(-4px);
+    }
+    .grid-sorteos .card-img { height:90px; }
+    .grid-sorteos .yape-logo svg.yape-svg { width:60px; height:60px; }
+    .grid-sorteos .card-body { padding:10px 12px; }
+    .grid-sorteos .badge-gratis { font-size:.65rem; padding:2px 10px 2px 8px; top:6px; box-shadow:none; }
+    .grid-sorteos .card-categoria { font-size:.5rem; letter-spacing:1px; margin-bottom:2px; opacity:.4; color:#8ab; }
+    .grid-sorteos .card-titulo { font-size:1rem; letter-spacing:1px; margin-bottom:3px; text-shadow:1px 1px 0 #000;
+      transform:skewX(-2deg); font-style:italic; }
+    .grid-sorteos .card-desc { font-size:.72rem; margin-bottom:6px; line-height:1.3; color:#999; }
+    .grid-sorteos .card-meta { margin-bottom:10px; gap:4px; }
+    .grid-sorteos .card-participantes { font-size:.6rem; color:#5a9; opacity:.5; }
+    .grid-sorteos .card-fecha { font-size:.68rem; color:#b08030; }
+    .grid-sorteos .barra-wrap { height:4px; margin-bottom:6px; }
+    .grid-sorteos .mini-cnt-wrap { display:none; }
+    .grid-sorteos .badge-gratis { display:none; }
+    .grid-sorteos .btn-participar {
+      font-size:.85rem; padding:10px; letter-spacing:1px; border-radius:8px; border-bottom-width:2px;
+      background:linear-gradient(135deg,#1a1a2e,#252545);
+      color:#777; box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+      border-bottom-color:rgba(57,255,20,.08);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .grid-sorteos .card-sorteo:not(.cerrado) .btn-participar:hover {
+      background:linear-gradient(135deg,#ff1493,#ff6a00);
+      color:#000; box-shadow:0 4px 12px rgba(255,20,147,.3);
+    }
+    .grid-sorteos .sello-cerrado { font-size:clamp(1.5rem,5vw,2.4rem); padding:6px 18px; border-width:3px; letter-spacing:5px; }
+    /* Card más próximo → destaca un poco */
+    .grid-sorteos .card-sorteo.siguiente {
+      border-color:rgba(57,255,20,.5);
+      box-shadow:0 0 20px rgba(57,255,20,.2), 0 0 8px rgba(255,20,147,.12);
+      transform:scale(1.03);
+      animation:siguientePulse 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes siguientePulse {
+      0% { box-shadow:0 0 20px rgba(57,255,20,.2), 0 0 8px rgba(255,20,147,.12); }
+      100% { box-shadow:0 0 30px rgba(57,255,20,.3), 0 0 14px rgba(255,20,147,.2); }
+    }
+    .grid-sorteos .card-sorteo.siguiente .card-front { filter:saturate(.9) brightness(.95); }
+    .grid-sorteos .card-back { padding:12px 10px; }
+    .grid-sorteos .card-back-titulo { font-size:.85rem; margin-bottom:4px; }
+    .grid-sorteos .card-back-estado { font-size:.7rem; margin-bottom:6px; }
+    .grid-sorteos .card-ruleta-container { width:120px; height:120px; }
+    .grid-sorteos .card-ganador-nombre { font-size:.95rem; }
+    .grid-sorteos .card-ganador-dni { font-size:.65rem; }
+    /* Botón cerrado → "VER GANADOR" sutil */
+    .grid-sorteos .card-sorteo.cerrado .btn-participar {
+      opacity:.6; background:#1a1a2a; color:#888; border-bottom-color:#111;
+      font-size:.75rem; letter-spacing:1.5px; pointer-events:auto; cursor:pointer;
+    }
+    .grid-sorteos .card-sorteo.cerrado .btn-participar:hover {
+      color:#ffd700; background:#222; box-shadow:none;
+    }
     .card-categoria { font-family:'Righteous',cursive; font-size:.75rem; letter-spacing:3px; color:var(--neon-celeste); text-transform:uppercase; margin-bottom:6px; }
-    .card-titulo { font-family:'Bangers',cursive; font-size:1.6rem; letter-spacing:2px; color:var(--neon-amarillo); line-height:1.1; margin-bottom:8px; }
-    .card-desc { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.55; margin-bottom:14px; letter-spacing:0.3px; }
+    .card-titulo { font-family:'Bangers',cursive; font-size:1.6rem; letter-spacing:2px;
+      color:var(--chicha-amarillo); line-height:1.1; margin-bottom:8px;
+      text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,215,0,.3); }
+    .card-desc { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.4; margin-bottom:10px; letter-spacing:0.3px; }
     .card-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
     .card-participantes { font-family:'Righteous',cursive; font-size:.82rem; color:#7dffb3; }
     .card-fecha { font-family:'Righteous',cursive; font-size:.85rem; color:#ffb347; letter-spacing:0.5px; }
-    .barra-wrap { background:#222; border-radius:2px; height:8px; margin-bottom:16px; }
-    .barra-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--neon-verde),var(--neon-amarillo)); box-shadow:0 0 8px var(--neon-verde); transition:width 1s ease; }
+    .barra-wrap { background:#111528; border-radius:4px; height:8px; margin-bottom:10px; border:1px solid #1a2040; }
+    .barra-fill { height:100%; border-radius:4px;
+      background:linear-gradient(90deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde));
+      box-shadow:0 0 8px var(--chicha-rosa); transition:width 1s ease; }
     /* Mini-contador por sorteo */
-    .mini-cnt-wrap { margin-bottom:14px; background:#0a0a1a; border-radius:4px; border:1px solid #333; overflow:hidden; }
-    .mini-contador { display:flex; align-items:center; justify-content:center; gap:4px; padding:7px 6px 8px; }
-    .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:34px; }
-    .mc-num { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-weight:700; font-size:1.35rem; line-height:1; color:#ffe680; text-shadow:none; letter-spacing:0.5px; }
-    .mc-lbl { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-size:.5rem; color:#777; letter-spacing:1px; text-transform:uppercase; font-weight:400; }
-    .mc-sep { font-family:'Calibri','Segoe UI','Helvetica Neue',Arial,sans-serif; font-weight:700; font-size:1.1rem; color:#555; margin-bottom:10px; }
+    .mini-cnt-wrap { margin-bottom:8px; background:#020408; border-radius:8px; border:1px solid #1a2040; overflow:hidden; }
+    .mini-contador { display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 8px 12px; }
+    .mc-blq { display:flex; flex-direction:column; align-items:center; min-width:38px; }
+    .mc-num { font-family:'Poppins','Segoe UI',Arial,sans-serif; font-weight:800; font-size:1.8rem; line-height:1; color:#fff; text-shadow:0 0 8px rgba(255,215,0,.5); letter-spacing:0.5px; }
+    .mc-lbl { font-family:'Poppins',sans-serif; font-size:.5rem; color:#888; letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-top:2px; }
+    .mc-sep { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.4rem; color:#ffd700; margin-bottom:12px; }
     .mini-contador.vencido .mc-num { color:#ff8a8a; text-shadow:none; }
-    .btn-participar { display:block; width:90%; margin:0 auto 12px; background:var(--neon-rosa); color:#000; border:none;
-      font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:12px;
+    .btn-participar { display:block; width:90%; margin:0 auto 6px;
+      background:linear-gradient(135deg,#ff1493,#ff6a00,#ffd700);
+      color:#000; border:none;
+      font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:3px; padding:14px;
       cursor:pointer; border-bottom:4px solid #7a0040; transition:transform .15s,box-shadow .15s; text-transform:uppercase;
-      border-radius:10px; }
-    .btn-participar:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-rosa); }
+      border-radius:10px; font-weight:900;
+      text-shadow:0 1px 0 rgba(255,255,255,.3);
+      box-shadow:0 4px 15px rgba(255,20,147,.3); }
+    .btn-participar:hover { transform:translateY(-3px); box-shadow:0 0 30px var(--chicha-rosa), 0 0 60px rgba(255,106,0,.3); }
     /* LOGOS ESPECIALES */
     .petcenter-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:6px; }
     .petcenter-paw { font-size:3.2rem; }
     .petcenter-nombre { font-family:'Bangers',cursive; font-size:1.7rem; letter-spacing:3px; color:#fff; background:#1e7c1e; padding:4px 14px; border-radius:4px; border:2px solid #39ff14; text-shadow:0 0 8px #39ff14; }
     .petcenter-sub { font-family:'Righteous',cursive; font-size:.7rem; color:#aaa; letter-spacing:2px; }
-    .yape-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; background:linear-gradient(135deg,#6b21a8,#4c1d95); gap:6px; }
-    .yape-icon { font-size:3rem; }
-    .yape-nombre { font-family:'Bangers',cursive; font-size:2.2rem; letter-spacing:4px; color:#fff; text-shadow:0 0 10px #cc00ff; }
-    .yape-sub { font-family:'Righteous',cursive; font-size:.72rem; color:#ddd; letter-spacing:1px; }
+    .yape-logo { display:flex; align-items:center; justify-content:center; height:100%; background:#6C2BD9; }
+    .yape-logo svg.yape-svg { width:110px; height:110px; }
     /* PANELES FLOTANTES */
     .panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82);
       z-index:900; align-items:center; justify-content:center; padding:20px; }
     .panel-overlay.activo { display:flex; }
-    .panel-box { background:#0f0f0f; border-radius:6px; width:100%; max-width:820px;
+    .panel-box { background:linear-gradient(135deg,#0a0e20,#0d1530); border-radius:10px; width:100%; max-width:820px;
       max-height:88vh; overflow-y:auto; animation:popin .3s cubic-bezier(.34,1.56,.64,1); position:relative; }
     @keyframes popin { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
     .panel-header { display:flex; justify-content:space-between; align-items:center;
@@ -225,23 +748,41 @@
     .panel-cerrar:hover { color:var(--neon-rosa); }
     .panel-body { padding:10px 28px 32px; }
     /* PANEL COMO */
-    #panel-como .panel-header { background:#0d001a; border-bottom:3px solid var(--neon-violeta); }
-    #panel-como .panel-titulo { color:var(--neon-violeta); text-shadow:0 0 16px var(--neon-violeta); }
-    #panel-como .panel-box { border:3px solid var(--neon-violeta); }
-    .pasos { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-top:10px; }
-    .paso { background:#111; border:3px solid var(--neon-violeta); border-radius:4px;
-      padding:24px 18px; text-align:center; box-shadow:0 0 16px rgba(204,0,255,.3); transition:transform .2s; }
-    .paso:hover { transform:translateY(-5px); }
-    .paso-num { font-family:'Bangers',cursive; font-size:3.2rem; color:var(--neon-violeta); text-shadow:0 0 10px var(--neon-violeta); line-height:1; }
-    .paso-icono { font-size:2.2rem; margin:10px 0; }
-    .paso h3 { font-family:'Bangers',cursive; font-size:1.4rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .paso p { font-family:'Righteous',cursive; font-size:.88rem; color:#ccc; line-height:1.5; }
+    #panel-como .panel-header { background:#080c1a; border-bottom:2px solid rgba(255,20,147,.4); padding:18px 28px; }
+    #panel-como .panel-titulo { color:#fff; font-size:1.8rem; letter-spacing:3px;
+      text-shadow:2px 2px 0 #000; }
+    #panel-como .panel-titulo .titulo-acento { color:var(--chicha-rosa); }
+    #panel-como .panel-box { border:2px solid rgba(255,20,147,.3); }
+    #panel-como .panel-body { padding:20px 28px 28px; }
+    #panel-como .panel-cerrar { font-size:1.4rem; opacity:.5; }
+    #panel-como .panel-cerrar:hover { opacity:1; color:var(--chicha-rosa); }
+    .pasos { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:8px; }
+    .paso { background:linear-gradient(135deg,#0d1530,#0a0e20); border:1px solid rgba(255,106,0,.15); border-radius:12px;
+      padding:20px 18px 18px; text-align:center; transition:transform .2s, border-color .2s; }
+    .paso:hover { transform:translateY(-3px); border-color:rgba(255,106,0,.35); }
+    .paso-top { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; }
+    .paso-num { font-family:'Bangers',cursive; font-size:2rem; color:var(--chicha-naranja);
+      text-shadow:1px 1px 0 #000; line-height:1; }
+    .paso-icono { font-size:1.5rem; }
+    .paso h3 { font-family:'Bangers',cursive; font-size:1.15rem; letter-spacing:2px; color:var(--neon-amarillo);
+      margin-bottom:6px; line-height:1.2; }
+    .paso p { font-family:'Poppins',sans-serif; font-size:.8rem; color:#aaa; line-height:1.5; font-weight:400; }
+    .paso p strong { color:var(--chicha-rosa); font-weight:600; }
+    .paso-cierre { text-align:center; margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.06); }
+    .paso-cierre-txt { font-family:'Lobster',cursive; font-size:1.1rem; color:#ffd700;
+      letter-spacing:1px; text-shadow:0 0 10px rgba(255,215,0,.3); margin-bottom:14px; }
+    .paso-cierre-btn { display:inline-block; font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:3px;
+      color:#000; background:linear-gradient(135deg,var(--chicha-rosa),var(--chicha-naranja));
+      padding:12px 32px; border-radius:8px; border:none; cursor:pointer;
+      box-shadow:0 4px 16px rgba(255,20,147,.3); transition:transform .2s, box-shadow .2s; }
+    .paso-cierre-btn:hover { transform:translateY(-2px) scale(1.03);
+      box-shadow:0 6px 24px rgba(255,20,147,.45); }
     /* PANEL GANADORES */
-    #panel-ganadores .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
-    #panel-ganadores .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 6px rgba(255,106,0,.35); }
-    #panel-ganadores .panel-box { border:3px solid var(--neon-naranja); }
+    #panel-ganadores .panel-header { background:#0a0e20; border-bottom:3px solid var(--chicha-naranja); }
+    #panel-ganadores .panel-titulo { color:var(--chicha-naranja); text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,106,0,.35); }
+    #panel-ganadores .panel-box { border:3px solid var(--chicha-naranja); }
     .ganador-entry {
-      background:linear-gradient(135deg,#1a1a00,#1a0800); border:2px solid var(--neon-amarillo);
+      background:linear-gradient(135deg,#0d1530,#1a1040); border:2px solid var(--chicha-amarillo);
       border-radius:8px; padding:14px 18px; margin-bottom:12px;
       display:flex; align-items:center; gap:14px;
     }
@@ -259,26 +800,66 @@
       text-decoration:none; border-bottom:4px solid #7a3300; transition:transform .15s,box-shadow .15s; }
     .btn-fotos-ganadores:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-naranja); }
     /* PANEL FAQ */
-    #panel-faq .panel-header { background:#1a0800; border-bottom:3px solid var(--neon-naranja); }
-    #panel-faq .panel-titulo { color:var(--neon-naranja); text-shadow:0 0 16px var(--neon-naranja); }
-    #panel-faq .panel-box { border:3px solid var(--neon-naranja); }
+    #panel-faq .panel-header { background:#0a0e20; border-bottom:3px solid var(--chicha-amarillo); }
+    #panel-faq .panel-titulo { color:var(--chicha-amarillo); text-shadow:2px 2px 0 #000, 0 0 16px rgba(255,215,0,.3); }
+    #panel-faq .panel-box { border:3px solid var(--chicha-amarillo); }
     .faq-item { border:2px solid #2a2a2a; border-radius:2px; margin-bottom:12px; overflow:hidden; transition:border-color .2s; }
     .faq-item.activo { border-color:var(--neon-naranja); }
-    .faq-preg { width:100%; background:#111; border:none; padding:16px 20px; text-align:left; cursor:pointer;
+    .faq-preg { width:100%; background:#0d1530; border:none; padding:16px 20px; text-align:left; cursor:pointer;
       display:flex; justify-content:space-between; align-items:center;
       font-family:'Righteous',cursive; font-size:.95rem; color:var(--neon-amarillo); transition:background .2s; }
     .faq-preg:hover { background:#1a1a1a; }
     .faq-icon { color:var(--neon-naranja); font-size:1.2rem; transition:transform .3s; }
     .faq-item.activo .faq-icon { transform:rotate(45deg); }
     .faq-resp { max-height:0; overflow:hidden; transition:max-height .4s ease,padding .3s;
-      background:#0d0d0d; color:#bbb; font-family:'Righteous',cursive; font-size:.88rem; line-height:1.7; }
+      background:#0a0e20; color:#bbb; font-family:'Righteous',cursive; font-size:.88rem; line-height:1.7; }
     .faq-item.activo .faq-resp { max-height:200px; padding:16px 20px; }
     /* PANEL TERMINOS */
-    #panel-terminos .panel-header { background:#00101a; border-bottom:3px solid var(--neon-celeste); }
-    #panel-terminos .panel-titulo { color:var(--neon-celeste); text-shadow:0 0 16px var(--neon-celeste); }
+    /* ── PANEL REGISTRO REDISEÑADO ── */
+    .reg-box { max-width:440px!important; border:2px solid rgba(57,255,20,.35)!important; border-radius:16px!important; }
+    .reg-header { background:#080c1a!important; border-bottom:2px solid rgba(57,255,20,.3)!important; padding:16px 22px!important; }
+    .reg-header .panel-titulo { color:var(--neon-verde)!important; font-size:1.5rem!important; letter-spacing:3px;
+      text-shadow:1px 1px 0 #000!important; }
+    .reg-cerrar { font-size:1.3rem!important; opacity:.4; }
+    .reg-cerrar:hover { opacity:1; color:var(--neon-verde)!important; }
+    .reg-premio-bar { background:var(--neon-verde); color:#000; font-family:'Bangers',cursive;
+      font-size:1rem; letter-spacing:2px; padding:8px 16px; text-align:center;
+      margin-bottom:20px; border-radius:8px; }
+    .reg-tiktok-inner { text-align:center; padding:8px 0 18px; }
+    .reg-paso-label { font-family:'Bangers',cursive; font-size:1.1rem; letter-spacing:2px;
+      color:var(--neon-amarillo); margin-bottom:4px; }
+    .reg-texto { font-family:'Poppins',sans-serif; font-size:.88rem; color:#aaa;
+      line-height:1.5; margin-bottom:18px; }
+    .reg-btn-tiktok { display:inline-flex; align-items:center; gap:8px;
+      background:#ff0050; color:#fff; font-family:'Bangers',cursive;
+      font-size:1.15rem; letter-spacing:2px; padding:12px 24px;
+      border-radius:10px; text-decoration:none;
+      border-bottom:4px solid #8a0030;
+      box-shadow:0 0 14px rgba(255,0,80,.4);
+      transition:transform .15s, box-shadow .15s; }
+    .reg-btn-tiktok:hover { transform:translateY(-2px);
+      box-shadow:0 0 24px rgba(255,0,80,.6); }
+    .reg-nota-mini { font-family:'Poppins',sans-serif; font-size:.72rem;
+      color:#555; margin-top:12px; line-height:1.4; }
+    .reg-btn-siguiente { display:block; width:100%; padding:14px;
+      font-family:'Bangers',cursive; font-size:1.1rem; letter-spacing:2px;
+      border:none; border-radius:10px; margin-top:16px; transition:all .3s; }
+    .reg-btn-siguiente:disabled { background:#333; color:#666;
+      cursor:not-allowed; opacity:.5; }
+    .reg-btn-siguiente:not(:disabled) { background:var(--chicha-rosa); color:#fff;
+      cursor:pointer; box-shadow:0 0 16px rgba(255,20,147,.4);
+      animation:regBtnPulse 2s ease-in-out infinite alternate; }
+    .reg-btn-siguiente:not(:disabled):hover { transform:translateY(-2px);
+      box-shadow:0 0 24px rgba(255,20,147,.6); }
+    @keyframes regBtnPulse {
+      0% { box-shadow:0 0 16px rgba(255,20,147,.4); }
+      100% { box-shadow:0 0 24px rgba(255,20,147,.55); }
+    }
+    #panel-terminos .panel-header { background:#0a0e20; border-bottom:3px solid var(--neon-celeste); }
+    #panel-terminos .panel-titulo { color:var(--neon-celeste); text-shadow:2px 2px 0 #000, 0 0 16px rgba(0,229,255,.3); }
     #panel-terminos .panel-box { border:3px solid var(--neon-celeste); }
     .terminos-wrap { margin-top:10px; }
-    .termino-bloque { background:#111; border-left:4px solid var(--neon-celeste); border-radius:0 4px 4px 0; padding:18px 20px; margin-bottom:16px; }
+    .termino-bloque { background:#0d1530; border-left:4px solid var(--neon-celeste); border-radius:0 4px 4px 0; padding:18px 20px; margin-bottom:16px; }
     .termino-bloque h3 { font-family:'Bangers',cursive; font-size:1.2rem; letter-spacing:2px; color:var(--neon-amarillo); margin-bottom:8px; }
     .termino-bloque p, .termino-bloque li { font-family:'Righteous',cursive; font-size:.85rem; color:#ccc; line-height:1.8; }
     .termino-bloque ul { padding-left:18px; }
@@ -289,295 +870,149 @@
       padding:14px 18px; margin-top:20px; text-align:center;
       font-family:'Righteous',cursive; font-size:.82rem; color:#bbb; line-height:1.7; }
     /* PANEL REGISTRO */
-    .form-chicha { background:#0f0f0f; border:3px solid var(--neon-verde); border-radius:4px; padding:36px 32px; box-shadow:0 0 40px rgba(57,255,20,.2); }
+    .form-chicha { background:linear-gradient(135deg,#0a0e20,#0d1530); border:3px solid var(--chicha-verde); border-radius:12px; padding:36px 32px;
+      box-shadow:0 0 40px rgba(57,255,20,.15), inset 0 0 30px rgba(26,42,108,.3); }
     .form-grupo { margin-bottom:22px; }
     .form-grupo label { display:block; font-family:'Righteous',cursive; font-size:1.05rem; letter-spacing:1px; color:var(--neon-amarillo); margin-bottom:8px; }
-    .form-grupo input, .form-grupo select { width:100%; background:#1a1a1a; border:2px solid #444; border-radius:6px; color:#fff; font-family:'Righteous',cursive; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
+    .form-grupo input, .form-grupo select { width:100%; background:#080c1a; border:2px solid #1a2040; border-radius:6px; color:#fff; font-family:'Righteous',cursive; font-size:.95rem; padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; }
     .form-grupo input:focus, .form-grupo select:focus { border-color:var(--neon-verde); box-shadow:0 0 10px rgba(57,255,20,.4); }
-    .form-grupo select option { background:#1a1a1a; }
+    .form-grupo select option { background:#0d1530; }
     .form-doble { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .btn-registro { display:block; width:100%; background:var(--neon-verde); color:#000; border:none;
+    .btn-registro { display:block; width:100%;
+      background:linear-gradient(135deg,#39ff14,#7fff00,#ffd700);
+      color:#000; border:none;
       font-family:'Bangers',cursive; font-size:1.8rem; letter-spacing:4px; padding:16px;
       cursor:pointer; border-bottom:5px solid #1a7a0a; margin-top:10px; text-transform:uppercase;
-      transition:transform .15s,box-shadow .15s; border-radius:10px; }
-    .btn-registro:hover { transform:translateY(-3px); box-shadow:0 0 30px var(--neon-verde); }
+      transition:transform .15s,box-shadow .15s; border-radius:10px; font-weight:900;
+      text-shadow:0 1px 0 rgba(255,255,255,.3);
+      box-shadow:0 4px 15px rgba(57,255,20,.3); }
+    .btn-registro:hover { transform:translateY(-3px); box-shadow:0 0 40px var(--chicha-verde), 0 0 60px rgba(255,215,0,.2); }
     .form-nota { text-align:center; font-family:'Righteous',cursive; font-size:.78rem; color:#666; margin-top:14px; line-height:1.5; }
     /* MODAL EXITO */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
       z-index:1000; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.activo { display:flex; }
-    .modal-box { background:#0f0f0f; border:4px solid var(--neon-verde); border-radius:4px;
+    .modal-box { background:linear-gradient(135deg,#0a0e20,#0d1530); border:4px solid var(--chicha-verde); border-radius:12px;
       padding:40px 32px; text-align:center; max-width:450px; width:100%;
       box-shadow:0 0 60px rgba(57,255,20,.4); animation:popin .3s cubic-bezier(.34,1.56,.64,1); }
     .modal-icono { font-size:4rem; margin-bottom:16px; }
     .modal-titulo { font-family:'Bangers',cursive; font-size:2.5rem; color:var(--neon-verde); text-shadow:0 0 20px var(--neon-verde); letter-spacing:3px; margin-bottom:12px; }
     .modal-texto { font-family:'Righteous',cursive; color:#ccc; font-size:.9rem; line-height:1.6; margin-bottom:20px; }
-    .modal-codigo { background:#1a1a1a; border:2px dashed var(--neon-verde); border-radius:2px;
+    .modal-codigo { background:#080c1a; border:2px dashed var(--chicha-verde); border-radius:2px;
       font-family:'Bangers',cursive; font-size:2rem; letter-spacing:8px;
       color:var(--neon-amarillo); text-shadow:0 0 10px var(--neon-amarillo); padding:14px; margin-bottom:20px; }
     .btn-cerrar { background:var(--neon-verde); color:#000; border:none; font-family:'Bangers',cursive;
       font-size:1.3rem; letter-spacing:2px; padding:12px 32px; cursor:pointer; border-bottom:4px solid #1a7a0a; }
     /* CINTA LLAMA CORRIENDO */
     .cinta-llama {
-      position:relative; overflow:visible; background:linear-gradient(90deg,#1a0a00,#2a1000,#1a0a00);
-      border-top:3px solid var(--neon-amarillo); border-bottom:3px solid var(--neon-amarillo);
-      height:80px; width:100%;
-      box-shadow:0 0 20px rgba(255,230,0,.15);
+      position:relative; overflow:visible;
+      background:linear-gradient(180deg,#08080f 0%,#0d1020 40%,#111520 60%,#0a0c14 100%);
+      border-top:4px solid transparent; border-bottom:4px solid transparent;
+      border-image:none;
+      height:85px; width:100%; margin-top:28px;
+      box-shadow:inset 0 8px 25px rgba(0,0,0,.6), inset 0 -8px 25px rgba(0,0,0,.5);
     }
+    /* Líneas neón rosa + verde con glow callejero */
     .cinta-llama::before {
-      content:''; position:absolute; inset:0;
-      background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,230,0,.04) 40px,rgba(255,230,0,.04) 80px);
+      content:''; position:absolute; top:0; left:0; right:0; height:4px;
+      background:linear-gradient(90deg,transparent 5%,var(--chicha-rosa) 15%,#ff1493 50%,var(--chicha-rosa) 85%,transparent 95%);
+      box-shadow:0 0 12px rgba(255,20,147,.6), 0 0 30px rgba(255,20,147,.3), 0 -4px 20px rgba(255,20,147,.2);
+      filter:blur(0.5px);
+      z-index:2;
     }
-    /* Contenedor principal — 18s ciclo: 0-28% corre, 28-30% frena, 30-47% parado 3s, 47-100% sigue */
+    .cinta-llama::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+      background:linear-gradient(90deg,transparent 10%,rgba(57,255,20,.7) 25%,rgba(57,255,20,.85) 50%,rgba(57,255,20,.7) 75%,transparent 90%);
+      box-shadow:0 0 8px rgba(57,255,20,.35), 0 3px 15px rgba(57,255,20,.15);
+      filter:blur(0.4px);
+      z-index:2;
+    }
+    /* Textura asfalto — granulado sutil, menos líneas verticales */
+    .cinta-asfalto {
+      position:absolute; inset:0; z-index:0;
+      background:
+        repeating-linear-gradient(90deg,transparent,transparent 55px,rgba(255,255,255,.012) 55px,rgba(255,255,255,.012) 57px,transparent 57px,transparent 120px),
+        repeating-linear-gradient(180deg,transparent,transparent 3px,rgba(255,255,255,.006) 3px,rgba(255,255,255,.006) 4px);
+      background-size:120px 120px, 6px 7px;
+    }
+    /* Línea amarilla discontinua — irregular, desgastada */
+    .cinta-linea-pista {
+      position:absolute; top:50%; left:0; right:0; height:2px; transform:translateY(-50%);
+      background:repeating-linear-gradient(90deg,
+        rgba(255,200,0,.25) 0px,rgba(255,200,0,.2) 14px,transparent 14px,transparent 35px,
+        rgba(255,200,0,.15) 35px,rgba(255,200,0,.1) 52px,transparent 52px,transparent 80px,
+        rgba(255,200,0,.3) 80px,rgba(255,200,0,.18) 98px,transparent 98px,transparent 130px);
+      z-index:1;
+    }
+    /* Manchas de desgaste — más marcadas */
+    .cinta-desgaste {
+      position:absolute; inset:0; z-index:1;
+      background:
+        radial-gradient(ellipse 70px 35px at 15% 55%, rgba(255,255,255,.02) 0%, transparent 70%),
+        radial-gradient(ellipse 90px 30px at 50% 45%, rgba(0,0,0,.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50px 25px at 75% 65%, rgba(255,255,255,.015) 0%, transparent 70%),
+        radial-gradient(ellipse 40px 20px at 35% 70%, rgba(0,0,0,.1) 0%, transparent 60%);
+    }
+    /* Contenedor principal — 10s ciclo: 0-30% corre, 30-33% frena, 33-55% parado, 55-100% sigue */
     .llama-runner {
       position:absolute; top:50%; transform:translateY(-50%);
       white-space:nowrap;
-      animation: llamaRun 18s ease-in-out infinite;
+      animation: llamaRun 10s ease-in-out infinite;
     }
     @keyframes llamaRun {
       0%   { left:-16%; }
-      28%  { left:calc(50% - 50px); }
       30%  { left:calc(50% - 50px); }
-      47%  { left:calc(50% - 50px); }
-      50%  { left:calc(50% - 45px); }
+      33%  { left:calc(50% - 50px); }
+      55%  { left:calc(50% - 50px); }
+      58%  { left:calc(50% - 45px); }
       100% { left:112%; }
     }
     .llama-svg-wrap {
-      display:inline-block; width:100px; height:55px;
-      transform: scaleX(-1);
-      animation: combiBrake 18s ease-in-out infinite;
+      display:inline-block; width:118px; height:65px;
+      transform: scaleX(-1) perspective(400px) rotateY(3deg);
+      animation: combiBrake 10s ease-in-out infinite;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.65));
     }
     /* Volteada (scaleX -1 = mira a la derecha) + sacudida de frenado */
     @keyframes combiBrake {
-      0%,27%   { transform:scaleX(-1) rotate(0deg); }
-      28%      { transform:scaleX(-1) rotate(4deg); }
-      29%      { transform:scaleX(-1) rotate(-3deg); }
-      30%      { transform:scaleX(-1) rotate(1deg); }
-      31%,47%  { transform:scaleX(-1) rotate(0deg); }
-      48%,100% { transform:scaleX(-1) rotate(0deg); }
+      0%,29%   { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(0deg); }
+      30%      { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(4deg); }
+      31%      { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(-3deg); }
+      32%      { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(1deg); }
+      33%,55%  { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(0deg); }
+      56%,100% { transform:scaleX(-1) perspective(400px) rotateY(3deg) rotate(0deg); }
     }
     /* Ruedas girando — se detienen en la parada */
-    .combi-rueda { animation: ruedaSpin 18s linear infinite; transform-origin:center center; }
+    .combi-rueda { animation: ruedaSpin 10s linear infinite; transform-origin:center center; }
     @keyframes ruedaSpin {
       0%    { transform:rotate(0deg); }
-      1%    { transform:rotate(100deg); }
-      2%    { transform:rotate(200deg); }
-      3%    { transform:rotate(300deg); }
-      4%    { transform:rotate(400deg); }
-      5%    { transform:rotate(500deg); }
-      6%    { transform:rotate(600deg); }
-      7%    { transform:rotate(700deg); }
-      8%    { transform:rotate(800deg); }
-      9%    { transform:rotate(900deg); }
       10%   { transform:rotate(1000deg); }
-      11%   { transform:rotate(1100deg); }
-      12%   { transform:rotate(1200deg); }
-      13%   { transform:rotate(1300deg); }
-      14%   { transform:rotate(1400deg); }
-      15%   { transform:rotate(1500deg); }
-      16%   { transform:rotate(1600deg); }
-      17%   { transform:rotate(1700deg); }
-      18%   { transform:rotate(1800deg); }
-      19%   { transform:rotate(1900deg); }
       20%   { transform:rotate(2000deg); }
-      21%   { transform:rotate(2100deg); }
-      22%   { transform:rotate(2200deg); }
-      23%   { transform:rotate(2300deg); }
-      24%   { transform:rotate(2400deg); }
-      25%   { transform:rotate(2500deg); }
-      26%   { transform:rotate(2600deg); }
-      27%   { transform:rotate(2700deg); }
-      28%   { transform:rotate(2750deg); }
-      30%,47% { transform:rotate(2760deg); }
-      48%   { transform:rotate(2860deg); }
-      49%   { transform:rotate(2960deg); }
-      50%   { transform:rotate(3060deg); }
-      55%   { transform:rotate(3560deg); }
-      60%   { transform:rotate(4060deg); }
-      65%   { transform:rotate(4560deg); }
-      70%   { transform:rotate(5060deg); }
-      75%   { transform:rotate(5560deg); }
-      80%   { transform:rotate(6060deg); }
-      85%   { transform:rotate(6560deg); }
-      90%   { transform:rotate(7060deg); }
-      95%   { transform:rotate(7560deg); }
-      100%  { transform:rotate(8060deg); }
+      30%   { transform:rotate(2800deg); }
+      33%,55% { transform:rotate(2810deg); }
+      60%   { transform:rotate(3300deg); }
+      70%   { transform:rotate(4300deg); }
+      80%   { transform:rotate(5300deg); }
+      90%   { transform:rotate(6300deg); }
+      100%  { transform:rotate(7300deg); }
     }
     /* Humo del tubo de escape */
-    .combi-humo { animation: humoCombi 18s linear infinite; }
+    .combi-humo { animation: humoCombi 10s linear infinite; }
     @keyframes humoCombi {
-      0%,28%   { opacity:0.6; }
-      30%,47%  { opacity:0; }
-      49%,100% { opacity:0.6; }
+      0%,29%   { opacity:0.6; }
+      33%,55%  { opacity:0; }
+      58%,100% { opacity:0.6; }
     }
     /* Sacudida de la combi corriendo — se detiene cuando frena */
-    .combi-body-shake { animation: combiShake 18s linear infinite; }
+    .combi-body-shake { animation: combiShake .15s linear infinite, combiShakePause 10s linear infinite; }
     @keyframes combiShake {
-      0%    { transform:translateY(0px); }
-      0.5%  { transform:translateY(-1.5px); }
-      1%    { transform:translateY(0px); }
-      1.5%  { transform:translateY(-1.5px); }
-      2%    { transform:translateY(0px); }
-      2.5%  { transform:translateY(-1.5px); }
-      3%    { transform:translateY(0px); }
-      3.5%  { transform:translateY(-1.5px); }
-      4%    { transform:translateY(0px); }
-      4.5%  { transform:translateY(-1.5px); }
-      5%    { transform:translateY(0px); }
-      5.5%  { transform:translateY(-1.5px); }
-      6%    { transform:translateY(0px); }
-      6.5%  { transform:translateY(-1.5px); }
-      7%    { transform:translateY(0px); }
-      7.5%  { transform:translateY(-1.5px); }
-      8%    { transform:translateY(0px); }
-      8.5%  { transform:translateY(-1.5px); }
-      9%    { transform:translateY(0px); }
-      9.5%  { transform:translateY(-1.5px); }
-      10%   { transform:translateY(0px); }
-      10.5% { transform:translateY(-1.5px); }
-      11%   { transform:translateY(0px); }
-      11.5% { transform:translateY(-1.5px); }
-      12%   { transform:translateY(0px); }
-      12.5% { transform:translateY(-1.5px); }
-      13%   { transform:translateY(0px); }
-      13.5% { transform:translateY(-1.5px); }
-      14%   { transform:translateY(0px); }
-      14.5% { transform:translateY(-1.5px); }
-      15%   { transform:translateY(0px); }
-      15.5% { transform:translateY(-1.5px); }
-      16%   { transform:translateY(0px); }
-      16.5% { transform:translateY(-1.5px); }
-      17%   { transform:translateY(0px); }
-      17.5% { transform:translateY(-1.5px); }
-      18%   { transform:translateY(0px); }
-      18.5% { transform:translateY(-1.5px); }
-      19%   { transform:translateY(0px); }
-      19.5% { transform:translateY(-1.5px); }
-      20%   { transform:translateY(0px); }
-      20.5% { transform:translateY(-1.5px); }
-      21%   { transform:translateY(0px); }
-      21.5% { transform:translateY(-1.5px); }
-      22%   { transform:translateY(0px); }
-      22.5% { transform:translateY(-1.5px); }
-      23%   { transform:translateY(0px); }
-      23.5% { transform:translateY(-1.5px); }
-      24%   { transform:translateY(0px); }
-      24.5% { transform:translateY(-1.5px); }
-      25%   { transform:translateY(0px); }
-      25.5% { transform:translateY(-1.5px); }
-      26%   { transform:translateY(0px); }
-      26.5% { transform:translateY(-1.5px); }
-      27%   { transform:translateY(0px); }
-      27.5% { transform:translateY(-1.5px); }
-      28%   { transform:translateY(0px); }
-      /* Parado — sin sacudida */
-      30%,47% { transform:translateY(0px); }
-      /* Arranca de nuevo */
-      48%   { transform:translateY(0px); }
-      48.5% { transform:translateY(-1.5px); }
-      49%   { transform:translateY(0px); }
-      49.5% { transform:translateY(-1.5px); }
-      50%   { transform:translateY(0px); }
-      50.5% { transform:translateY(-1.5px); }
-      51%   { transform:translateY(0px); }
-      51.5% { transform:translateY(-1.5px); }
-      52%   { transform:translateY(0px); }
-      52.5% { transform:translateY(-1.5px); }
-      53%   { transform:translateY(0px); }
-      53.5% { transform:translateY(-1.5px); }
-      54%   { transform:translateY(0px); }
-      54.5% { transform:translateY(-1.5px); }
-      55%   { transform:translateY(0px); }
-      55.5% { transform:translateY(-1.5px); }
-      56%   { transform:translateY(0px); }
-      56.5% { transform:translateY(-1.5px); }
-      57%   { transform:translateY(0px); }
-      57.5% { transform:translateY(-1.5px); }
-      58%   { transform:translateY(0px); }
-      58.5% { transform:translateY(-1.5px); }
-      59%   { transform:translateY(0px); }
-      59.5% { transform:translateY(-1.5px); }
-      60%   { transform:translateY(0px); }
-      60.5% { transform:translateY(-1.5px); }
-      61%   { transform:translateY(0px); }
-      61.5% { transform:translateY(-1.5px); }
-      62%   { transform:translateY(0px); }
-      62.5% { transform:translateY(-1.5px); }
-      63%   { transform:translateY(0px); }
-      63.5% { transform:translateY(-1.5px); }
-      64%   { transform:translateY(0px); }
-      64.5% { transform:translateY(-1.5px); }
-      65%   { transform:translateY(0px); }
-      65.5% { transform:translateY(-1.5px); }
-      66%   { transform:translateY(0px); }
-      66.5% { transform:translateY(-1.5px); }
-      67%   { transform:translateY(0px); }
-      67.5% { transform:translateY(-1.5px); }
-      68%   { transform:translateY(0px); }
-      68.5% { transform:translateY(-1.5px); }
-      69%   { transform:translateY(0px); }
-      69.5% { transform:translateY(-1.5px); }
-      70%   { transform:translateY(0px); }
-      70.5% { transform:translateY(-1.5px); }
-      71%   { transform:translateY(0px); }
-      71.5% { transform:translateY(-1.5px); }
-      72%   { transform:translateY(0px); }
-      72.5% { transform:translateY(-1.5px); }
-      73%   { transform:translateY(0px); }
-      73.5% { transform:translateY(-1.5px); }
-      74%   { transform:translateY(0px); }
-      74.5% { transform:translateY(-1.5px); }
-      75%   { transform:translateY(0px); }
-      75.5% { transform:translateY(-1.5px); }
-      76%   { transform:translateY(0px); }
-      76.5% { transform:translateY(-1.5px); }
-      77%   { transform:translateY(0px); }
-      77.5% { transform:translateY(-1.5px); }
-      78%   { transform:translateY(0px); }
-      78.5% { transform:translateY(-1.5px); }
-      79%   { transform:translateY(0px); }
-      79.5% { transform:translateY(-1.5px); }
-      80%   { transform:translateY(0px); }
-      80.5% { transform:translateY(-1.5px); }
-      81%   { transform:translateY(0px); }
-      81.5% { transform:translateY(-1.5px); }
-      82%   { transform:translateY(0px); }
-      82.5% { transform:translateY(-1.5px); }
-      83%   { transform:translateY(0px); }
-      83.5% { transform:translateY(-1.5px); }
-      84%   { transform:translateY(0px); }
-      84.5% { transform:translateY(-1.5px); }
-      85%   { transform:translateY(0px); }
-      85.5% { transform:translateY(-1.5px); }
-      86%   { transform:translateY(0px); }
-      86.5% { transform:translateY(-1.5px); }
-      87%   { transform:translateY(0px); }
-      87.5% { transform:translateY(-1.5px); }
-      88%   { transform:translateY(0px); }
-      88.5% { transform:translateY(-1.5px); }
-      89%   { transform:translateY(0px); }
-      89.5% { transform:translateY(-1.5px); }
-      90%   { transform:translateY(0px); }
-      90.5% { transform:translateY(-1.5px); }
-      91%   { transform:translateY(0px); }
-      91.5% { transform:translateY(-1.5px); }
-      92%   { transform:translateY(0px); }
-      92.5% { transform:translateY(-1.5px); }
-      93%   { transform:translateY(0px); }
-      93.5% { transform:translateY(-1.5px); }
-      94%   { transform:translateY(0px); }
-      94.5% { transform:translateY(-1.5px); }
-      95%   { transform:translateY(0px); }
-      95.5% { transform:translateY(-1.5px); }
-      96%   { transform:translateY(0px); }
-      96.5% { transform:translateY(-1.5px); }
-      97%   { transform:translateY(0px); }
-      97.5% { transform:translateY(-1.5px); }
-      98%   { transform:translateY(0px); }
-      98.5% { transform:translateY(-1.5px); }
-      99%   { transform:translateY(0px); }
-      99.5% { transform:translateY(-1.5px); }
-      100%  { transform:translateY(0px); }
+      0%,100% { transform:translateY(0px); }
+      50%     { transform:translateY(-1.5px); }
+    }
+    @keyframes combiShakePause {
+      0%,29%  { animation-play-state:running; }
+      33%,55% { transform:translateY(0px); }
+      58%,100%{ animation-play-state:running; }
     }
     /* Luz azul neón interior */
     .combi-luz-azul { animation: luzNeonPulse 0.8s ease-in-out infinite alternate; }
@@ -587,17 +1022,17 @@
       100% { opacity:0.7; filter:url(#glowAzul) brightness(1.5); }
     }
     /* Ojos normales/enojados en parabrisas — cara molesta siempre, más enojada al frenar */
-    .combi-ojos-normal { animation: ojosNorm 18s linear infinite; }
-    .combi-ojos-angry  { animation: ojosAngry 18s linear infinite; }
+    .combi-ojos-normal { animation: ojosNorm 10s linear infinite; }
+    .combi-ojos-angry  { animation: ojosAngry 10s linear infinite; }
     @keyframes ojosNorm {
-      0%,28%   { opacity:1; }
-      29%,47%  { opacity:0; }
-      48%,100% { opacity:1; }
+      0%,30%   { opacity:1; }
+      33%,55%  { opacity:0; }
+      58%,100% { opacity:1; }
     }
     @keyframes ojosAngry {
-      0%,28%   { opacity:0; }
-      29%,47%  { opacity:1; }
-      48%,100% { opacity:0; }
+      0%,30%   { opacity:0; }
+      33%,55%  { opacity:1; }
+      58%,100% { opacity:0; }
     }
     /* Bandera en el techo */
     .combi-bandera {
@@ -608,29 +1043,29 @@
       0%   { transform:rotate(-6deg) skewY(3deg); }
       100% { transform:rotate(4deg) skewY(-2deg); }
     }
-    /* Bocadillo */
-    /* Bocadillo — burbuja de diálogo desde arriba de la ventana de la combi */
+    /* Cartel de combi — letrero callejero */
     .bocadillo-cinta {
-      position:absolute; top:-28px; left:50%; transform:translateX(-50%) scale(0.5);
+      position:absolute; top:-52px; left:50%; transform:translateX(-50%) scale(0.5) rotate(-2deg);
       opacity:0; font-family:'Bangers',cursive;
-      color:#fff; font-size:0.95rem; letter-spacing:2px;
-      background:rgba(0,80,255,0.9);
-      padding:5px 14px 4px 12px; border-radius:14px 14px 14px 4px;
-      box-shadow:0 0 14px rgba(0,100,255,.7), 0 0 30px rgba(0,100,255,.35), inset 0 0 8px rgba(100,180,255,.3);
-      animation: bocadilloShow 18s linear infinite;
+      color:#ff7ccf; font-size:.95rem; letter-spacing:2px;
+      background:rgba(255,0,140,.12); border:2px solid #ff2ea6;
+      padding:5px 16px 4px 14px; border-radius:6px;
+      box-shadow:0 0 10px rgba(255,46,166,.3);
+      text-shadow:0 0 6px rgba(255,46,166,.4);
+      animation: bocadilloShow 10s linear infinite;
       white-space:nowrap; z-index:5;
     }
     .bocadillo-cinta::after {
       content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%);
       width:0; height:0;
-      border-left:7px solid transparent; border-right:7px solid transparent;
-      border-top:8px solid rgba(0,80,255,0.9);
+      border-left:6px solid transparent; border-right:6px solid transparent;
+      border-top:7px solid rgba(255,0,140,.12);
     }
     @keyframes bocadilloShow {
-      0%,30%   { opacity:0; transform:translateX(-50%) scale(0.5) translateY(4px); }
-      32%      { opacity:1; transform:translateX(-50%) scale(1.15) translateY(-2px); }
-      34%,45%  { opacity:1; transform:translateX(-50%) scale(1) translateY(0); }
-      47%      { opacity:0; transform:translateX(-50%) scale(0.5) translateY(4px); }
+      0%,33%   { opacity:0; transform:translateX(-50%) scale(0.5) rotate(-2deg) translateY(4px); }
+      36%      { opacity:1; transform:translateX(-50%) scale(1.1) rotate(-3deg) translateY(-2px); }
+      38%,52%  { opacity:1; transform:translateX(-50%) scale(1) rotate(-2deg) translateY(0); }
+      55%      { opacity:0; transform:translateX(-50%) scale(0.5) rotate(-2deg) translateY(4px); }
       100%     { opacity:0; }
     }
     /* Polvo de frenada */
@@ -638,20 +1073,20 @@
       position:absolute; top:50%; transform:translateY(-50%);
       font-size:1.1rem; opacity:0; pointer-events:none;
     }
-    .polvo-izq { animation: polvoI 18s linear infinite; }
-    .polvo-der { animation: polvoD 18s linear infinite; }
+    .polvo-izq { animation: polvoI 10s linear infinite; }
+    .polvo-der { animation: polvoD 10s linear infinite; }
     @keyframes polvoI {
-      0%,27%  { opacity:0; left:calc(50% - 60px); }
-      28%     { opacity:1; left:calc(50% - 70px); }
-      29%     { opacity:.6; left:calc(50% - 90px); }
-      31%     { opacity:0; left:calc(50% - 110px); }
+      0%,29%  { opacity:0; left:calc(50% - 60px); }
+      30%     { opacity:1; left:calc(50% - 70px); }
+      31%     { opacity:.6; left:calc(50% - 90px); }
+      33%     { opacity:0; left:calc(50% - 110px); }
       100%    { opacity:0; }
     }
     @keyframes polvoD {
-      0%,27%  { opacity:0; left:calc(50% + 40px); }
-      28%     { opacity:1; left:calc(50% + 50px); }
-      29%     { opacity:.6; left:calc(50% + 65px); }
-      31%     { opacity:0; left:calc(50% + 80px); }
+      0%,29%  { opacity:0; left:calc(50% + 40px); }
+      30%     { opacity:1; left:calc(50% + 50px); }
+      31%     { opacity:.6; left:calc(50% + 65px); }
+      33%     { opacity:0; left:calc(50% + 80px); }
       100%    { opacity:0; }
     }
     /* ══════════════════════════════════════════
@@ -708,7 +1143,7 @@
     }
     .ruleta-ganador-card {
       display:none; margin-top:20px; padding:20px 30px;
-      background:linear-gradient(135deg,#1a0800,#2a1200);
+      background:linear-gradient(135deg,#0d1530,#1a1040);
       border:3px solid var(--neon-amarillo); border-radius:12px;
       text-align:center;
       box-shadow:0 0 30px rgba(255,230,0,.3);
@@ -749,8 +1184,8 @@
     }
     /* APP COMING SOON */
     .app-coming-soon {
-      position:fixed; bottom:16px; right:16px; z-index:90;
-      background:rgba(13,13,31,0.92); border:2px solid var(--neon-violeta);
+      position:fixed; bottom:18px; right:18px; z-index:9990;
+      background:rgba(10,14,32,0.95); border:2px solid var(--chicha-rosa);
       border-radius:12px; padding:12px 16px; text-align:center;
       box-shadow:0 0 20px rgba(204,0,255,.25);
       backdrop-filter:blur(8px);
@@ -771,10 +1206,27 @@
       .app-coming-soon { bottom:10px; right:10px; padding:8px 12px; }
       .app-coming-soon p { font-size:.75rem; }
     }
-    /* FOOTER */
-    footer { background:#050505; border-top:4px solid var(--neon-rosa); padding:30px 20px 20px; text-align:center; }
-    .footer-copy { color:#444; font-size:.76rem; line-height:1.6; }
-    .footer-copy strong { color:#666; }
+    /* FOOTER — chicha con carácter */
+    footer { background:linear-gradient(180deg,#0d1530 0%,#080818 100%); border-top:4px solid;
+      border-image:linear-gradient(90deg,var(--chicha-rosa),var(--chicha-naranja),var(--chicha-amarillo),var(--chicha-verde)) 1;
+      padding:40px 20px 20px; text-align:center;
+      box-shadow:inset 0 20px 40px rgba(255,20,147,.03); }
+    .footer-tiktok-wrap { margin-bottom:28px; }
+    .footer-tiktok-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      background:linear-gradient(135deg,#1a0a20,#2a0a30); border:2px solid #ff0050;
+      border-radius:10px; color:#fff; font-family:'Bangers',cursive;
+      font-size:1.2rem; letter-spacing:2px; padding:14px 28px;
+      text-decoration:none; transition:all .3s;
+      box-shadow:0 0 12px rgba(255,0,80,.2);
+    }
+    .footer-tiktok-btn:hover { box-shadow:0 0 28px rgba(255,0,80,.5); transform:translateY(-3px) scale(1.03); border-color:#ff3070; }
+    .footer-tiktok-btn svg { filter:drop-shadow(0 0 4px rgba(255,0,80,.5)); }
+    .footer-tiktok-sub { font-family:'Poppins',sans-serif; font-weight:500; font-size:.8rem; color:#ff6090; margin-top:10px; margin-bottom:6px; letter-spacing:1px; }
+    .footer-micro { font-family:'Poppins',sans-serif; font-weight:600; font-size:.92rem; color:#fff; letter-spacing:1px; margin-bottom:18px; }
+    .footer-cierre { font-family:'Lobster',cursive; font-size:1.2rem; color:#ffd700; letter-spacing:1.5px; margin-bottom:24px; text-shadow:0 0 16px rgba(255,215,0,.4), 0 0 6px rgba(255,215,0,.2); }
+    .footer-copy { color:#2a2a2a; font-size:.55rem; line-height:1.4; letter-spacing:.5px; margin-top:8px; }
+    .footer-copy strong { color:#3a3a3a; }
     /* ══════════════════════════════════════════
        VERSIÓN MÓVIL — max 640px
     ══════════════════════════════════════════ */
@@ -784,37 +1236,45 @@
       #banner-prototipo span { font-size:.72rem; letter-spacing:1px; }
       /* ── Header ── */
       header { padding:18px 14px 14px; }
-      .metele-tag { font-size:.65rem; top:6px; left:6px; line-height:1.15; max-width:80px; }
-      .logo-principal { padding-left:30px; }
+      .metele-tag { top:2px; left:2px; width:clamp(90px,24vw,140px); }
+      .logo-principal { padding-left:25px; font-size:clamp(3.2rem,14vw,6rem); }
+      .logo-principal .logo-tu, .logo-principal .logo-suerte, .logo-principal .logo-pe { -webkit-text-stroke:2px #000; }
+      .logo-principal::before { left:-2.5em; font-size:.16em; letter-spacing:2px; }
+      .logo-principal::after { right:-2.5em; font-size:.16em; letter-spacing:2px; }
       .header-decoracion { gap:5px; margin-bottom:4px; }
       .estrella { font-size:.9rem; }
       .logo-sub { font-size:.7rem; letter-spacing:3px; }
-      /* ── Nav: scroll horizontal sin saltos ── */
-      nav {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      nav::-webkit-scrollbar { display:none; }
-      nav a {
-        font-size: .9rem;
-        padding: 11px 14px;
-        white-space: nowrap;
-        border-right: 1px solid #2a2a2a;
-        flex-shrink: 0;
-      }
+      /* ── Nav chicha mobile ── */
+      nav { padding:8px 10px; gap:8px; }
+      .nav-chicha-box { padding:6px 12px; gap:6px; flex-wrap:nowrap; }
+      .nav-chicha-box::before, .nav-chicha-box::after { font-size:.9rem; left:-12px; right:-12px; }
+      nav a.nav-btn-chicha { font-size:clamp(.75rem,2.5vw,1rem); padding:8px 12px; letter-spacing:1.5px; }
+      .nav-chicha-box { justify-content:center; }
       /* ── Ticker ── */
       .ticker span { font-size:.95rem; padding:0 55px; }
       /* ── Sorteos ── */
       #sorteos { padding:28px 12px; }
       .seccion-titulo { font-size:1.8rem; margin-bottom:20px; }
-      .grid-sorteos { grid-template-columns:1fr; gap:24px; max-width:92%; margin:0 auto; }
-      .card-img { height:140px; font-size:3.8rem; }
-      .card-titulo { font-size:1.35rem; }
-      .card-desc { font-size:.84rem; line-height:1.5; }
-      .btn-participar { font-size:1.2rem; padding:14px; }
+      /* ── Bloque 2 mobile ── */
+      .bloque2 { padding:20px 14px 18px; }
+      .chicha-line1 { font-size:clamp(1.5rem,5.5vw,2.3rem); }
+      .chicha-line2 { font-size:clamp(2.3rem,9vw,3.8rem); }
+      .bloque2-subtitulo { font-size:clamp(.82rem,2.8vw,1rem); margin-top:10px; }
+      .bloque2-btn { font-size:clamp(.95rem,3vw,1.2rem); padding:12px 28px; }
+      /* ── Bloque 3 mobile ── */
+      #sorteos { padding:20px 12px 30px; }
+      .sorteos-header-titulo { font-size:clamp(1.1rem,4vw,1.4rem); }
+      .sorteos-header-sub { font-size:clamp(.8rem,2.5vw,.95rem); }
+      .card-hoy .card-img { height:130px; }
+      .card-hoy .card-titulo { font-size:1.4rem; }
+      .card-hoy .card-desc { font-size:.84rem; }
+      .card-hoy .btn-participar { font-size:1.1rem; padding:12px; }
+      .grid-sorteos { grid-template-columns:repeat(2,1fr); gap:10px; padding:0 10px; }
+      .grid-sorteos .card-img { height:80px; }
+      .grid-sorteos .card-titulo { font-size:.95rem; }
+      .grid-sorteos .btn-participar { font-size:.85rem; padding:8px; }
+      .semana-card-emoji { font-size:1.3rem; }
+      .semana-card-nombre { font-size:.7rem; }
       /* ── Paneles: sheet desde abajo ── */
       .panel-overlay { padding:0; align-items:flex-end; }
       .panel-box {
@@ -829,10 +1289,12 @@
       .panel-titulo { font-size:1.4rem; letter-spacing:2px; }
       .panel-body { padding:10px 14px 36px; }
       /* ── Pasos cómo funciona ── */
-      .pasos { grid-template-columns:1fr; gap:12px; }
-      .paso { padding:16px 14px; }
-      .paso-num { font-size:2.4rem; }
-      .paso h3 { font-size:1.2rem; }
+      .pasos { grid-template-columns:1fr; gap:10px; }
+      .paso { padding:14px 14px 12px; }
+      .paso-num { font-size:1.6rem; }
+      .paso h3 { font-size:1.05rem; }
+      .paso p { font-size:.78rem; }
+      #panel-como .panel-body { padding:14px 16px 24px; }
       /* ── FAQ ── */
       .faq-item.activo .faq-resp { max-height:300px; }
       .faq-preg { font-size:.85rem; padding:14px 16px; }
@@ -843,8 +1305,12 @@
       .form-grupo input,
       .form-grupo select { font-size:1rem; padding:13px 12px; }
       .btn-registro { font-size:1.4rem; letter-spacing:2px; padding:16px; }
-      /* ── Panel registro: paso TikTok ── */
-      #paso-tiktok a[href*="tiktok"] { font-size:1.1rem; padding:12px 18px; }
+      /* ── Panel registro ── */
+      .reg-box { max-width:100%!important; }
+      .reg-btn-tiktok { font-size:1rem; padding:11px 20px; }
+      .reg-btn-siguiente { font-size:1rem; }
+      .reg-paso-label { font-size:1rem; }
+      .reg-texto { font-size:.82rem; }
       /* ── Modales ── */
       .modal-overlay { padding:12px; }
       .modal-box { padding:26px 18px; }
@@ -855,8 +1321,9 @@
       #llama-saludo svg { width:85px !important; height:108px !important; }
       #llama-burbuja, #llama-burbuja2 { font-size:clamp(.6rem,2.5vw,.85rem); padding:6px 10px; white-space:normal; max-width:145px; text-align:center; word-break:break-word; }
       /* ── Footer ── */
-      footer { padding:18px 14px 16px; }
-      .footer-copy { font-size:.7rem; }
+      footer { padding:24px 14px 14px; }
+      .footer-tiktok-btn { font-size:1rem; padding:12px 22px; }
+      .footer-copy { font-size:.55rem; }
     }
   </style>
 </head>
@@ -865,26 +1332,13 @@
   <!-- BANNER PROTOTIPO -->
   <div id="banner-prototipo" style="
     position:sticky; top:0; z-index:500;
-    background:#1a1a2e;
-    padding:7px 16px; text-align:center; border-bottom:1px solid rgba(255,230,0,.2);">
+    background:linear-gradient(90deg,#0d1530,#1a1040,#0d1530);
+    padding:7px 16px; text-align:center; border-bottom:2px solid rgba(255,20,147,.3);">
     <span style="font-family:'Bangers',cursive;font-size:.95rem;letter-spacing:2px;color:rgba(255,230,0,.6);">
       🚧 Marcha blanca — Ya puedes participar en sorteos de prueba mientras afinamos la plataforma.
     </span>
   </div>
-  <!-- HEADER -->
-  <header>
-    <div class="metele-tag">¡Métele sin<br>miedo, mi neto!</div>
-    <div class="logo-principal" id="logo-admin">TUSUERTE.PE</div>
-    <div class="logo-sub">✦ Sorteo pa la gente ✦</div>
-  </header>
-  <!-- NAV -->
-  <nav>
-    <a onclick="abrirPanel('panel-como')">📋 CÓMO FUNCIONA</a>
-    <a onclick="abrirPanel('panel-ganadores')">🏆 GANADORES</a>
-    <a onclick="abrirPanel('panel-faq')">❓ PREGUNTAS</a>
-    <a onclick="abrirPanel('panel-terminos')">📜 TÉRMINOS</a>
-  </nav>
-  <!-- TICKER -->
+  <!-- TICKER — arriba del título -->
   <div class="ticker-wrap">
     <div class="ticker">
       <span>Dale con todo, causa</span>
@@ -899,154 +1353,106 @@
       <span>Que salga lo que tenga que salir</span>
     </div>
   </div>
-  <!-- SORTEOS -->
+  <!-- HEADER -->
+  <header>
+    <div class="metele-tag">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200">
+        <defs>
+          <linearGradient id="gMetele" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffeb3b"/><stop offset="30%" stop-color="#ff9800"/>
+            <stop offset="60%" stop-color="#ff6a00"/><stop offset="100%" stop-color="#e63900"/>
+          </linearGradient>
+          <linearGradient id="gNeto" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7fff00"/><stop offset="40%" stop-color="#39ff14"/>
+            <stop offset="70%" stop-color="#00c853"/><stop offset="100%" stop-color="#008a00"/>
+          </linearGradient>
+          <linearGradient id="gRosa" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ff69b4"/><stop offset="50%" stop-color="#ff1493"/>
+            <stop offset="100%" stop-color="#c71585"/>
+          </linearGradient>
+          <filter id="starGlow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- Sombras 3D -->
+        <text x="160" y="62" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="68" letter-spacing="2" fill="#000" opacity="0.7" transform="translate(5,6)">&#161;M&#201;TELE!</text>
+        <text x="160" y="100" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="36" letter-spacing="3" fill="#000" opacity="0.6" transform="translate(3,4)">sin miedo</text>
+        <text x="160" y="158" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="62" letter-spacing="3" fill="#000" opacity="0.7" transform="translate(5,6)">MI NETO</text>
+        <!-- Contornos negros gruesos -->
+        <text x="160" y="62" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="68" letter-spacing="2" fill="none" stroke="#000" stroke-width="10" stroke-linejoin="round">&#161;M&#201;TELE!</text>
+        <text x="160" y="100" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="36" letter-spacing="3" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round">sin miedo</text>
+        <text x="160" y="158" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="62" letter-spacing="3" fill="none" stroke="#000" stroke-width="10" stroke-linejoin="round">MI NETO</text>
+        <!-- Relleno de color -->
+        <text x="160" y="62" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="68" letter-spacing="2" fill="url(#gMetele)" stroke="#4a2000" stroke-width="1.5" stroke-linejoin="round">&#161;M&#201;TELE!</text>
+        <text x="160" y="100" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="36" letter-spacing="3" fill="#ffffff" stroke="#1a1a1a" stroke-width="1" stroke-linejoin="round">sin miedo</text>
+        <text x="160" y="158" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="62" letter-spacing="3" fill="url(#gNeto)" stroke="#003300" stroke-width="1.5" stroke-linejoin="round">MI NETO</text>
+        <!-- Brillos superiores -->
+        <text x="160" y="50" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="68" letter-spacing="2" fill="rgba(255,255,255,0.25)">&#161;M&#201;TELE!</text>
+        <text x="160" y="146" text-anchor="middle" font-family="'Passion One','Impact','Arial Black',sans-serif" font-weight="900" font-style="italic" font-size="62" letter-spacing="3" fill="rgba(255,255,255,0.2)">MI NETO</text>
+        <!-- Estrellas decorativas -->
+        <text x="18" y="30" font-size="22" fill="#ffd700" filter="url(#starGlow)" opacity="0.9">&#9733;</text>
+        <text x="290" y="45" font-size="18" fill="#ffd700" filter="url(#starGlow)" opacity="0.8">&#9733;</text>
+        <text x="35" y="140" font-size="14" fill="#ffd700" filter="url(#starGlow)" opacity="0.7">&#10022;</text>
+        <text x="280" y="170" font-size="16" fill="#ffd700" filter="url(#starGlow)" opacity="0.85">&#9733;</text>
+        <text x="55" y="80" font-size="12" fill="#ff1493" filter="url(#starGlow)" opacity="0.7">&#10022;</text>
+        <text x="265" y="110" font-size="13" fill="#ff1493" filter="url(#starGlow)" opacity="0.75">&#10022;</text>
+        <text x="15" y="180" font-size="16" fill="#39ff14" filter="url(#starGlow)" opacity="0.8">&#9733;</text>
+        <text x="302" y="25" font-size="11" fill="#39ff14" filter="url(#starGlow)" opacity="0.7">&#10022;</text>
+        <text x="75" y="18" font-size="10" fill="#ff4444" filter="url(#starGlow)" opacity="0.65">&#10022;</text>
+        <text x="240" y="185" font-size="10" fill="#ff4444" filter="url(#starGlow)" opacity="0.65">&#10022;</text>
+        <!-- Linea decorativa -->
+        <line x1="80" y1="110" x2="240" y2="110" stroke="url(#gRosa)" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="logo-principal" id="logo-admin"><span class="logo-tu">Tu</span><span class="logo-suerte">Suerte</span><span class="logo-pe">.pe</span></div>
+    <div class="header-chicha-line">
+      <span style="color:var(--chicha-rosa)">★</span>
+      <div class="chicha-line-bar"></div>
+      <span style="color:var(--chicha-amarillo)">✦</span>
+      <div class="chicha-line-bar"></div>
+      <span style="color:var(--chicha-verde)">★</span>
+    </div>
+  </header>
+  <!-- ═══ BLOQUE 2 — Banner chicha + CTA ═══ -->
+  <section class="bloque2">
+    <span class="chicha-line1">¡HOY TE PUEDE</span>
+    <span class="chicha-line2">CAER TU YAPE!</span>
+    <div class="chicha-banner-stars">
+      <span>★</span><span>✦</span><span>★</span><span>✦</span><span>★</span>
+    </div>
+    <div class="bloque2-subtitulo">Entra ahora y podrías recibir tu yape hoy</div>
+    <a class="bloque2-btn" onclick="abrirPanel('panel-como')">QUIERO MI YAPE</a>
+    <div class="bloque2-urgencia">⚡ SORTEO ACTIVO HOY ⚡</div>
+  </section>
+  <!-- ═══ BLOQUE 3 — SORTEOS ═══ -->
   <section id="sorteos">
-    <h2 class="seccion-titulo"><span>ESCOGE Y APÚNTATE A UNO DE ESTOS SORTEOS</span></h2>
-    <div class="grid-sorteos">
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-1" style="border-color:var(--neon-naranja)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-naranja)">
-          <div class="yape-logo"><span class="yape-icon">🍬</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pal chicle 😜</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PAL CHICLE</div>
-          <div class="card-desc">¡GÁNATE 1 lukita directo a tu número pa que te compres tu chicle favorito. Chiquitito pero es tuyo causa!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-1">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-1" style="width:5%;background:linear-gradient(90deg,var(--neon-naranja),var(--neon-amarillo))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-1"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc1d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc1s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-naranja);border-bottom-color:#8a3600" onclick="abrirRegistro('Yape pal Chicle – S/1','1')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-1">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-1" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-1"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-1"></div><div class="card-ganador-dni" id="card-ganador-dni-1"></div></div>
-        </div>
-      </div></div>
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-2" style="border-color:var(--neon-rosa)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-rosa)">
-          <div class="yape-logo"><span class="yape-icon">🌾</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la quinua 💪</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PA LA QUINUA</div>
-          <div class="card-desc">¡GÁNATE 2 lukitas pa tu vaso de quinua del mercado. Nutritivo y ganado con pura suerte causa!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-2">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-2" style="width:5%;background:linear-gradient(90deg,var(--neon-rosa),var(--neon-violeta))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-2"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc2d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc2s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-rosa);border-bottom-color:#7a003d" onclick="abrirRegistro('Yape pa la Quinua – S/2','2')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-2">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-2" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-2"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-2"></div><div class="card-ganador-dni" id="card-ganador-dni-2"></div></div>
-        </div>
-      </div></div>
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-3" style="border-color:var(--neon-violeta)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-violeta)">
-          <div class="yape-logo"><span class="yape-icon">💸</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la gaseosa 🥤</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PA LA GASEOSA</div>
-          <div class="card-desc">¡GÁNATE 5 lukitas directo a tu número pa la gaseosa heladita. Pequeño pero seguro causa!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-3">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-3" style="width:5%;background:linear-gradient(90deg,var(--neon-violeta),var(--neon-rosa))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-3"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc3d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc3s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-violeta);border-bottom-color:#5c007a" onclick="abrirRegistro('Yape pa la Gaseosa – S/5','3')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-3">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-3" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-3"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-3"></div><div class="card-ganador-dni" id="card-ganador-dni-3"></div></div>
-        </div>
-      </div></div>
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-4" style="border-color:var(--neon-amarillo)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-amarillo)">
-          <div class="yape-logo"><span class="yape-icon">🍺</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la chelita 🍻</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PA LA CHELITA</div>
-          <div class="card-desc">¡GÁNATE 6 lukitas pa que te caigas con tu chelita bien helada después del trabajo. Te lo mereces causa!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-4">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-4" style="width:5%;background:linear-gradient(90deg,var(--neon-amarillo),var(--neon-verde))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-4"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc4d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc4s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-amarillo);color:#000;border-bottom-color:#7a6e00" onclick="abrirRegistro('Yape pa la Chelita – S/6','4')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-4">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-4" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-4"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-4"></div><div class="card-ganador-dni" id="card-ganador-dni-4"></div></div>
-        </div>
-      </div></div>
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-5" style="border-color:var(--neon-celeste)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-celeste)">
-          <div class="yape-logo"><span class="yape-icon">🚌</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pa la recarga 🚌</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PA LA RECARGA DEL METRO</div>
-          <div class="card-desc">¡GÁNATE 7 lukitas directo a tu número pa que recargues tu tarjeta del Metropolitano. Sin cola ni nada pe!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-5">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-5" style="width:5%;background:linear-gradient(90deg,var(--neon-celeste),var(--neon-violeta))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-5"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc5d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc5s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-celeste);border-bottom-color:#007a8a" onclick="abrirRegistro('Yape pa la Recarga del Metropolitano – 7','5')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-5">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-5" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-5"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-5"></div><div class="card-ganador-dni" id="card-ganador-dni-5"></div></div>
-        </div>
-      </div></div>
-      <div class="card-sorteo-wrap"><div class="card-sorteo" id="card-sorteo-6" style="border-color:var(--neon-verde)">
-        <div class="card-front">
-        <div class="card-img" style="padding:0;border-bottom-color:var(--neon-verde)">
-          <div class="yape-logo"><span class="yape-icon">🍗</span><div class="yape-nombre">YAPE</div><div class="yape-sub">Pal pollito 🔥</div></div>
-        </div>
-        <div class="card-body">
-          <div class="card-categoria"></div>
-          <div class="card-titulo">YAPE PAL POLLITO</div>
-          <div class="card-desc">¡GÁNATE 20 lukitas directo a tu número pa que te caigas con un pollito a la brasa. Come rico papi!</div>
-          <div class="card-meta"><span class="card-participantes" style="display:none">👥 <span id="inscritos-6">0</span> inscritos</span><span class="card-fecha proxfecha">📅 ...</span></div>
-          <div class="barra-wrap"><div class="barra-fill" id="barra-6" style="width:5%;background:linear-gradient(90deg,var(--neon-verde),var(--neon-celeste))"></div></div>
-          <div class="mini-cnt-wrap" id="mini-cnt-6"><div class="mini-contador"><div class="mc-blq"><div class="mc-num" id="mc6d">--</div><div class="mc-lbl">Días</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6h">--</div><div class="mc-lbl">Hrs</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6m">--</div><div class="mc-lbl">Min</div></div><div class="mc-sep">:</div><div class="mc-blq"><div class="mc-num" id="mc6s">--</div><div class="mc-lbl">Seg</div></div></div></div>
-          <button class="btn-participar" style="background:var(--neon-verde);border-bottom-color:#1a7a0a" onclick="abrirRegistro('Yape pa el Pollito – S/20','6')">¡ME APUNTO!</button>
-        </div>
-        <div class="sello-cerrado">CERRADO</div>
-        </div>
-        <div class="card-back">
-          <div class="card-back-titulo">RULETA DEL SORTEO</div>
-          <div class="card-back-estado" id="card-estado-6">Cargando...</div>
-          <div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-6" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>
-          <div class="card-ganador-result" id="card-ganador-6"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-6"></div><div class="card-ganador-dni" id="card-ganador-dni-6"></div></div>
-        </div>
-      </div></div>
+    <!-- Encabezado marcha blanca -->
+    <div class="sorteos-header">
+      <div class="sorteos-header-titulo">Sorteos gratis en marcha blanca</div>
+      <div class="sorteos-header-sub">Esta semana: 1 sorteo diario a las 4:00 PM. Participa gratis y prueba tu suerte.</div>
+    </div>
+    <!--
+      Regla del sistema:
+      1. Un sorteo solo puede aparecer una vez en pantalla.
+      2. Si está activo (o es el próximo), va solo en el card principal.
+      3. Si está próximo (no el inmediato), va solo en cards secundarios.
+      4. Cuando el activo termina, el siguiente próximo sube automáticamente a principal.
+      5. Al cambiar de estado, también cambia automáticamente de formato visual.
+      6. Finalizado = no se muestra (va a historial).
+    -->
+    <!-- CONTENEDOR PRINCIPAL: JS decide qué sorteo va aquí -->
+    <div id="principal-wrap" class="card-hoy-wrap"></div>
+    <!-- ═══ GRID DE SORTEOS ═══ -->
+    <div class="semana-titulo" style="margin-top:24px;opacity:.5;font-size:clamp(.75rem,2vw,.9rem);letter-spacing:3px;color:#888">SORTEOS DE LA SEMANA</div>
+    <div class="semana-habito" style="opacity:1;font-size:.85rem;color:#ffe082;letter-spacing:1.5px;font-weight:600">Todos los días hay yape a las 4PM 🔥</div>
+    <!-- CONTENEDOR SECUNDARIOS: JS decide qué sorteos van aquí -->
+    <div class="grid-sorteos" id="secundarios-wrap">
+      <!-- JS llena esto dinámicamente -->
     </div>
   </section>
   <!-- CINTA LLAMA CORRIENDO -->
   <div class="cinta-llama">
-    <span class="polvo polvo-izq">💨</span>
-    <span class="polvo polvo-der">💨</span>
+    <div class="cinta-asfalto"></div>
+    <div class="cinta-linea-pista"></div>
+    <div class="cinta-desgaste"></div>
     <div class="llama-runner">
       <div class="llama-svg-wrap">
         <svg viewBox="0 0 130 68" width="100" height="55" xmlns="http://www.w3.org/2000/svg">
@@ -1073,23 +1479,35 @@
             </radialGradient>
           </defs>
           <g class="combi-body-shake">
-            <!-- Sombra inferior -->
-            <ellipse cx="58" cy="58" rx="48" ry="3" fill="rgba(0,0,0,0.3)"/>
-            <!-- Cuerpo principal — forma tipo Nissan Urvan -->
-            <!-- Panel inferior (falda) gris oscuro -->
-            <rect x="6" y="42" width="100" height="10" rx="2" fill="#555"/>
-            <!-- Carrocería blanca/crema -->
-            <path d="M8,18 L8,50 Q8,52 10,52 L102,52 Q104,52 104,50 L104,18 Q104,14 100,12 L16,12 Q10,12 8,18Z" fill="#e8e4d8"/>
-            <path d="M10,19 L10,49 Q10,50 11,50 L101,50 Q102,50 102,49 L102,19 Q102,15 99,13.5 L17,13.5 Q12,13.5 10,19Z" fill="#f0ece0"/>
-            <!-- Franja verde horizontal (como la foto) -->
-            <rect x="6" y="32" width="100" height="5" rx="1" fill="#1a8a3a"/>
-            <rect x="6" y="33" width="100" height="3" fill="#22a848"/>
-            <!-- Techo -->
-            <path d="M14,12 L98,12 Q102,12 102,14 L102,15 L10,15 L10,14 Q10,12 14,12Z" fill="#d4d0c4"/>
-            <!-- Letrero de ruta en techo -->
-            <rect x="25" y="7" width="62" height="6" rx="2" fill="#222"/>
-            <rect x="26" y="7.5" width="60" height="5" rx="1.5" fill="#111"/>
-            <text x="56" y="12" text-anchor="middle" font-family="Arial,sans-serif" font-size="4" fill="#ffe600" font-weight="bold">TUSUERTE.PE</text>
+            <!-- Sombra inferior — más profunda, blur para profundidad -->
+            <ellipse cx="58" cy="60" rx="52" ry="5" fill="rgba(0,0,0,0.45)" filter="url(#glowAzul)" style="filter:blur(2px)"/>
+            <ellipse cx="58" cy="58" rx="48" ry="3" fill="rgba(0,0,0,0.5)"/>
+            <!-- Cuerpo principal — forma tipo Nissan Urvan con imperfecciones -->
+            <!-- Panel inferior (falda) con desgaste -->
+            <rect x="6" y="42" width="100" height="10" rx="2" fill="#4a4a4a"/>
+            <rect x="15" y="44" width="30" height="2" rx="1" fill="#525252" opacity=".5"/>
+            <rect x="70" y="43" width="20" height="1.5" rx=".5" fill="#3d3d3d" opacity=".6"/>
+            <!-- Carrocería — ligeramente irregular -->
+            <path d="M8,18.5 L8.2,50 Q8,52 10,52 L102,52 Q104,52 104,50.2 L103.8,18 Q104,14 100,12.2 L16.5,12 Q10,11.8 8,18.5Z" fill="#e0dcd0"/>
+            <path d="M10,19.5 L10.2,49 Q10,50 11,50 L101,50 Q102,50 101.8,49 L102,19.2 Q102,15.2 99,13.8 L17.2,13.5 Q12,13.2 10,19.5Z" fill="#ede8da"/>
+            <!-- Manchas/suciedad sutil -->
+            <rect x="20" y="38" width="15" height="4" rx="2" fill="#d8d4c6" opacity=".4"/>
+            <rect x="65" y="36" width="12" height="6" rx="3" fill="#d5d0c2" opacity=".3"/>
+            <circle cx="90" cy="45" r="4" fill="#ddd8cc" opacity=".25"/>
+            <!-- Franja verde horizontal — ligeramente despareja -->
+            <path d="M6,32 L106,32.3 L106,37 L6,36.8Z" fill="#1a8a3a"/>
+            <path d="M6,33.2 L106,33.5 L106,36 L6,35.8Z" fill="#22a848"/>
+            <!-- Rayón diagonal sutil -->
+            <line x1="35" y1="20" x2="38" y2="30" stroke="#ccc8ba" stroke-width=".4" opacity=".3"/>
+            <line x1="78" y1="22" x2="80" y2="28" stroke="#ccc8ba" stroke-width=".3" opacity=".25"/>
+            <!-- Techo — ligeramente irregular -->
+            <path d="M14,12.2 L98,11.8 Q102,12 102,14 L102,15 L10,15.2 L10,14 Q10,12 14,12.2Z" fill="#ccc8bc"/>
+            <!-- Letrero de ruta en techo — levemente torcido -->
+            <g transform="rotate(-1.5,56,10)">
+              <rect x="25" y="7" width="62" height="6" rx="2" fill="#1a1a1a"/>
+              <rect x="26" y="7.5" width="60" height="5" rx="1.5" fill="#0a0a0a"/>
+              <text x="56" y="12" text-anchor="middle" font-family="Arial,sans-serif" font-size="4" fill="#ffe600" font-weight="bold">TUSUERTE.PE</text>
+            </g>
             <!-- Parabrisas grande frontal dividido -->
             <rect x="11" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
             <rect x="26" y="16" width="14" height="18" rx="2" fill="#88c8e8"/>
@@ -1143,11 +1561,15 @@
             <!-- Puerta lateral corrediza -->
             <rect x="45" y="22" width="10" height="21" rx="1" fill="none" stroke="#b0ac9c" stroke-width="0.8"/>
             <circle cx="54" cy="33" r="0.8" fill="#888"/>
-            <!-- Letrero lateral "PERU BUS" -->
-            <text x="72" y="40" font-family="Arial,sans-serif" font-size="3.2" fill="#1a8a3a" font-weight="bold">PERU BUS</text>
-            <!-- Espejo retrovisor -->
-            <rect x="4" y="20" width="4" height="3" rx="1" fill="#666"/>
-            <rect x="3" y="20.5" width="2" height="2" rx="0.5" fill="#88c8e8"/>
+            <!-- Letrero lateral — estilo callejero peruano -->
+            <text x="72" y="40.5" font-family="Arial,sans-serif" font-size="3" fill="#156a2e" font-weight="bold" transform="rotate(-1,72,40)">PERU BUS</text>
+            <!-- Sticker peruano sutil -->
+            <rect x="92" y="38" width="8" height="4" rx=".8" fill="#d42b2b" opacity=".7"/>
+            <rect x="92" y="39.3" width="8" height="1.3" rx="0" fill="#fff" opacity=".7"/>
+            <rect x="92" y="40.7" width="8" height="1.3" rx=".8" fill="#d42b2b" opacity=".7"/>
+            <!-- Espejo retrovisor — asimétrico -->
+            <rect x="3.5" y="19.5" width="4.5" height="3.5" rx="1" fill="#555" transform="rotate(3,5,21)"/>
+            <rect x="2.5" y="20" width="2.2" height="2.2" rx="0.5" fill="#7ab8d8" transform="rotate(3,3,21)"/>
             <!-- Humo del escape -->
             <g class="combi-humo">
               <circle cx="110" cy="48" r="2.2" fill="#bbb" opacity="0.5"/>
@@ -1180,7 +1602,7 @@
           </g>
         </svg>
       </div>
-      <span class="bocadillo-cinta">tsss sanaso</span>
+      <span class="bocadillo-cinta">SUBE PE, AL FONDO ENTRAN</span>
     </div>
   </div>
   <!-- CONFETI -->
@@ -1212,15 +1634,21 @@
   </div>
   <!-- FOOTER -->
   <footer>
-    <div style="margin-bottom:16px;">
-      <a href="https://tiktok.com/@tusuerte.pe.oficial" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#111;border:2px solid #ff0050;border-radius:4px;color:#fff;font-family:'Righteous',cursive;font-size:.95rem;padding:10px 20px;text-decoration:none;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 0 16px #ff0050'" onmouseout="this.style.boxShadow='none'">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.79 1.52V6.75a4.85 4.85 0 0 1-1.02-.06z"/></svg>
-        @tusuerte.pe.oficial
-      </a>
+    <div class="footer-nav-links">
+      <a onclick="abrirPanel('panel-faq')">PREGUNTAS FRECUENTES</a>
+      <a onclick="abrirPanel('panel-terminos')">TÉRMINOS Y CONDICIONES</a>
     </div>
+    <div class="footer-tiktok-wrap">
+      <a href="https://tiktok.com/@tusuerte.pe.oficial" target="_blank" class="footer-tiktok-btn">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.79 1.52V6.75a4.85 4.85 0 0 1-1.02-.06z"/></svg>
+        @TUSUERTE.PE.OFICIAL
+      </a>
+      <div class="footer-tiktok-sub">Los ganadores se anuncian en vivo por TikTok</div>
+    </div>
+    <div class="footer-micro">Todo es real, sin floro.</div>
+    <div class="footer-cierre">Hoy te puede caer tu yape 👀</div>
     <div class="footer-copy">
-      © 2026 <strong>TUSUERTE.PE</strong> | tusuerte.pe<br>
-      Sorteos solo para peruanos 🇵🇪
+      © 2026 <strong>TUSUERTE.PE</strong>
     </div>
   </footer>
   <!-- PANEL REGISTRO -->
@@ -1236,34 +1664,28 @@
     <input name="tiktok"/>
   </form>
   <div class="panel-overlay" id="panel-registro" onclick="cerrarPanelFuera(event,'panel-registro')">
-    <div class="panel-box" style="max-width:600px;border:3px solid var(--neon-verde)">
-      <div class="panel-header" style="background:#001a0d;border-bottom:3px solid var(--neon-verde)">
-        <span class="panel-titulo" style="color:var(--neon-verde);text-shadow:0 0 16px var(--neon-verde)" id="panel-reg-titulo">✍️ ¡APÚNTATE AL TOQUE!</span>
-        <button class="panel-cerrar" onclick="cerrarPanel('panel-registro')">✕</button>
+    <div class="panel-box reg-box">
+      <div class="panel-header reg-header">
+        <span class="panel-titulo" id="panel-reg-titulo">¡APÚNTATE AL TOQUE!</span>
+        <button class="panel-cerrar reg-cerrar" onclick="cerrarPanel('panel-registro')">✕</button>
       </div>
       <div class="panel-body">
-        <div style="background:var(--neon-verde);color:#000;font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:2px;padding:8px 16px;text-align:center;margin-bottom:20px;border-radius:3px;" id="registro-sorteo-label">SORTEO SELECCIONADO</div>
+        <div class="reg-premio-bar" id="registro-sorteo-label">SORTEO SELECCIONADO</div>
         <!-- ── PASO 1: TikTok ── -->
         <div id="paso-tiktok">
-          <div style="text-align:center;padding:10px 0 20px;">
-            <div style="font-size:3.5rem;margin-bottom:10px;">📱</div>
-            <p style="font-family:'Bangers',cursive;font-size:1.6rem;letter-spacing:2px;color:var(--neon-amarillo);text-shadow:0 0 12px var(--neon-amarillo);margin-bottom:8px;">¡PASO PREVIO OBLIGATORIO!</p>
-            <p style="color:#ccc;font-size:.95rem;line-height:1.6;margin-bottom:22px;">Para participar en el sorteo debes seguir nuestra cuenta de TikTok y darle <strong style="color:var(--neon-rosa)">❤️ like</strong> a la página oficial. ¡Es un requisito pe!</p>
+          <div class="reg-tiktok-inner">
+            <p class="reg-paso-label">Paso obligatorio</p>
+            <p class="reg-texto">Sigue la cuenta y dale like para participar</p>
             <a href="https://tiktok.com/@tusuerte.pe.oficial" target="_blank" rel="noopener"
-               onclick="activarConfirmacion()"
-               style="display:inline-flex;align-items:center;gap:10px;background:#ff0050;color:#fff;font-family:'Bangers',cursive;font-size:1.3rem;letter-spacing:2px;padding:14px 28px;border-radius:4px;text-decoration:none;border-bottom:5px solid #8a0030;transition:transform .15s,box-shadow .15s;"
-               onmouseover="this.style.boxShadow='0 0 24px #ff0050'" onmouseout="this.style.boxShadow='none'">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.78a4.85 4.85 0 0 1-1.01-.09z"/></svg>
-              IR A TIKTOK @tusuerte.pe.oficial
+               onclick="activarConfirmacion()" class="reg-btn-tiktok">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.78a4.85 4.85 0 0 1-1.01-.09z"/></svg>
+              IR A TIKTOK
             </a>
-            <p style="font-size:.78rem;color:#666;margin-top:14px;">Al hacer clic se abrirá TikTok en una nueva pestaña.<br>Vuelve aquí después de seguir y dar like.</p>
+            <p class="reg-nota-mini">Se abre en otra pestaña. Vuelve después de seguir.</p>
           </div>
-          <button id="btn-confirmar-tiktok" class="btn-registro" disabled
-            style="opacity:.45;cursor:not-allowed;background:#555;border-bottom-color:#333;"
-            onclick="irAlFormulario()">
-            ✅ ¡YA LOS SEGUÍ Y DI LIKE! — IR AL REGISTRO
+          <button id="btn-confirmar-tiktok" class="reg-btn-siguiente" disabled onclick="irAlFormulario()">
+            YA SEGUÍ Y DI LIKE
           </button>
-          <p style="text-align:center;font-size:.75rem;color:#555;margin-top:10px;">El botón se activa al hacer clic en "IR A TIKTOK"</p>
         </div>
         <!-- ── PASO 2: Formulario ── -->
         <div id="paso-formulario" style="display:none;">
@@ -1377,47 +1799,45 @@
   <div class="panel-overlay" id="panel-como" onclick="cerrarPanelFuera(event,'panel-como')">
     <div class="panel-box">
       <div class="panel-header">
-        <span class="panel-titulo">📋 ¿CÓMO FUNCIONA?</span>
+        <span class="panel-titulo">¿CÓMO <span class="titulo-acento">FUNCIONA</span>?</span>
         <button class="panel-cerrar" onclick="cerrarPanel('panel-como')">✕</button>
       </div>
       <div class="panel-body">
         <div class="pasos">
           <div class="paso">
-            <div class="paso-num">1</div>
-            <div class="paso-icono">📱</div>
-            <h3>SIGUE NUESTRA CUENTA</h3>
-            <p><strong style="color:var(--neon-rosa)">¡PRIMERO LO PRIMERO PE!</strong> Sigue <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong> en TikTok y dale ❤️ like a la página. ¡Sin esto no te puedes registrar!</p>
+            <div class="paso-top"><span class="paso-num">1</span><span class="paso-icono">📱</span></div>
+            <h3>SIGUE LA CUENTA</h3>
+            <p>Sigue a <strong>@tusuerte.pe.oficial</strong> en TikTok y dale like pa' entrar al juego.</p>
           </div>
           <div class="paso">
-            <div class="paso-num">2</div>
-            <div class="paso-icono">🍀</div>
-            <h3>ELIGE TU SORTEO</h3>
-            <p>Escoge el premio que más te gusta y dale clic en ¡ME APUNTO! ¡Puedes participar solo en uno por semana!</p>
+            <div class="paso-top"><span class="paso-num">2</span><span class="paso-icono">🍀</span></div>
+            <h3>ELIGE TU SUERTE</h3>
+            <p>Escoge el premio que quieras y dale a <strong>"Me apunto"</strong>.</p>
           </div>
           <div class="paso">
-            <div class="paso-num">3</div>
-            <div class="paso-icono">✍️</div>
+            <div class="paso-top"><span class="paso-num">3</span><span class="paso-icono">📝</span></div>
             <h3>REGÍSTRATE</h3>
-            <p>Llena el formulario con tu nombre, DNI, celular, correo y tu usuario de TikTok. ¡Es gratis pe, no se cobra nada!</p>
+            <p>Deja tus datos: nombre, DNI y numero de Yape/Plin.</p>
           </div>
           <div class="paso">
-            <div class="paso-num">4</div>
-            <div class="paso-icono">📲</div>
+            <div class="paso-top"><span class="paso-num">4</span><span class="paso-icono">⏳</span></div>
             <h3>ESPERA EL SORTEO</h3>
-            <p>El sorteo es en vivo en la misma web <strong style="color:var(--neon-celeste)">tusuerte.pe</strong>; de acuerdo a la fecha y hora que se indica, será a través de una <strong style="color:var(--neon-amarillo)">ruleta digital</strong>. ¡Tienes que estar mosca!</p>
+            <p>Se juega en vivo en la web a la hora indicada. ¡Estate mosca!</p>
           </div>
           <div class="paso">
-            <div class="paso-num">5</div>
-            <div class="paso-icono">🎉</div>
-            <h3>¡RECLAMA TU PREMIO!</h3>
-            <p>Si ganas, deberás reclamar tu premio en la próxima hora a través de un mensaje con tu <strong style="color:var(--neon-amarillo)">código de registro</strong> a nuestra cuenta oficial de TikTok <strong style="color:var(--neon-rosa)">@tusuerte.pe.oficial</strong>. De no hacerlo así, perderás el premio por sano.</p>
+            <div class="paso-top"><span class="paso-num">5</span><span class="paso-icono">🎉</span></div>
+            <h3>SI GANAS, COBRAS</h3>
+            <p>Nos escribes al tiktok con tu codigo pa que reclames tu premio.</p>
           </div>
           <div class="paso">
-            <div class="paso-num">6</div>
-            <div class="paso-icono">🔄</div>
-            <h3>¡ELIGE OTRO SORTEO!</h3>
-            <p>Si el sorteo que escogiste ya se cerró, podrás participar en otro nuevo. Las condiciones y reglas son las mismas. ¡No te quedes sin jugar causa!</p>
+            <div class="paso-top"><span class="paso-num">6</span><span class="paso-icono">🔁</span></div>
+            <h3>SI NO TE TOCÓ...</h3>
+            <p>Tranqui causa. Puedes intentar en el siguiente sorteo.</p>
           </div>
+        </div>
+        <div class="paso-cierre">
+          <div class="paso-cierre-txt">Fácil pe causa. Sigue los pasos y entra</div>
+          <button class="paso-cierre-btn" onclick="cerrarPanel('panel-como')">YA, QUIERO PARTICIPAR</button>
         </div>
       </div>
     </div>
@@ -1639,31 +2059,324 @@
         }
       }
     });
-    // ── Contadores: solo mini por sorteo (hero eliminado) ──
-    function actualizarContadores() {
-      // Mini-contadores por sorteo
-      Object.keys(SORTEOS_CFG).forEach(function(id) {
-        var ms = msHasta(SORTEOS_CFG[id].ts);
-        var wrap = document.getElementById('mini-cnt-' + id);
-        if (!wrap) return;
-        if (ms <= 0) {
-          wrap.classList.add('vencido');
-          ['d','h','m','s'].forEach(function(p) {
-            var el = document.getElementById('mc' + id + p);
-            if (el) el.textContent = '00';
-          });
-        } else {
-          wrap.classList.remove('vencido');
-          var t = descomponerMs(ms);
-          document.getElementById('mc'+id+'d').textContent = pad(t.d);
-          document.getElementById('mc'+id+'h').textContent = pad(t.h);
-          document.getElementById('mc'+id+'m').textContent = pad(t.m);
-          document.getElementById('mc'+id+'s').textContent = pad(t.s);
+    // ── Contadores: ELIMINADO — ahora renderBloque3 maneja su propio contador ──
+
+    // ══════════════════════════════════════════════════════════════
+    // BLOQUE 3: SISTEMA DE ESTADOS — RENDERIZADO DINÁMICO
+    // ══════════════════════════════════════════════════════════════
+    var DIAS_NOMBRE = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    var SORTEO_DATA = [
+      { id:'1', emoji:'🍬', sub:'Pal chicle', nombre:'YAPE PAL CHICLE 🍬', desc:'Hoy te llevas 1 lukita directo a tu Yape', monto:'S/1', lukitas:'1 lukita' },
+      { id:'2', emoji:'🌾', sub:'Pa la quinua', nombre:'YAPE PA LA QUINUA 🥣', desc:'Hoy te llevas 2 lukitas directo a tu Yape', monto:'S/2', lukitas:'2 lukitas' },
+      { id:'3', emoji:'🥤', sub:'Pa la gaseosa', nombre:'YAPE PA LA GASEOSA 🥤', desc:'Hoy te llevas 5 lukitas directo a tu Yape', monto:'S/5', lukitas:'5 lukitas' },
+      { id:'4', emoji:'🍺', sub:'Pa la chelita', nombre:'YAPE PA LA CHELITA 🍺', desc:'Hoy te llevas 6 lukitas directo a tu Yape', monto:'S/6', lukitas:'6 lukitas' },
+      { id:'5', emoji:'🚌', sub:'Pa la recarga', nombre:'YAPE PA LA RECARGA 📱', desc:'Hoy te llevas 7 lukitas directo a tu Yape', monto:'S/7', lukitas:'7 lukitas' },
+      { id:'6', emoji:'🍗', sub:'Pal pollito', nombre:'YAPE PAL POLLITO 🍗', desc:'Hoy te llevas 20 lukitas directo a tu Yape', monto:'S/20', lukitas:'20 lukitas' }
+    ];
+
+    // ── SVG Yape logo inline (reutilizable) ──
+    function yapeSVG(gradId) {
+      return '<svg class="yape-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">' +
+        '<defs><linearGradient id="' + gradId + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7B2FE0"/><stop offset="100%" stop-color="#5A1DB8"/></linearGradient></defs>' +
+        '<rect width="120" height="120" rx="26" fill="url(#' + gradId + ')"/>' +
+        '<circle cx="88" cy="28" r="14" fill="#00D4AA"/>' +
+        '<text x="88" y="33" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="13" fill="#fff">S/</text>' +
+        '<text x="60" y="82" text-anchor="middle" font-family="Pacifico,Lobster,cursive" font-size="44" fill="#fff">yape</text></svg>';
+    }
+
+    // ── Determinar estado de un sorteo ──
+    function getEstado(sorteoId) {
+      var cfg = SORTEOS_CFG[sorteoId];
+      if (!cfg) return 'finalizado';
+      var ahora = Date.now();
+      // Activo = ya pasó su hora de inicio pero hace menos de 30 min (ventana de sorteo)
+      if (ahora >= cfg.ts && ahora < cfg.ts + 1800000) return 'activo';
+      if (ahora < cfg.ts) return 'proximo';
+      return 'finalizado';
+    }
+
+    // ── Badge text para el principal ──
+    function getBadgeText(sorteoId) {
+      var cfg = SORTEOS_CFG[sorteoId];
+      var d = new Date(cfg.ts);
+      var hh = d.getHours(); var mm = d.getMinutes();
+      var horaCorta = (hh > 12 ? hh - 12 : hh) + (mm > 0 ? ':' + (mm < 10 ? '0' + mm : mm) : '') + (hh >= 12 ? 'PM' : 'AM');
+      var ahora = new Date();
+      var estado = getEstado(sorteoId);
+      if (estado === 'activo') return '🔴 EN VIVO 🔥';
+      if (d.getDate() === ahora.getDate() && d.getMonth() === ahora.getMonth()) {
+        return 'HOY ' + horaCorta + ' — SE JUEGA 🔥';
+      }
+      return DIAS_NOMBRE[d.getDay()].toUpperCase() + ' ' + horaCorta + ' 🔥';
+    }
+
+    // ── Generar HTML del card PRINCIPAL ──
+    function renderPrincipal(s) {
+      var cfg = SORTEOS_CFG[s.id];
+      return '<div class="card-hoy" id="card-sorteo-' + s.id + '">' +
+        '<div class="card-front">' +
+          '<div class="badge-hoy">' + getBadgeText(s.id) + '</div>' +
+          '<span class="badge-gratis">GRATIS</span>' +
+          '<div class="card-img" style="padding:0;border-bottom-color:#ff1493"><div class="yape-logo">' + yapeSVG('ypBg' + s.id) + '</div></div>' +
+          '<div class="card-body">' +
+            '<div class="card-titulo">' + s.nombre + '</div>' +
+            '<div class="card-desc">' + s.desc + '</div>' +
+            '<div class="mini-cnt-wrap" id="mini-cnt-' + s.id + '">' +
+              '<div class="mini-contador">' +
+                '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 'h">--</div><div class="mc-lbl">Hrs</div></div>' +
+                '<div class="mc-sep">:</div>' +
+                '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 'm">--</div><div class="mc-lbl">Min</div></div>' +
+                '<div class="mc-sep">:</div>' +
+                '<div class="mc-blq"><div class="mc-num" id="mc' + s.id + 's">--</div><div class="mc-lbl">Seg</div></div>' +
+              '</div>' +
+            '</div>' +
+            '<button class="btn-participar" onclick="abrirRegistro(\'' + s.nombre + ' – ' + s.monto + '\',\'' + s.id + '\')">PARTICIPAR GRATIS</button>' +
+            '<div class="card-confianza">Solo con tu número de Yape. Sin pago, sin floro.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sello-cerrado">CERRADO</div>' +
+        '<div class="card-back">' +
+          '<div class="card-back-titulo">RULETA DEL SORTEO</div>' +
+          '<div class="card-back-estado" id="card-estado-' + s.id + '">Cargando...</div>' +
+          '<div class="card-ruleta-container"><div class="card-ruleta-flecha"></div><canvas class="card-ruleta-canvas" id="card-canvas-' + s.id + '" width="180" height="180"></canvas><div class="card-ruleta-centro">PE</div></div>' +
+          '<div class="card-ganador-result" id="card-ganador-' + s.id + '"><div style="font-size:1.5rem">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-' + s.id + '"></div><div class="card-ganador-dni" id="card-ganador-dni-' + s.id + '"></div></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // ── Generar HTML de card SECUNDARIO (proximo o cerrado) ──
+    function renderSecundario(s, esCerrado, esSiguiente) {
+      var cfg = SORTEOS_CFG[s.id];
+      var d = new Date(cfg.ts);
+      var fechaTexto = DIAS_NOMBRE[d.getDay()] + ' ' + d.getDate() + ' • ' +
+        (d.getHours() > 12 ? d.getHours() - 12 : d.getHours()) + (d.getMinutes() > 0 ? ':' + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()) : '') +
+        (d.getHours() >= 12 ? 'PM' : 'AM');
+      var claseExtra = esCerrado ? ' cerrado' : '';
+      if (esSiguiente) claseExtra += ' siguiente';
+      var btnHTML = esCerrado
+        ? '<button class="btn-participar" style="pointer-events:none;opacity:.3">FINALIZADO</button>'
+        : '<button class="btn-participar" style="pointer-events:none">EN BREVE CAUSA</button>';
+      var metaHTML = esCerrado
+        ? '<div class="card-meta"><span class="card-fecha" style="color:#666">📅 ' + fechaTexto + '</span></div>'
+        : '<div class="card-meta"><span class="card-participantes">Sé el primero 👀</span><span class="card-fecha">📅 ' + fechaTexto + '</span></div>';
+      return '<div class="card-sorteo-wrap">' +
+        '<div class="card-sorteo' + claseExtra + '" id="card-sorteo-' + s.id + '">' +
+          '<div class="card-front">' +
+            '<div class="card-img" style="padding:0;border-bottom-color:rgba(57,255,20,.3)"><div class="yape-logo">' + yapeSVG('ypSBg' + s.id) + '</div></div>' +
+            '<div class="card-body">' +
+              '<div class="card-titulo">¡' + s.nombre + '!</div>' +
+              '<div class="card-desc" style="color:#999">' + s.lukitas + ' directo a tu Yape</div>' +
+              metaHTML +
+              btnHTML +
+            '</div>' +
+          '</div>' +
+          '<div class="sello-cerrado">CERRADO</div>' +
+          '<div class="card-back card-back-cerrado">' +
+            '<div class="card-ganador-result" id="card-ganador-' + s.id + '" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%"><div style="font-size:2.5rem;margin-bottom:8px">🏆</div><div class="card-ganador-nombre" id="card-ganador-nombre-' + s.id + '" style="font-size:1.1rem"></div><div class="card-ganador-dni" id="card-ganador-dni-' + s.id + '" style="font-size:.7rem;margin-top:4px"></div></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // ── Mostrar ganador en card (para cerrados) ──
+    function mostrarGanadorEnCard(card, ganador) {
+      var estadoEl = card.querySelector('.card-back-estado');
+      var ganadorDiv = card.querySelector('.card-ganador-result');
+      var ganadorNombre = card.querySelector('.card-ganador-nombre');
+      var ganadorDni = card.querySelector('.card-ganador-dni');
+      if (ganador && ganadorNombre && ganadorDni) {
+        if (estadoEl) { estadoEl.textContent = '🎉 ¡GANADOR!'; estadoEl.style.color = 'var(--neon-amarillo)'; estadoEl.style.fontSize = '1rem'; }
+        ganadorNombre.textContent = (ganador.nombres + ' ' + ganador.apellidos).toUpperCase();
+        var dniMask = ganador.dni ? ganador.dni.substring(0,3) + '***' + ganador.dni.substring(ganador.dni.length - 2) : '';
+        ganadorDni.textContent = 'DNI: ' + dniMask;
+        if (ganadorDiv) ganadorDiv.classList.add('visible');
+        lanzarConfeti();
+      } else {
+        if (estadoEl) { estadoEl.textContent = 'Aún no hay ganador registrado'; estadoEl.style.color = '#888'; }
+        if (ganadorDiv) ganadorDiv.classList.remove('visible');
+      }
+    }
+
+    // ── Click handler para cards cerradas — voltea y muestra ganador + confeti ──
+    function setupClickCerrado(card, sorteoId) {
+      if (card._cerradoClickBound) return;
+      card._cerradoClickBound = true;
+      card.addEventListener('click', function() {
+        if (!card.classList.contains('cerrado')) return;
+        if (card.classList.contains('flipped')) { card.classList.remove('flipped'); return; }
+        if (card._busy) return;
+        card._busy = true;
+
+        var ganadorNombre = card.querySelector('.card-ganador-nombre');
+        var ganadorDni = card.querySelector('.card-ganador-dni');
+
+        // Limpiar antes de voltear
+        if (ganadorNombre) ganadorNombre.textContent = '';
+        if (ganadorDni) ganadorDni.textContent = '';
+
+        card.classList.add('flipped');
+
+        function mostrarEnCard(g) {
+          if (g && ganadorNombre && ganadorDni) {
+            ganadorNombre.textContent = (g.nombres + ' ' + g.apellidos).toUpperCase();
+            var dniM = g.dni ? g.dni.substring(0,3) + '***' + g.dni.substring(g.dni.length - 2) : '';
+            ganadorDni.textContent = 'DNI: ' + dniM;
+            lanzarConfeti();
+          } else {
+            if (ganadorNombre) ganadorNombre.textContent = 'AÚN SIN GANADOR';
+            if (ganadorDni) ganadorDni.textContent = '';
+          }
+          setTimeout(function() { card.classList.remove('flipped'); card._busy = false; }, 5000);
         }
+
+        // Checar localStorage primero
+        var ganadores = cargarGanadores();
+        var ganadorLocal = null;
+        for (var i = 0; i < ganadores.length; i++) {
+          if (ganadores[i].sorteoId === sorteoId) { ganadorLocal = ganadores[i]; break; }
+        }
+        if (ganadorLocal) {
+          setTimeout(function() { mostrarEnCard(ganadorLocal); }, 400);
+          return;
+        }
+
+        // Fetch de Google Sheets
+        var cfg = SORTEOS_CFG[sorteoId];
+        if (!cfg) { setTimeout(function() { mostrarEnCard(null); }, 400); return; }
+        var nombreSorteo = cfg.nombre.split('–')[0].trim();
+        fetch(GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
+            if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
+              mostrarEnCard(null);
+            } else {
+              var p = data.participantes;
+              var idx = window.crypto ? (new Uint32Array(1), window.crypto.getRandomValues(new Uint32Array(1))[0] % p.length) : Math.floor(Math.random() * p.length);
+              var g = p[idx];
+              var obj = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sorteoId, sorteo:cfg.nombre };
+              guardarGanador(obj);
+              mostrarEnCard(obj);
+            }
+          }).catch(function() { mostrarEnCard(null); });
       });
     }
-    actualizarContadores();
-    setInterval(actualizarContadores, 1000);
+
+    // ── RENDER PRINCIPAL — el corazón del sistema ──
+    var _principalActualId = null;
+    var _contadorInterval = null;
+
+    function renderBloque3() {
+      var ahora = Date.now();
+      var principalWrap = document.getElementById('principal-wrap');
+      var secundariosWrap = document.getElementById('secundarios-wrap');
+
+      // Clasificar sorteos por estado
+      var activo = null;   // el que está en vivo o es el próximo inmediato
+      var proximos = [];   // los que vienen después
+      var finalizados = [];
+
+      // Primero buscar si hay uno activo (en vivo)
+      for (var i = 0; i < SORTEO_DATA.length; i++) {
+        var est = getEstado(SORTEO_DATA[i].id);
+        if (est === 'activo') { activo = SORTEO_DATA[i]; break; }
+      }
+      // Si no hay activo en vivo, el principal es el próximo más cercano
+      if (!activo) {
+        for (var j = 0; j < SORTEO_DATA.length; j++) {
+          if (getEstado(SORTEO_DATA[j].id) === 'proximo') { activo = SORTEO_DATA[j]; break; }
+        }
+      }
+      // Separar el resto
+      SORTEO_DATA.forEach(function(s) {
+        if (activo && s.id === activo.id) return; // ya está en principal
+        var est = getEstado(s.id);
+        if (est === 'proximo') proximos.push(s);
+        else if (est === 'finalizado') finalizados.push(s);
+      });
+
+      // ── Renderizar PRINCIPAL ──
+      if (activo && _principalActualId !== activo.id) {
+        _principalActualId = activo.id;
+        window._hoyCardId = activo.id;
+        principalWrap.innerHTML = renderPrincipal(activo);
+
+        // Participar
+        window.participarHoy = function() {
+          abrirRegistro(activo.nombre + ' – ' + activo.monto, activo.id);
+        };
+
+        // Contador
+        if (_contadorInterval) clearInterval(_contadorInterval);
+        var cfg = SORTEOS_CFG[activo.id];
+        function actualizarContadorPrincipal() {
+          var ms = msHasta(cfg.ts);
+          var wrap = document.getElementById('mini-cnt-' + activo.id);
+          if (!wrap) return;
+          if (ms <= 0) {
+            ['h','m','s'].forEach(function(p) { var el = document.getElementById('mc' + activo.id + p); if (el) el.textContent = '00'; });
+            if (wrap) wrap.classList.add('vencido');
+            return;
+          }
+          var t = descomponerMs(ms);
+          var totalH = t.d * 24 + t.h;
+          document.getElementById('mc' + activo.id + 'h').textContent = pad(totalH);
+          document.getElementById('mc' + activo.id + 'm').textContent = pad(t.m);
+          document.getElementById('mc' + activo.id + 's').textContent = pad(t.s);
+          // Urgencia
+          if (ms < 7200000 && wrap) { wrap.classList.add('urgente'); wrap.classList.remove('casi'); }
+          else if (ms < 21600000 && wrap) { wrap.classList.add('casi'); wrap.classList.remove('urgente'); }
+          else if (wrap) { wrap.classList.remove('urgente','casi'); }
+        }
+        actualizarContadorPrincipal();
+        _contadorInterval = setInterval(actualizarContadorPrincipal, 1000);
+
+        // Marcar cerrado si ya pasó
+        var cardEl = document.getElementById('card-sorteo-' + activo.id);
+        if (cardEl && getEstado(activo.id) === 'finalizado') {
+          cardEl.classList.add('cerrado');
+        }
+        if (cardEl) setupClickCerrado(cardEl, activo.id);
+      }
+      if (!activo) {
+        principalWrap.innerHTML = '<div style="text-align:center;color:#888;padding:30px;font-family:Poppins,sans-serif">No hay sorteo activo en este momento.</div>';
+        _principalActualId = null;
+      }
+
+      // Actualizar badge del principal en tiempo real
+      if (activo) {
+        var badgeEl = principalWrap.querySelector('.badge-hoy');
+        if (badgeEl) badgeEl.textContent = getBadgeText(activo.id);
+        // Marcar cerrado si acaba de finalizar
+        var cardPrincipal = document.getElementById('card-sorteo-' + activo.id);
+        if (cardPrincipal && getEstado(activo.id) === 'finalizado') {
+          cardPrincipal.classList.add('cerrado');
+        }
+      }
+
+      // ── Renderizar SECUNDARIOS (finalizados primero, luego próximos) ──
+      finalizados.sort(function(a, b) { return SORTEOS_CFG[b.id].ts - SORTEOS_CFG[a.id].ts; }); // más reciente primero
+      proximos.sort(function(a, b) { return SORTEOS_CFG[a.id].ts - SORTEOS_CFG[b.id].ts; });
+      var secHTML = '';
+      finalizados.forEach(function(s) { secHTML += renderSecundario(s, true, false); });
+      proximos.forEach(function(s, idx) { secHTML += renderSecundario(s, false, idx === 0); });
+      // Solo actualizar si cambió (para no romper animaciones)
+      var secIds = finalizados.map(function(s) { return 'f' + s.id; }).concat(proximos.map(function(s) { return 'p' + s.id; })).join(',');
+      if (secundariosWrap.getAttribute('data-ids') !== secIds) {
+        secundariosWrap.innerHTML = secHTML;
+        secundariosWrap.setAttribute('data-ids', secIds);
+        // Setup click handlers para cerrados
+        finalizados.forEach(function(s) {
+          var card = document.getElementById('card-sorteo-' + s.id);
+          if (card) setupClickCerrado(card, s.id);
+        });
+      }
+    }
+
+    // Render inicial + re-render cada 5s para detectar cambios de estado
+    renderBloque3();
+    setInterval(renderBloque3, 5000);
+
     // PANELES
     var _panelAbierto = false;
     function abrirPanel(id) {
@@ -1718,35 +2431,37 @@
       // Paso 1: TikTok primero, luego formulario
       document.getElementById('paso-tiktok').style.display = 'block';
       document.getElementById('paso-formulario').style.display = 'none';
-      document.getElementById('panel-reg-titulo').textContent = '✍️ ¡APÚNTATE AL TOQUE!';
+      document.getElementById('panel-reg-titulo').textContent = '¡APÚNTATE AL TOQUE!';
       var btnConfirmar = document.getElementById('btn-confirmar-tiktok');
       btnConfirmar.disabled = true;
-      btnConfirmar.style.opacity = '.45';
-      btnConfirmar.style.cursor = 'not-allowed';
-      btnConfirmar.style.background = '#555';
-      btnConfirmar.style.borderBottomColor = '#333';
+      btnConfirmar.textContent = 'YA SEGUÍ Y DI LIKE';
+      _fueATikTok = false;
       abrirPanel('panel-registro');
     }
+    var _fueATikTok = false;
     function activarConfirmacion() {
-      setTimeout(function() {
-        const btn = document.getElementById('btn-confirmar-tiktok');
-        btn.disabled = false;
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-        btn.style.background = 'var(--neon-verde)';
-        btn.style.borderBottomColor = '#1a7a0a';
-      }, 1500);
+      _fueATikTok = true;
+      setTimeout(activarBtnRegistro, 2000);
     }
+    function activarBtnRegistro() {
+      var btn = document.getElementById('btn-confirmar-tiktok');
+      if (!btn || !btn.disabled) return;
+      btn.disabled = false;
+      btn.textContent = 'IR AL REGISTRO';
+    }
+    window.addEventListener('focus', function() {
+      if (_fueATikTok) activarBtnRegistro();
+    });
     function irAlFormulario() {
       document.getElementById('paso-tiktok').style.display = 'none';
       document.getElementById('paso-formulario').style.display = 'block';
-      document.getElementById('panel-reg-titulo').textContent = '📝 COMPLETA TUS DATOS';
+      document.getElementById('panel-reg-titulo').textContent = 'COMPLETA TUS DATOS';
     }
     // ══════════════════════════════════════════════════════
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzcWiOIam9A-mbxU9cB-ag9oHqN9X0W5JMz8BiCrow8h_f593WebueKBRo1lHb5ENd7/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxO6jFPkjWs8Sj_gWCLVpapAJG66ObNEHiDkmxiSDaDVuOAv9xjulH6ciM02SLgKH2b/exec';
     function enviarRegistro(e) {
       e.preventDefault();
       const form = e.target;
@@ -1893,6 +2608,25 @@
       var lista = cargarGanadores();
       lista.unshift(ganador); // más reciente primero
       localStorage.setItem(GANADORES_KEY, JSON.stringify(lista));
+
+      // ── Enviar ganador a Google Sheets ──
+      if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
+        fetch(GOOGLE_SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'registrarGanador',
+            sorteo: ganador.sorteo || '',
+            sorteoId: ganador.sorteoId || '',
+            nombres: ganador.nombres || '',
+            apellidos: ganador.apellidos || '',
+            dni: ganador.dni || ''
+          })
+        }).catch(function(err) {
+          console.warn('Error al registrar ganador en Sheets:', err);
+        });
+      }
     }
 
     // ── Renderizar lista de ganadores en el panel ──
@@ -2200,17 +2934,18 @@
     }
     setInterval(verificarSorteosActivos, 5000);
 
-    // ── Testing: doble click en título del sorteo ──
-    document.querySelectorAll('.card-titulo').forEach(function(el, idx) {
-      el.addEventListener('dblclick', function() {
-        var id = String(idx + 1);
-        if (confirm('¿Iniciar ruleta de prueba para ' + SORTEOS_CFG[id].nombre + '?')) {
-          ruletaSorteoYaEjecutado[id] = false;
-          var card = document.getElementById('card-sorteo-' + id);
-          if (card) { card.classList.remove('cerrado'); card.classList.remove('flipped'); }
-          iniciarRuleta(id);
-        }
-      });
+    // ── Testing: doble click en título del sorteo (delegación para DOM dinámico) ──
+    document.getElementById('sorteos').addEventListener('dblclick', function(e) {
+      var titulo = e.target.closest('.card-titulo');
+      if (!titulo) return;
+      var card = titulo.closest('[id^="card-sorteo-"]');
+      if (!card) return;
+      var id = card.id.replace('card-sorteo-', '');
+      if (SORTEOS_CFG[id] && confirm('¿Iniciar ruleta de prueba para ' + SORTEOS_CFG[id].nombre + '?')) {
+        ruletaSorteoYaEjecutado[id] = false;
+        card.classList.remove('cerrado'); card.classList.remove('flipped');
+        iniciarRuleta(id);
+      }
     });
   </script>
   <!-- ══════════════ MÚSICA PERUANA ══════════════ -->
@@ -2257,7 +2992,7 @@
   </style>
   <button id="btn-musica" title="Silenciar / Activar sonido" onclick="toggleMusica()">🔊</button>
   <div id="musica-label">SONIDO</div>
-  <!-- Silbidos cargados via fetch + Web Audio API desde silbido_1/2/3.mp3 -->
+  <!-- Audio -->
   <!-- Silbidos generados con Web Audio API usando el contexto de la música -->
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>
@@ -2268,25 +3003,14 @@
       flex-direction: column;
       align-items: center;
       pointer-events: none;
-      left: -300px; bottom: 30%;
-      visibility: hidden; /* oculta siempre; JS la hace visible solo durante la animación */
+      left: -300px; bottom: 10px;
+      visibility: hidden;
     }
     /* Lado derecho: llama espejada */
     #llama-saludo.lado-derecho svg { transform: scaleX(-1); }
-    /* Lado superior: burbuja debajo de la llama */
-    #llama-saludo.lado-top {
-      flex-direction: column-reverse;
-    }
-    #llama-saludo.lado-top #llama-burbuja::after {
-      bottom: auto; top: -13px;
-      border-top-color: transparent;
-      border-bottom-color: var(--neon-amarillo);
-    }
-    /* Animaciones peek por cada lado */
+    /* Solo animaciones de esquinas inferiores */
     #llama-saludo.animando.lado-izq    { animation: peekIzq    9s cubic-bezier(.4,0,.6,1) forwards; }
     #llama-saludo.animando.lado-derecho{ animation: peekDer    9s cubic-bezier(.4,0,.6,1) forwards; }
-    #llama-saludo.animando.lado-bottom { animation: peekBottom 9s cubic-bezier(.4,0,.6,1) forwards; }
-    #llama-saludo.animando.lado-top    { animation: peekTop    9s cubic-bezier(.4,0,.6,1) forwards; }
     /* Estilos compartidos para ambas burbujas */
     #llama-burbuja, #llama-burbuja2 {
       position: relative;
@@ -2352,30 +3076,7 @@
       75%  { transform: translateX(0)      rotate(0deg); }
       100% { transform: translateX(300px)  rotate(0deg); }
     }
-    /* ── Peek desde abajo ── */
-    @keyframes peekBottom {
-      0%   { transform: translateY(300px)  rotate(0deg); }
-      20%  { transform: translateY(0)      rotate(0deg); }
-      28%  { transform: translateY(0)      rotate(-8deg); }
-      36%  { transform: translateY(0)      rotate(7deg); }
-      44%  { transform: translateY(0)      rotate(-6deg); }
-      52%  { transform: translateY(0)      rotate(5deg); }
-      62%  { transform: translateY(0)      rotate(0deg); }
-      75%  { transform: translateY(0)      rotate(0deg); }
-      100% { transform: translateY(300px)  rotate(0deg); }
-    }
-    /* ── Peek desde arriba ── */
-    @keyframes peekTop {
-      0%   { transform: translateY(-300px) rotate(0deg); }
-      20%  { transform: translateY(0)      rotate(0deg); }
-      28%  { transform: translateY(0)      rotate(-8deg); }
-      36%  { transform: translateY(0)      rotate(7deg); }
-      44%  { transform: translateY(0)      rotate(-6deg); }
-      52%  { transform: translateY(0)      rotate(5deg); }
-      62%  { transform: translateY(0)      rotate(0deg); }
-      75%  { transform: translateY(0)      rotate(0deg); }
-      100% { transform: translateY(-300px) rotate(0deg); }
-    }
+    /* (peekBottom y peekTop eliminados — llama solo aparece en esquinas inferiores) */
     /* ── Burbuja: aparece, se mueve con el wiggle, desaparece ── */
     @keyframes burbujaAppear {
       0%   { opacity:0; transform:scale(0.2) rotate(8deg); }
@@ -2473,8 +3174,8 @@
       var el      = document.getElementById('llama-saludo');
       var burbuja = document.getElementById('llama-burbuja');
       var DUR     = 9000;
-      var CLASES  = ['animando','lado-izq','lado-derecho','lado-bottom','lado-top'];
-      // Oculta la llama completamente — visibility:hidden garantiza invisibilidad
+      var CLASES  = ['animando','lado-izq','lado-derecho'];
+      // Oculta la llama completamente
       function resetLlama() {
         CLASES.forEach(function(c) { el.classList.remove(c); });
         el.style.visibility      = 'hidden';
@@ -2483,7 +3184,7 @@
         el.style.left   = '-300px';
         el.style.right  = 'auto';
         el.style.top    = 'auto';
-        el.style.bottom = '30%';
+        el.style.bottom = '10px';
       }
       resetLlama(); // estado inicial
       function mostrarLlama() {
@@ -2491,87 +3192,39 @@
         burbuja.innerHTML = frases[Math.floor(Math.random() * frases.length)].replace(/\n/g, '<br>');
         // 1) Reset completo
         resetLlama();
-        // 2) Posicionar en el borde elegido (aún invisible por visibility:hidden)
-        var lado = Math.floor(Math.random() * 4);
-        switch(lado) {
-          case 0: // izquierda
-            el.style.left   = '20px';
-            el.style.bottom = (20 + Math.random() * 40) + 'vh';
-            el.style.top    = 'auto';
-            el.style.transformOrigin = 'left center';
-            el.classList.add('lado-izq');
-            break;
-          case 1: // derecha
-            el.style.left   = 'calc(100vw - 165px)';
-            el.style.bottom = (20 + Math.random() * 40) + 'vh';
-            el.style.top    = 'auto';
-            el.style.transformOrigin = 'right center';
-            el.classList.add('lado-derecho');
-            break;
-          case 2: // abajo
-            el.style.bottom = '10px';
-            el.style.top    = 'auto';
-            el.style.left   = (15 + Math.random() * 55) + 'vw';
-            el.style.transformOrigin = 'center bottom';
-            el.classList.add('lado-bottom');
-            break;
-          case 3: // arriba
-            el.style.top    = '10px';
-            el.style.bottom = 'auto';
-            el.style.left   = (15 + Math.random() * 55) + 'vw';
-            el.style.transformOrigin = 'center top';
-            el.classList.add('lado-top');
-            break;
+        // 2) Esquina inferior izquierda o derecha (aleatorio)
+        var lado = Math.random() < 0.5 ? 0 : 1;
+        if (lado === 0) {
+          // Esquina inferior izquierda
+          el.style.left   = '10px';
+          el.style.bottom = '10px';
+          el.style.top    = 'auto';
+          el.style.transformOrigin = 'left bottom';
+          el.classList.add('lado-izq');
+        } else {
+          // Esquina inferior derecha
+          el.style.left   = 'calc(100vw - 165px)';
+          el.style.bottom = '10px';
+          el.style.top    = 'auto';
+          el.style.transformOrigin = 'right bottom';
+          el.classList.add('lado-derecho');
         }
         // 3) Hacer visible y forzar reflow; la animación arranca desde el keyframe 0%
         el.style.visibility = 'visible';
         void el.offsetWidth;
         el.classList.add('animando');
-        // Silbido generado con Web Audio API (no depende de archivos mp3)
-        setTimeout(function() {
-          if (document.hidden) return;
-          tocarSilbido();
-        }, 1000);
+        // (silbidos removidos)
         // Al terminar: reset limpio fuera de pantalla
         setTimeout(resetLlama, DUR + 50);
       }
       setTimeout(mostrarLlama, 2000);
       setInterval(mostrarLlama, 20000);
     })();
-    /* ─── SILBIDOS (tus mp3 originales, usando el ctx de la música) ─── */
+    /* ─── SILBIDOS REMOVIDOS ─── */
     var audioMuteado = false;
-    var silbidoBuffers = [null, null, null];
-    var silbidosCargados = false;
-    function cargarSilbidosMp3() {
-      if (silbidosCargados) return;
-      var ctx = musica.getCtx();
-      if (!ctx) return;
-      silbidosCargados = true;
-      ['./silbido_1.mp3','./silbido_2.mp3','./silbido_3.mp3'].forEach(function(url, i) {
-        fetch(url)
-          .then(function(r) { return r.arrayBuffer(); })
-          .then(function(arr) { return ctx.decodeAudioData(arr); })
-          .then(function(decoded) { silbidoBuffers[i] = decoded; })
-          .catch(function() {});
-      });
-    }
-    function tocarSilbido() {
-      if (audioMuteado) return;
-      var ctx = musica.getCtx();
-      if (!ctx || ctx.state !== 'running') return;
-      // Cargar si aún no se cargaron
-      if (!silbidosCargados) { cargarSilbidosMp3(); return; }
-      var disponibles = silbidoBuffers.filter(function(b) { return !!b; });
-      if (disponibles.length === 0) return;
-      var buf = disponibles[Math.floor(Math.random() * disponibles.length)];
-      var source = ctx.createBufferSource();
-      var gain = ctx.createGain();
-      source.buffer = buf;
-      gain.gain.value = 0.4;
-      source.connect(gain);
-      gain.connect(ctx.destination);
-      source.start(0);
-    }
+    var silbidosCargados = true;
+    function cargarSilbidosMp3() {}
+    function tocarSilbido() {}
 
     /* ─── MÚSICA PERUANA (Web Audio API) ─── */
     var musica = (function() {

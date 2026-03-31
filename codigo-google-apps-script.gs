@@ -21,6 +21,88 @@
 
 function doPost(e) {
   try {
+    var datos = JSON.parse(e.postData.contents);
+    var action = (datos.action || 'registro').toLowerCase();
+
+    // Fecha y hora Lima (GMT-5)
+    var ahora = new Date();
+    var fechaLima = Utilities.formatDate(ahora, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
+
+    // ── REGISTRAR GANADOR ──
+    if (action === 'registrarganador') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var ganadorSheet = ss.getSheetByName('Ganadores');
+      if (!ganadorSheet) {
+        ganadorSheet = ss.insertSheet('Ganadores');
+        ganadorSheet.appendRow([
+          'FECHA Y HORA',
+          'SORTEO',
+          'SORTEO ID',
+          'NOMBRES',
+          'APELLIDOS',
+          'DNI',
+          'CELULAR',
+          'CORREO',
+          'DISTRITO',
+          'CODIGO'
+        ]);
+        var headerRange = ganadorSheet.getRange(1, 1, 1, 10);
+        headerRange.setBackground('#1a0a2a');
+        headerRange.setFontColor('#ffd700');
+        headerRange.setFontWeight('bold');
+      }
+
+      // Buscar datos completos del ganador en la hoja de registros
+      var regSheet = ss.getActiveSheet();
+      var regData = regSheet.getDataRange().getValues();
+      var celular = '', correo = '', distrito = '', codigo = '';
+      var dniGanador = (datos.dni || '').trim();
+      for (var i = 1; i < regData.length; i++) {
+        if (String(regData[i][4] || '').trim() === dniGanador) {
+          celular = String(regData[i][5] || '');
+          correo = String(regData[i][6] || '');
+          distrito = String(regData[i][7] || '');
+          codigo = String(regData[i][9] || '');
+          break;
+        }
+      }
+
+      ganadorSheet.appendRow([
+        fechaLima,
+        datos.sorteo || '',
+        datos.sorteoId || '',
+        datos.nombres || '',
+        datos.apellidos || '',
+        datos.dni || '',
+        celular,
+        correo,
+        distrito,
+        codigo
+      ]);
+
+      // Marcar como ganador en la hoja de registros (columna K = "GANADOR")
+      if (regSheet.getLastColumn() < 11) {
+        regSheet.getRange(1, 11).setValue('GANADOR');
+        regSheet.getRange(1, 11).setBackground('#0d0d1f');
+        regSheet.getRange(1, 11).setFontColor('#ffd700');
+        regSheet.getRange(1, 11).setFontWeight('bold');
+      }
+      for (var j = 1; j < regData.length; j++) {
+        if (String(regData[j][4] || '').trim() === dniGanador) {
+          regSheet.getRange(j + 1, 11).setValue('SI');
+          regSheet.getRange(j + 1, 11).setBackground('#1a4a1a');
+          regSheet.getRange(j + 1, 11).setFontColor('#ffd700');
+          regSheet.getRange(j + 1, 11).setFontWeight('bold');
+          break;
+        }
+      }
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', mensaje: 'Ganador registrado' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── REGISTRO NORMAL DE PARTICIPANTE ──
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
     // Crear encabezados si la hoja está vacía
@@ -37,19 +119,11 @@ function doPost(e) {
         'TIKTOK',
         'CODIGO'
       ]);
-      // Estilo de encabezados
       var headerRange = sheet.getRange(1, 1, 1, 10);
       headerRange.setBackground('#0d0d1f');
       headerRange.setFontColor('#ffe600');
       headerRange.setFontWeight('bold');
     }
-
-    // Parsear los datos recibidos
-    var datos = JSON.parse(e.postData.contents);
-
-    // Fecha y hora Lima (GMT-5)
-    var ahora = new Date();
-    var fechaLima = Utilities.formatDate(ahora, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
 
     // Agregar la fila con los datos del registro
     sheet.appendRow([
@@ -65,13 +139,11 @@ function doPost(e) {
       datos.codigo || ''
     ]);
 
-    // Respuesta de éxito
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok', mensaje: 'Registro guardado' }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
-    // Respuesta de error
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', mensaje: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
