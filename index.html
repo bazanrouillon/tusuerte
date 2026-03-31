@@ -2106,15 +2106,24 @@
     var _ganadoresPreload = {}; // { sorteoId: { nombres, apellidos, dni } }
     var _ganadoresPreloadDone = false;
 
+    // ── Ganadores oficiales confirmados (fallback si Sheets no responde) ──
+    var GANADORES_OFICIALES = {
+      '1': { nombres:'Karina', apellidos:'Linares', dni:'', sorteoId:'1', sorteo:'Yape pal Chicle – S/1', fecha:'30/03/2026' }
+    };
+
     function precargarGanadores() {
-      // Primero cargar de localStorage
+      // 1) Cargar ganadores oficiales hardcodeados (siempre disponibles)
+      Object.keys(GANADORES_OFICIALES).forEach(function(sid) {
+        _ganadoresPreload[sid] = GANADORES_OFICIALES[sid];
+      });
+      // 2) Cargar de localStorage (puede sobreescribir con datos más completos)
       var locales = cargarGanadores();
       locales.forEach(function(g) {
-        if (g.sorteoId && !_ganadoresPreload[g.sorteoId]) {
+        if (g.sorteoId && g.nombres) {
           _ganadoresPreload[g.sorteoId] = g;
         }
       });
-      // Luego fetch de Google Sheets para obtener ganadores reales
+      // 3) Fetch de Google Sheets para obtener ganadores reales (sobreescribe todo con datos frescos)
       fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
@@ -2298,7 +2307,7 @@
           setTimeout(function() { card.classList.remove('flipped'); card._busy = false; }, 5000);
         }
 
-        // Checar localStorage primero
+        // 1) Checar localStorage
         var ganadores = cargarGanadores();
         var ganadorLocal = null;
         for (var i = 0; i < ganadores.length; i++) {
@@ -2309,7 +2318,19 @@
           return;
         }
 
-        // Fetch ganador REAL de Google Sheets (hoja Ganadores)
+        // 2) Checar preload (incluye ganadores oficiales)
+        if (_ganadoresPreload[sorteoId]) {
+          setTimeout(function() { mostrarEnCard(_ganadoresPreload[sorteoId]); }, 400);
+          return;
+        }
+
+        // 3) Checar ganadores oficiales hardcodeados directamente
+        if (GANADORES_OFICIALES[sorteoId]) {
+          setTimeout(function() { mostrarEnCard(GANADORES_OFICIALES[sorteoId]); }, 400);
+          return;
+        }
+
+        // 4) Fetch de Google Sheets como último recurso
         var cfg = SORTEOS_CFG[sorteoId];
         if (!cfg) { setTimeout(function() { mostrarEnCard(null); }, 400); return; }
         var nombreSorteo = cfg.nombre.split('–')[0].trim();
@@ -2320,7 +2341,6 @@
             if (data.status === 'ok' && data.ganador) {
               var g = data.ganador;
               var obj = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sorteoId, sorteo:cfg.nombre };
-              // Guardar en localStorage para no volver a pedir
               var lista = cargarGanadores();
               var yaExiste = false;
               for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sorteoId) { yaExiste = true; break; } }
