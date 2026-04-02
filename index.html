@@ -1053,12 +1053,14 @@
       90%   { transform:rotate(6300deg); }
       100%  { transform:rotate(7300deg); }
     }
-    /* Humo del tubo de escape */
+    /* Humo del tubo de escape — solo al frenar y mientras está parado */
     .combi-humo { animation: humoCombi 10s linear infinite; }
     @keyframes humoCombi {
-      0%,29%   { opacity:0.6; }
-      33%,55%  { opacity:0; }
-      58%,100% { opacity:0.6; }
+      0%,27%   { opacity:0; }
+      29%      { opacity:0.8; }
+      33%,55%  { opacity:0.6; }
+      57%      { opacity:0.2; }
+      58%,100% { opacity:0; }
     }
     /* Sacudida de la combi corriendo — se detiene cuando frena */
     .combi-body-shake { animation: combiShake .15s linear infinite, combiShakePause 10s linear infinite; }
@@ -2121,6 +2123,8 @@
 
     // ── Determinar estado de un sorteo ──
     function getEstado(sorteoId) {
+      // Sorteos marcados como finalizados por prueba admin
+      if (_testFinalizados[sorteoId]) return 'finalizado';
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return 'finalizado';
       var ahora = Date.now();
@@ -2133,6 +2137,7 @@
     // ── PRE-CARGA DE GANADORES REALES (desde Google Sheets) ──
     var _ganadoresPreload = {}; // { sorteoId: { nombres, apellidos, dni } }
     var _ganadoresPreloadDone = false;
+    var _testFinalizados = {}; // sorteos marcados como finalizados por prueba admin
 
     function precargarGanadores() {
       // Cargar ganadores desde el servidor (hoja Ganadores)
@@ -2842,25 +2847,12 @@
     })();
 
     // ── Botón admin oculto: 5 clics rápidos en el logo ──
-    // ── Modo admin: 5 clics rápidos en el logo ──
-    var _esAdmin = false;
-    (function() {
-      var logoAdmin = document.getElementById('logo-admin');
-      var clicks = 0;
-      var timer = null;
-      if (logoAdmin) {
-        logoAdmin.style.cursor = 'pointer';
-        logoAdmin.addEventListener('click', function() {
-          clicks++;
-          clearTimeout(timer);
-          timer = setTimeout(function() { clicks = 0; }, 1500);
-          if (clicks >= 5) {
-            clicks = 0;
-            _esAdmin = true;
-            alert('Modo admin activado. Ahora puedes hacer doble clic en el título de un sorteo para probar la ruleta (sin registrar datos).');
-          }
-        });
-      }
+    // ── Modo admin: requiere URL con ?admin=Surferman28! ──
+    var _esAdmin = (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        return params.get('admin') === 'santiagobazan';
+      } catch(e) { return false; }
     })();
 
     // ── Dibujar la ruleta en un canvas específico ──
@@ -3250,12 +3242,27 @@
                   lanzarConfeti();
 
                   // NO guarda nada en el servidor — solo visual
-                  // Cerrar después de 15 segundos
+                  // Transición completa después de 15 segundos:
+                  // cierra tarjeta → baja a secundaria → sube el siguiente sorteo
                   setTimeout(function() {
+                    // Marcar como finalizado temporalmente para la transición
+                    _testFinalizados[sorteoId] = true;
+                    _ganadoresPreload[sorteoId] = {
+                      nombres: ganador.nombres, apellidos: ganador.apellidos,
+                      dni: ganador.dni, sorteoId: sorteoId, sorteo: nombreSorteo
+                    };
                     card.classList.remove('flipped');
                     setTimeout(function() {
-                      _sorteoEnVivo = false;
-                      renderBloque3();
+                      card.classList.add('cerrado');
+                      transicionPostSorteo(sorteoId);
+                      // Después de 30 segundos, limpiar datos de prueba y restaurar
+                      setTimeout(function() {
+                        delete _testFinalizados[sorteoId];
+                        delete _ganadoresPreload[sorteoId];
+                        _ganadoresServerCache = null;
+                        _principalActualId = null;
+                        precargarGanadores();
+                      }, 30000);
                     }, 900);
                   }, 15000);
                 }
