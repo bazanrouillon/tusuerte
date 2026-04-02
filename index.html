@@ -2132,25 +2132,8 @@
     var _ganadoresPreload = {}; // { sorteoId: { nombres, apellidos, dni } }
     var _ganadoresPreloadDone = false;
 
-    // ── Ganadores oficiales confirmados (fallback si Sheets no responde) ──
-    var GANADORES_OFICIALES = {
-      '1': { nombres:'Karina', apellidos:'Linares', dni:'', sorteoId:'1', sorteo:'Yape pal Chicle – S/1', fecha:'30/03/2026' }
-    };
-
     function precargarGanadores() {
-      // 1) Cargar ganadores oficiales hardcodeados
-      Object.keys(GANADORES_OFICIALES).forEach(function(sid) {
-        _ganadoresPreload[sid] = GANADORES_OFICIALES[sid];
-      });
-      // 2) Cargar de localStorage
-      var locales = cargarGanadores();
-      locales.forEach(function(g) {
-        if (g.sorteoId && g.nombres) {
-          _ganadoresPreload[g.sorteoId] = g;
-        }
-      });
-
-      // 3) Intentar endpoint obtenerTodosGanadores (nuevo, puede no estar desplegado)
+      // Cargar ganadores desde el servidor (hoja Ganadores)
       fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
@@ -2166,55 +2149,14 @@
               }
               if (sid) {
                 _ganadoresPreload[sid] = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sid, sorteo:g.sorteo };
-                guardarGanadorEnLocal(sid, _ganadoresPreload[sid]);
               }
             });
-            forzarReRender();
+            _ganadoresServerCache = data.ganadores;
           }
-        }).catch(function() { /* silencioso — probablemente no está desplegado aún */ });
-
-      // 4) Para cada ganador oficial sin DNI, buscar en el endpoint 'participantes' (YA desplegado)
-      Object.keys(GANADORES_OFICIALES).forEach(function(sid) {
-        var g = _ganadoresPreload[sid];
-        if (g && g.dni) return; // ya tiene DNI, no buscar
-        var cfg = SORTEOS_CFG[sid];
-        if (!cfg) return;
-        var nombreSorteo = cfg.nombre.split('–')[0].trim();
-        fetch(GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
-          .then(function(r) { return r.text(); })
-          .then(function(txt) {
-            var data; try { data = JSON.parse(txt); } catch(e) { return; }
-            if (data.status !== 'ok' || !data.participantes) return;
-            // Buscar al ganador por nombre+apellido en la lista de participantes
-            var nombreBuscar = (g.nombres || '').trim().toLowerCase();
-            var apellidoBuscar = (g.apellidos || '').trim().toLowerCase();
-            for (var i = 0; i < data.participantes.length; i++) {
-              var p = data.participantes[i];
-              var pNom = (p.nombres || '').trim().toLowerCase();
-              var pApe = (p.apellidos || '').trim().toLowerCase();
-              if (pNom.indexOf(nombreBuscar) !== -1 && pApe.indexOf(apellidoBuscar) !== -1) {
-                // Encontrado — actualizar con DNI real
-                _ganadoresPreload[sid] = { nombres:p.nombres, apellidos:p.apellidos, dni:p.dni, sorteoId:sid, sorteo:cfg.nombre };
-                guardarGanadorEnLocal(sid, _ganadoresPreload[sid]);
-                forzarReRender();
-                break;
-              }
-            }
-          }).catch(function() {});
-      });
-
-      // Render inicial con lo que tengamos
-      forzarReRender();
+          forzarReRender();
+        }).catch(function() { forzarReRender(); });
     }
 
-    function guardarGanadorEnLocal(sid, obj) {
-      var lista = cargarGanadores();
-      // Reemplazar si ya existe, o agregar
-      var idx = -1;
-      for (var x = 0; x < lista.length; x++) { if (lista[x].sorteoId === sid) { idx = x; break; } }
-      if (idx >= 0) { lista[idx] = obj; } else { lista.unshift(obj); }
-      localStorage.setItem(GANADORES_KEY, JSON.stringify(lista));
-    }
 
     function forzarReRender() {
       _ganadoresPreloadDone = true;
@@ -2285,6 +2227,7 @@
           '<div class="card-img" style="padding:0;border-bottom-color:#ff1493"><div class="yape-logo">' + yapeSVG('ypBg' + s.id) + '</div></div>' +
           '<div class="card-body">' +
             '<div class="card-titulo">' + s.nombre + '</div>' +
+            '<div class="card-monto-principal" style="font-size:2rem;font-weight:900;color:var(--neon-amarillo);text-shadow:0 0 18px var(--neon-amarillo),0 0 40px rgba(255,230,0,.3);margin:4px 0 2px;font-family:Poppins,sans-serif;letter-spacing:1px">' + s.monto + '</div>' +
             '<div class="card-desc">' + getDescPrincipal(s) + '</div>' +
             '<div class="mini-cnt-wrap" id="mini-cnt-' + s.id + '">' +
               '<div class="mini-contador">' +
@@ -2421,43 +2364,26 @@
         if (!cfg) { setTimeout(function() { mostrarEnCard(null); }, 400); return; }
         var nombreSorteo = cfg.nombre.split('–')[0].trim();
 
-        fetch(GOOGLE_SHEETS_URL + '?action=obtenerGanador&sorteo=' + encodeURIComponent(nombreSorteo), { redirect:'follow' })
+        fetch(GOOGLE_SHEETS_URL + '?action=obtenerGanador&sorteo=' + encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId), { redirect:'follow' })
           .then(function(r) { return r.text(); })
           .then(function(txt) {
             var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
             if (data.status === 'ok' && data.ganador && data.ganador.nombres) {
               var g = data.ganador;
               var obj = { nombres:g.nombres, apellidos:g.apellidos, dni:g.dni, sorteoId:sorteoId, sorteo:cfg.nombre };
-              // Guardar en localStorage para futuras consultas
               _ganadoresPreload[sorteoId] = obj;
-              guardarGanadorEnLocal(sorteoId, obj);
               mostrarEnCard(obj);
             } else {
-              // Fallback a datos locales
-              usarDatosLocales();
+              // Fallback a preload en memoria
+              usarDatosMemoria();
             }
           }).catch(function() {
-            // Si el fetch falla, intentar datos locales
-            usarDatosLocales();
+            usarDatosMemoria();
           });
 
-        function usarDatosLocales() {
-          // 1) localStorage
-          var ganadores = cargarGanadores();
-          for (var i = 0; i < ganadores.length; i++) {
-            if (ganadores[i].sorteoId === sorteoId && ganadores[i].nombres) {
-              mostrarEnCard(ganadores[i]);
-              return;
-            }
-          }
-          // 2) preload
+        function usarDatosMemoria() {
           if (_ganadoresPreload[sorteoId] && _ganadoresPreload[sorteoId].nombres) {
             mostrarEnCard(_ganadoresPreload[sorteoId]);
-            return;
-          }
-          // 3) oficiales hardcodeados
-          if (GANADORES_OFICIALES[sorteoId]) {
-            mostrarEnCard(GANADORES_OFICIALES[sorteoId]);
             return;
           }
           mostrarEnCard(null);
@@ -2710,11 +2636,6 @@
         if (inscEl) inscEl.textContent = contadores[id];
         var barraEl = document.getElementById('barra-' + id);
         if (barraEl) barraEl.style.width = Math.max(5, Math.min(contadores[id], 100)) + '%';
-        // Guardar en localStorage
-        var regs = {};
-        try { regs = JSON.parse(localStorage.getItem('tsp_registrados_por_sorteo')) || {}; } catch(ex) {}
-        regs[id] = { sorteo: datos.sorteo, dni: datos.dni, codigo: cod, fecha: new Date().toISOString() };
-        localStorage.setItem('tsp_registrados_por_sorteo', JSON.stringify(regs));
         // Mostrar éxito
         document.getElementById('codigo-participacion').textContent = cod;
         cerrarPanel('panel-registro');
@@ -2734,37 +2655,55 @@
       var verificarUrl = GOOGLE_SHEETS_URL + '?action=verificarDni&dni=' + encodeURIComponent(datos.dni) + '&sorteo=' + encodeURIComponent(datos.sorteo);
       var _yaResuelto = false;
 
-      // Timeout: si en 6 segundos no hay respuesta, registrar directo
+      // Timeout: si en 10 segundos no hay respuesta, reintentar una vez
+      var _intentos = 0;
       var timeout = setTimeout(function() {
         if (_yaResuelto) return;
         _yaResuelto = true;
-        console.warn('Verificación DNI: timeout, registrando directo');
-        completarRegistro();
-      }, 6000);
+        console.warn('Verificación DNI: timeout');
+        // En timeout, no registrar directo — pedir que reintente
+        liberarRegistro();
+        alert('No se pudo verificar tu DNI. Por favor intenta de nuevo.');
+      }, 10000);
 
-      fetch(verificarUrl, { redirect: 'follow' })
-        .then(function(r) { return r.text(); })
-        .then(function(txt) {
-          if (_yaResuelto) return;
-          var res;
-          try { res = JSON.parse(txt); } catch(ex) { res = null; }
-          if (res && res.yaRegistrado) {
-            _yaResuelto = true;
-            clearTimeout(timeout);
-            mostrarYaRegistrado();
-          } else {
-            _yaResuelto = true;
-            clearTimeout(timeout);
-            completarRegistro();
-          }
-        })
-        .catch(function(err) {
-          if (_yaResuelto) return;
-          _yaResuelto = true;
-          clearTimeout(timeout);
-          console.warn('Verificación DNI falló, registrando directo:', err);
-          completarRegistro();
-        });
+      function hacerVerificacion() {
+        fetch(verificarUrl, { redirect: 'follow' })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            if (_yaResuelto) return;
+            var res;
+            try { res = JSON.parse(txt); } catch(ex) { res = null; }
+            if (res && res.yaRegistrado) {
+              _yaResuelto = true;
+              clearTimeout(timeout);
+              mostrarYaRegistrado();
+            } else if (res) {
+              _yaResuelto = true;
+              clearTimeout(timeout);
+              completarRegistro();
+            } else {
+              // Respuesta no parseada — reintentar una vez
+              if (_intentos < 1) { _intentos++; hacerVerificacion(); }
+              else {
+                _yaResuelto = true; clearTimeout(timeout);
+                liberarRegistro();
+                alert('Error de conexión. Por favor intenta de nuevo.');
+              }
+            }
+          })
+          .catch(function(err) {
+            if (_yaResuelto) return;
+            // Reintentar una vez en caso de error de red
+            if (_intentos < 1) { _intentos++; hacerVerificacion(); }
+            else {
+              _yaResuelto = true; clearTimeout(timeout);
+              console.warn('Verificación DNI falló:', err);
+              liberarRegistro();
+              alert('Error de conexión. Por favor intenta de nuevo.');
+            }
+          });
+      }
+      hacerVerificacion();
     }
     function cerrarModal() {
       document.getElementById('modal-exito').classList.remove('activo');
@@ -2797,58 +2736,23 @@
     // ══════════════════════════════════════════════════════
     // RULETA DIGITAL — sorteo automático
     // ══════════════════════════════════════════════════════
-    var GANADORES_KEY = 'tsp_ganadores';
     var COLORES_RULETA = [
       '#ff0080','#39ff14','#ffe600','#00e5ff','#cc00ff','#ff6a00',
       '#ff4488','#22cc44','#ffcc00','#0099ff','#aa00ff','#ff8833'
     ];
 
-    // ── Limpiar ganadores automáticamente cada lunes ──
-    (function() {
-      var ahora = new Date();
-      if (ahora.getDay() === 1) { // Lunes = 1
-        var yaLimpio = localStorage.getItem('tsp_ganadores_limpiado');
-        var semanaActual = ahora.getFullYear() + '-W' + Math.ceil((((ahora - new Date(ahora.getFullYear(),0,1)) / 86400000) + new Date(ahora.getFullYear(),0,1).getDay() + 1) / 7);
-        if (yaLimpio !== semanaActual) {
-          localStorage.removeItem(GANADORES_KEY);
-          localStorage.setItem('tsp_ganadores_limpiado', semanaActual);
-        }
-      }
-    })();
-
-    // ── Cargar ganadores de localStorage ──
-    function cargarGanadores() {
-      try { return JSON.parse(localStorage.getItem(GANADORES_KEY)) || []; }
-      catch(e) { return []; }
-    }
+    // Ganador se guarda solo en servidor (hoja Ganadores)
     function guardarGanador(ganador) {
-      var lista = cargarGanadores();
-      lista.unshift(ganador); // más reciente primero
-      localStorage.setItem(GANADORES_KEY, JSON.stringify(lista));
-
-      // ── Enviar ganador a Google Sheets ──
-      if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
-        fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'registrarGanador',
-            sorteo: ganador.sorteo || '',
-            sorteoId: ganador.sorteoId || '',
-            nombres: ganador.nombres || '',
-            apellidos: ganador.apellidos || '',
-            dni: ganador.dni || ''
-          })
-        }).catch(function(err) {
-          console.warn('Error al registrar ganador en Sheets:', err);
-        });
+      // Actualizar preload en memoria y invalidar cache
+      if (ganador.sorteoId) {
+        _ganadoresPreload[ganador.sorteoId] = ganador;
       }
+      _ganadoresServerCache = null;
     }
 
     // ── Renderizar lista de ganadores en el panel ──
-    function renderGanadores(listaOverride) {
-      var lista = listaOverride || cargarGanadores();
+    function renderGanadores(lista) {
+      lista = lista || [];
       var container = document.getElementById('ganadores-lista');
       var empty = document.getElementById('ganadores-empty');
       if (!container) return;
@@ -2873,7 +2777,6 @@
         container.appendChild(div);
       });
     }
-    renderGanadores();
 
     // ── Abrir panel ganadores con fetch en vivo desde Google Sheets ──
     // ── Cache de ganadores del servidor (evita fetch repetidos) ──
@@ -2931,7 +2834,7 @@
       fetch(GOOGLE_SHEETS_URL + '?action=checklib', { redirect: 'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
-          try { var res = JSON.parse(txt); if (res.liberacion) localStorage.setItem('tsp_liberacion', res.liberacion); } catch(e) {}
+          // Solo consulta, no guarda en localStorage
         })
         .catch(function() {});
     })();
@@ -2950,11 +2853,10 @@
           timer = setTimeout(function() { clicks = 0; }, 1500);
           if (clicks >= 5) {
             clicks = 0;
-            if (!confirm('¿Limpiar todos los registros y ganadores del localStorage?')) return;
-            localStorage.removeItem('tsp_registrados_por_sorteo');
-            localStorage.removeItem('tsp_registrado');
-            localStorage.removeItem(GANADORES_KEY);
-            alert('¡Listo! localStorage limpiado.');
+            if (!confirm('¿Recargar la página y limpiar cache?')) return;
+            _ganadoresServerCache = null;
+            _ganadoresPreload = {};
+            alert('¡Cache limpiado!');
             location.reload();
           }
         });
@@ -3184,6 +3086,7 @@
 
                       // Guardar ganador localmente
                       var ahora = new Date();
+                      // Guardar en memoria (el servidor ya lo guardó en hoja Ganadores)
                       guardarGanador({
                         nombres: ganador.nombres,
                         apellidos: ganador.apellidos,
@@ -3192,12 +3095,6 @@
                         sorteoId: sorteoId,
                         fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
                       });
-                      _ganadoresPreload[sorteoId] = {
-                        nombres: ganador.nombres, apellidos: ganador.apellidos,
-                        dni: ganador.dni, sorteoId: sorteoId, sorteo: cfg.nombre
-                      };
-                      guardarGanadorEnLocal(sorteoId, _ganadoresPreload[sorteoId]);
-                      renderGanadores();
 
                       // NO registrar ganador en Sheets aquí — el servidor ya lo hizo
                       // en el endpoint seleccionarGanador
@@ -3207,18 +3104,9 @@
                         card.classList.remove('flipped');
                         setTimeout(function() {
                           card.classList.add('cerrado');
-                          try {
-                            var regActual = localStorage.getItem('tsp_registrado');
-                            if (regActual) {
-                              var regObj = JSON.parse(regActual);
-                              if (regObj.sorteoId === sorteoId && regObj.dni !== ganador.dni) {
-                                localStorage.removeItem('tsp_registrado');
-                              }
-                            }
-                          } catch(e) {}
                           transicionPostSorteo(sorteoId);
                         }, 900);
-                      }, 300000);
+                      }, 60000); // 1 minuto mostrando ganador
                     }
                   }
                   inicio = performance.now();
