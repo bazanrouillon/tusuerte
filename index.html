@@ -2842,7 +2842,8 @@
     })();
 
     // ── Botón admin oculto: 5 clics rápidos en el logo ──
-    // Libera a TODOS los usuarios para que puedan registrarse en otro sorteo
+    // ── Modo admin: 5 clics rápidos en el logo ──
+    var _esAdmin = false;
     (function() {
       var logoAdmin = document.getElementById('logo-admin');
       var clicks = 0;
@@ -2855,11 +2856,8 @@
           timer = setTimeout(function() { clicks = 0; }, 1500);
           if (clicks >= 5) {
             clicks = 0;
-            if (!confirm('¿Recargar la página y limpiar cache?')) return;
-            _ganadoresServerCache = null;
-            _ganadoresPreload = {};
-            alert('¡Cache limpiado!');
-            location.reload();
+            _esAdmin = true;
+            alert('Modo admin activado. Ahora puedes hacer doble clic en el título de un sorteo para probar la ruleta (sin registrar datos).');
           }
         });
       }
@@ -3155,19 +3153,123 @@
     }
     setInterval(verificarSorteosActivos, 5000);
 
-    // ── Testing: doble click en título del sorteo (delegación para DOM dinámico) ──
+    // ── Testing ADMIN: doble click en título del sorteo — solo modo admin, sin registrar en servidor ──
     document.getElementById('sorteos').addEventListener('dblclick', function(e) {
+      if (!_esAdmin) return; // solo admin
       var titulo = e.target.closest('.card-titulo');
       if (!titulo) return;
       var card = titulo.closest('[id^="card-sorteo-"]');
       if (!card) return;
       var id = card.id.replace('card-sorteo-', '');
-      if (SORTEOS_CFG[id] && confirm('¿Iniciar ruleta de prueba para ' + SORTEOS_CFG[id].nombre + '?')) {
-        ruletaSorteoYaEjecutado[id] = false;
-        card.classList.remove('cerrado'); card.classList.remove('flipped');
-        iniciarRuleta(id);
+      if (SORTEOS_CFG[id] && confirm('🔧 PRUEBA ADMIN\n¿Simular ruleta para ' + SORTEOS_CFG[id].nombre + '?\n(No se registrará nada en el servidor)')) {
+        iniciarRuletaPrueba(id);
       }
     });
+
+    // ── Ruleta de PRUEBA — solo visual, NO guarda nada en el servidor ──
+    function iniciarRuletaPrueba(sorteoId) {
+      var cfg = SORTEOS_CFG[sorteoId];
+      if (!cfg) return;
+
+      var card = document.getElementById('card-sorteo-' + sorteoId);
+      var estadoEl = document.getElementById('card-estado-' + sorteoId);
+      var canvasId = 'card-canvas-' + sorteoId;
+      var ganadorDiv = document.getElementById('card-ganador-' + sorteoId);
+      var ganadorNombre = document.getElementById('card-ganador-nombre-' + sorteoId);
+      var ganadorDni = document.getElementById('card-ganador-dni-' + sorteoId);
+      if (!card) return;
+
+      // Preparar tarjeta
+      card.classList.remove('cerrado','flipped');
+      _sorteoEnVivo = true;
+
+      setTimeout(function() {
+        card.classList.add('flipped');
+        estadoEl.textContent = 'Cargando participantes...';
+        ganadorDiv.classList.remove('visible');
+        var enVivoEl = card.querySelector('.en-vivo-badge');
+        if (enVivoEl) enVivoEl.style.display = 'flex';
+      }, 300);
+
+      // Obtener participantes del servidor (solo lectura)
+      var nombreSorteo = cfg.nombre.split('–')[0].trim();
+      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
+
+      setTimeout(function() {
+        fetch(url, { redirect:'follow' })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
+            if (data.status !== 'ok' || !data.participantes || data.participantes.length === 0) {
+              estadoEl.textContent = 'No hay participantes para simular';
+              setTimeout(function() { card.classList.remove('flipped'); _sorteoEnVivo = false; }, 3000);
+              return;
+            }
+
+            var participantes = data.participantes;
+            estadoEl.textContent = participantes.length + ' participantes (PRUEBA)';
+            dibujarRuleta(canvasId, participantes, 0);
+
+            // Elegir ganador LOCAL (no llama a seleccionarGanador del servidor)
+            var idx = Math.floor(Math.random() * participantes.length);
+            var ganador = participantes[idx];
+
+            var n = participantes.length;
+            var slice = (2 * Math.PI) / n;
+            var targetAngle = (3 * Math.PI / 2) - (idx * slice + slice / 2);
+            var vueltas = 8 + Math.floor(Math.random() * 5);
+            var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
+            var duracion = 6000;
+
+            setTimeout(function() {
+              estadoEl.textContent = '¡Girando la ruleta! (PRUEBA)';
+              var inicio = performance.now();
+
+              function animarPrueba(timestamp) {
+                var progreso = Math.min(1, (timestamp - inicio) / duracion);
+                var eased = 1 - Math.pow(1 - progreso, 3);
+                dibujarRuleta(canvasId, participantes, anguloTotal * eased);
+
+                if (progreso < 1) {
+                  requestAnimationFrame(animarPrueba);
+                } else {
+                  var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
+                  var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' + ganador.dni.substring(ganador.dni.length - 2) : '';
+
+                  var ruletaContainer = card.querySelector('.card-ruleta-container');
+                  if (ruletaContainer) ruletaContainer.style.display = 'none';
+                  var enVivoEl = card.querySelector('.en-vivo-badge');
+                  if (enVivoEl) enVivoEl.style.display = 'none';
+
+                  estadoEl.textContent = '🔧 PRUEBA — ¡GANADOR SIMULADO!';
+                  estadoEl.style.color = 'var(--neon-amarillo)';
+                  estadoEl.style.fontSize = '1rem';
+                  ganadorNombre.textContent = nombreCompleto.toUpperCase();
+                  ganadorDni.textContent = 'DNI: ' + dniMask;
+                  ganadorDiv.classList.add('visible');
+                  lanzarConfeti();
+
+                  // NO guarda nada en el servidor — solo visual
+                  // Cerrar después de 15 segundos
+                  setTimeout(function() {
+                    card.classList.remove('flipped');
+                    setTimeout(function() {
+                      _sorteoEnVivo = false;
+                      renderBloque3();
+                    }, 900);
+                  }, 15000);
+                }
+              }
+              inicio = performance.now();
+              requestAnimationFrame(animarPrueba);
+            }, 1500);
+          })
+          .catch(function(err) {
+            estadoEl.textContent = 'Error: ' + err.message;
+            setTimeout(function() { card.classList.remove('flipped'); _sorteoEnVivo = false; }, 3000);
+          });
+      }, 1200);
+    }
   </script>
   <!-- ══════════════ LLAMA ANIMADA ══════════════ -->
   <style>

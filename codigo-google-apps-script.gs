@@ -322,60 +322,61 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // ── Obtener TODOS los ganadores (desde Registros TuSuerte, columna K = "SI") ──
-    // Solo 1 ganador por sorteo (el primero encontrado con K="SI" para ese sorteo)
+    // ── Obtener TODOS los ganadores (desde hoja Ganadores) ──
+    // Lee directamente de la hoja Ganadores donde seleccionarGanador guarda los datos
+    // Columnas Ganadores: 0=Fecha, 1=Sorteo, 2=SorteoId, 3=Nombres, 4=Apellidos, 5=DNI, 6=Celular, 7=Correo, 8=Distrito, 9=Codigo
     if (action === 'obtenertodosganadores') {
       var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var sheet = ss.getActiveSheet(); // Registros TuSuerte
-      var data = sheet.getDataRange().getValues();
+      var ganadorSheet = ss.getSheetByName('Ganadores');
       var ganadores = [];
-      var sorteosYaVistos = {}; // para garantizar 1 ganador por sorteo
-      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ..., 10=GANADOR(K)
-      for (var i = 1; i < data.length; i++) {
-        var esGanador = String(data[i][10] || '').trim().toUpperCase();
-        if (esGanador !== 'SI') continue;
-        var sorteo = String(data[i][1] || '').trim();
-        if (sorteosYaVistos[sorteo]) continue; // ya hay ganador para este sorteo
-        sorteosYaVistos[sorteo] = true;
-        var nombres = String(data[i][2] || '').trim();
-        var apellidos = String(data[i][3] || '').trim();
-        if (!nombres && !apellidos) continue;
-        ganadores.push({
-          sorteo: sorteo,
-          sorteoId: '',
-          nombres: nombres,
-          apellidos: apellidos,
-          dni: String(data[i][4] || '').trim(),
-          fecha: String(data[i][0] || '').trim()
-        });
+      if (ganadorSheet) {
+        var data = ganadorSheet.getDataRange().getValues();
+        for (var i = 1; i < data.length; i++) {
+          var nombres = String(data[i][3] || '').trim();
+          var apellidos = String(data[i][4] || '').trim();
+          if (!nombres && !apellidos) continue;
+          ganadores.push({
+            sorteo: String(data[i][1] || '').trim(),
+            sorteoId: String(data[i][2] || '').trim(),
+            nombres: nombres,
+            apellidos: apellidos,
+            dni: String(data[i][5] || '').trim(),
+            fecha: String(data[i][0] || '').trim()
+          });
+        }
       }
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'ok', ganadores: ganadores }))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // ── Obtener ganador de un sorteo (desde Registros TuSuerte, columna K = "SI") ──
+    // ── Obtener ganador de un sorteo (desde hoja Ganadores) ──
+    // Columnas Ganadores: 0=Fecha, 1=Sorteo, 2=SorteoId, 3=Nombres, 4=Apellidos, 5=DNI, 6=Celular, 7=Correo, 8=Distrito, 9=Codigo
     if (action === 'obtenerganador') {
       var sorteoFiltro = (e.parameter.sorteo || '').trim();
+      var sorteoIdParam = (e.parameter.sorteoId || '').trim();
       var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var sheet = ss.getActiveSheet(); // Registros TuSuerte
-      var data = sheet.getDataRange().getValues();
-      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ..., 10=GANADOR(K)
+      var ganadorSheet = ss.getSheetByName('Ganadores');
       var ganadorEncontrado = null;
-      for (var i = 1; i < data.length; i++) {
-        var esGanador = String(data[i][10] || '').trim().toUpperCase();
-        if (esGanador !== 'SI') continue;
-        var sorteoCell = String(data[i][1] || '').trim();
-        if (sorteoFiltro && sorteoCell.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1) {
-          ganadorEncontrado = {
-            nombres: String(data[i][2] || '').trim(),
-            apellidos: String(data[i][3] || '').trim(),
-            dni: String(data[i][4] || '').trim(),
-            sorteo: sorteoCell,
-            sorteoId: '',
-            fecha: String(data[i][0] || '').trim()
-          };
-          break;
+      if (ganadorSheet) {
+        var data = ganadorSheet.getDataRange().getValues();
+        for (var i = 1; i < data.length; i++) {
+          var gSorteoId = String(data[i][2] || '').trim();
+          var gSorteo = String(data[i][1] || '').trim();
+          var match = false;
+          if (sorteoIdParam && gSorteoId === sorteoIdParam) match = true;
+          if (!match && sorteoFiltro && gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1) match = true;
+          if (match) {
+            ganadorEncontrado = {
+              nombres: String(data[i][3] || '').trim(),
+              apellidos: String(data[i][4] || '').trim(),
+              dni: String(data[i][5] || '').trim(),
+              sorteo: gSorteo,
+              sorteoId: gSorteoId,
+              fecha: String(data[i][0] || '').trim()
+            };
+            break;
+          }
         }
       }
       return ContentService
