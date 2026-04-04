@@ -2062,7 +2062,7 @@
       '3': { fechaISO: '2026-04-01T16:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
       '4': { fechaISO: '2026-04-02T16:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
       '5': { fechaISO: '2026-04-03T16:00:00-05:00', nombre: 'Yape pa la Recarga – 7' },
-      '6': { fechaISO: '2026-04-04T16:00:00-05:00', nombre: 'Yape pa el Pollito – S/20' }
+      '6': { fechaISO: '2026-04-04T16:00:00-05:00', nombre: 'Yape pal Pollito – S/20' }
     };
     // Pre-calcular timestamps en ms para cada sorteo
     Object.keys(SORTEOS_CFG).forEach(function(id) {
@@ -2121,10 +2121,15 @@
         '<text x="60" y="82" text-anchor="middle" font-family="Pacifico,Lobster,cursive" font-size="44" fill="#fff">yape</text></svg>';
     }
 
+    // ── Variable de control: qué sorteos ya ejecutaron su ruleta ──
+    var ruletaSorteoYaEjecutado = {};
+
     // ── Determinar estado de un sorteo ──
     function getEstado(sorteoId) {
       // Sorteos marcados como finalizados por prueba admin
       if (_testFinalizados[sorteoId]) return 'finalizado';
+      // Si la ruleta ya se ejecutó y la transición ya ocurrió, es finalizado
+      if (ruletaSorteoYaEjecutado[sorteoId] && !_sorteoEnVivo) return 'finalizado';
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return 'finalizado';
       var ahora = Date.now();
@@ -2609,6 +2614,7 @@
       var btnRegistro = form.querySelector('.btn-registro');
       var datos = {
         sorteo: document.getElementById('registro-sorteo-label').textContent.replace('🍀 ', '').trim(),
+        sorteoId: document.getElementById('sorteo-id').value || '',
         nombres: form.nombres.value.trim(),
         apellidos: form.apellidos.value.trim(),
         dni: form.dni.value.trim(),
@@ -2793,33 +2799,30 @@
       var container = document.getElementById('ganadores-lista');
       var empty = document.getElementById('ganadores-empty');
 
-      // 1) Mostrar inmediato con datos que ya tenemos (cache o preload)
+      // 1) Mostrar inmediato con datos que ya tenemos (cache o preload) mientras carga
       if (_ganadoresServerCache && _ganadoresServerCache.length > 0) {
         renderGanadores(_ganadoresServerCache);
-        abrirPanel('panel-ganadores');
-        return;
-      }
-
-      // Mostrar preload/locales instantáneamente mientras carga
-      var datosRapidos = [];
-      Object.keys(_ganadoresPreload).forEach(function(sid) {
-        var g = _ganadoresPreload[sid];
-        if (g && g.nombres) datosRapidos.push(g);
-      });
-      if (datosRapidos.length > 0) {
-        renderGanadores(datosRapidos);
       } else {
-        if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-family:Poppins,sans-serif;">Cargando ganadores...</div>';
-        if (empty) empty.style.display = 'none';
+        var datosRapidos = [];
+        Object.keys(_ganadoresPreload).forEach(function(sid) {
+          var g = _ganadoresPreload[sid];
+          if (g && g.nombres) datosRapidos.push(g);
+        });
+        if (datosRapidos.length > 0) {
+          renderGanadores(datosRapidos);
+        } else {
+          if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;font-family:Poppins,sans-serif;">Cargando ganadores...</div>';
+          if (empty) empty.style.display = 'none';
+        }
       }
       abrirPanel('panel-ganadores');
 
-      // 2) Fetch del servidor en background y actualizar
+      // 2) SIEMPRE consultar al servidor para obtener datos frescos
       fetch(GOOGLE_SHEETS_URL + '?action=obtenerTodosGanadores', { redirect:'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
           var data; try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
-          if (data.status === 'ok' && data.ganadores && data.ganadores.length > 0) {
+          if (data.status === 'ok' && data.ganadores) {
             _ganadoresServerCache = data.ganadores.map(function(g) {
               return {
                 nombres: g.nombres || '',
@@ -2831,9 +2834,21 @@
               };
             });
             renderGanadores(_ganadoresServerCache);
+            // Actualizar también el preload
+            _ganadoresServerCache.forEach(function(g) {
+              if (g.sorteoId) {
+                _ganadoresPreload[g.sorteoId] = g;
+              }
+            });
           }
         })
-        .catch(function() { /* silencioso — ya mostramos datos locales */ });
+        .catch(function(err) {
+          console.error('Error cargando ganadores:', err);
+          // Si falló el fetch y no hay datos, mostrar mensaje
+          if (!_ganadoresServerCache && Object.keys(_ganadoresPreload).length === 0) {
+            if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error al cargar ganadores. Intenta de nuevo.</div>';
+          }
+        });
     }
 
     // ── Consultar flag de liberación al cargar la página ──
@@ -2923,8 +2938,6 @@
     }
 
     // ── Flujo principal: ruleta dentro de la tarjeta ──
-    var ruletaSorteoYaEjecutado = {};
-
     function iniciarRuleta(sorteoId) {
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return;
@@ -2954,9 +2967,9 @@
         if (enVivoEl) enVivoEl.style.display = 'flex';
       }, 300);
 
-      // Obtener participantes
+      // Obtener participantes — enviar nombre limpio + sorteoId para búsqueda robusta
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
-      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
+      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
       setTimeout(function() {
         fetch(url, { redirect: 'follow' })
@@ -2997,14 +3010,29 @@
             var selUrl = GOOGLE_SHEETS_URL + '?action=seleccionarGanador&sorteo=' +
               encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
-            fetch(selUrl, { redirect: 'follow' })
-              .then(function(rSel) { return rSel.text(); })
-              .then(function(txtSel) {
-                var selData;
-                try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON'); }
-                if (selData.status !== 'ok' || !selData.ganador) {
-                  throw new Error(selData.mensaje || 'No se pudo seleccionar ganador');
-                }
+            // Función con reintentos para manejar servidor ocupado (lock)
+            function fetchGanadorConReintento(intentos) {
+              return fetch(selUrl, { redirect: 'follow' })
+                .then(function(rSel) { return rSel.text(); })
+                .then(function(txtSel) {
+                  var selData;
+                  try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON'); }
+                  // Si el servidor está ocupado (lock), reintentar
+                  if (selData.status === 'error' && intentos > 0) {
+                    estadoEl.textContent = 'Servidor ocupado, reintentando...';
+                    return new Promise(function(resolve) {
+                      setTimeout(function() { resolve(fetchGanadorConReintento(intentos - 1)); }, 2000);
+                    });
+                  }
+                  if (selData.status !== 'ok' || !selData.ganador) {
+                    throw new Error(selData.mensaje || 'No se pudo seleccionar ganador');
+                  }
+                  return selData;
+                });
+            }
+
+            fetchGanadorConReintento(3)
+              .then(function(selData) {
 
                 var ganadorServer = selData.ganador;
                 // Encontrar el índice del ganador en la lista de participantes
@@ -3183,9 +3211,9 @@
         if (enVivoEl) enVivoEl.style.display = 'flex';
       }, 300);
 
-      // Obtener participantes del servidor (solo lectura)
+      // Obtener participantes del servidor (solo lectura) — enviar nombre + sorteoId
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
-      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo);
+      var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
       setTimeout(function() {
         fetch(url, { redirect:'follow' })
