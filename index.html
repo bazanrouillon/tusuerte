@@ -2721,8 +2721,9 @@
           })
           .then(function(r) { return r.text(); })
           .then(function(txt) {
+            console.log('Respuesta registro:', txt);
             var res;
-            try { res = JSON.parse(txt); } catch(ex) { res = null; }
+            try { res = JSON.parse(txt); } catch(ex) { console.error('Error parseando respuesta registro:', ex, 'Texto:', txt); res = null; }
 
             if (res && res.status === 'duplicado') {
               // El servidor detectó que ya estaba registrado
@@ -2730,6 +2731,11 @@
               return;
             }
 
+            if (res && res.status === 'error') {
+              alert('Error del servidor: ' + (res.mensaje || 'desconocido'));
+              liberarRegistro();
+              return;
+            }
             if (res && res.status === 'ok') {
               // ── Registro exitoso ──
               var id = document.getElementById('sorteo-id').value;
@@ -2749,7 +2755,7 @@
           })
           .catch(function(err) {
             console.error('Error enviando registro:', err);
-            alert('Error de conexión. Intenta de nuevo.');
+            alert('Error de conexión al registrar: ' + (err.message || err) + '. Intenta de nuevo.');
             liberarRegistro();
           });
         } else {
@@ -2796,11 +2802,12 @@
               completarRegistro();
             } else {
               // Respuesta no parseada — reintentar una vez
+              console.warn('Verificar DNI respuesta no parseada:', txt);
               if (_intentos < 1) { _intentos++; hacerVerificacion(); }
               else {
                 _yaResuelto = true; clearTimeout(timeout);
                 liberarRegistro();
-                alert('Error de conexión. Por favor intenta de nuevo.');
+                alert('Error de verificación. Respuesta inesperada del servidor. Intenta de nuevo.');
               }
             }
           })
