@@ -36,52 +36,67 @@ function doPost(e) {
     if (action === 'registrarganador') {
       var ss = SpreadsheetApp.getActiveSpreadsheet();
       var ganadorSheet = ss.getSheetByName('Ganadores');
+      // Cabeceras esperadas (orden fijo):
+      // 0=FECHA Y HORA, 1=SORTEO, 2=SORTEO ID, 3=NOMBRES, 4=APELLIDOS,
+      // 5=DNI, 6=CELULAR, 7=CORREO, 8=DISTRITO, 9=CODIGO
+      var GANADOR_HEADERS = [
+        'FECHA Y HORA', 'SORTEO', 'SORTEO ID', 'NOMBRES', 'APELLIDOS',
+        'DNI', 'CELULAR', 'CORREO', 'DISTRITO', 'CODIGO'
+      ];
       if (!ganadorSheet) {
         ganadorSheet = ss.insertSheet('Ganadores');
-        ganadorSheet.appendRow([
-          'FECHA Y HORA',
-          'SORTEO',
-          'SORTEO ID',
-          'NOMBRES',
-          'APELLIDOS',
-          'DNI',
-          'CELULAR',
-          'CORREO',
-          'DISTRITO',
-          'CODIGO'
-        ]);
-        var headerRange = ganadorSheet.getRange(1, 1, 1, 10);
+        ganadorSheet.appendRow(GANADOR_HEADERS);
+        var headerRange = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length);
         headerRange.setBackground('#1a0a2a');
         headerRange.setFontColor('#ffd700');
         headerRange.setFontWeight('bold');
+      } else {
+        // Validar cabeceras existentes
+        var existingHeaders = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length).getValues()[0];
+        var headersOk = true;
+        for (var hh = 0; hh < GANADOR_HEADERS.length; hh++) {
+          if (String(existingHeaders[hh] || '').trim().toUpperCase() !== GANADOR_HEADERS[hh]) {
+            headersOk = false; break;
+          }
+        }
+        if (!headersOk) {
+          ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length).setValues([GANADOR_HEADERS]);
+          var headerRange2 = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length);
+          headerRange2.setBackground('#1a0a2a');
+          headerRange2.setFontColor('#ffd700');
+          headerRange2.setFontWeight('bold');
+        }
       }
 
       // Buscar datos completos del ganador en la hoja de registros
+      // Registros: 0=FECHA, 1=SORTEO, 2=NOMBRES, 3=APELLIDOS, 4=DNI,
+      //            5=CELULAR, 6=CORREO, 7=DISTRITO, 8=TIKTOK, 9=CODIGO
       var regSheet = ss.getSheetByName(HOJA_REGISTROS);
       var regData = regSheet.getDataRange().getValues();
       var celular = '', correo = '', distrito = '', codigo = '';
       var dniGanador = (datos.dni || '').trim();
       for (var i = 1; i < regData.length; i++) {
         if (String(regData[i][4] || '').trim() === dniGanador) {
-          celular = String(regData[i][5] || '');
-          correo = String(regData[i][6] || '');
-          distrito = String(regData[i][7] || '');
-          codigo = String(regData[i][9] || '');
+          celular = String(regData[i][5] || '');  // col 5 = CELULAR
+          correo = String(regData[i][6] || '');   // col 6 = CORREO
+          distrito = String(regData[i][7] || ''); // col 7 = DISTRITO
+          codigo = String(regData[i][9] || '');   // col 9 = CODIGO (col 8 es TIKTOK)
           break;
         }
       }
 
+      // appendRow en MISMO orden que GANADOR_HEADERS
       ganadorSheet.appendRow([
-        fechaLima,
-        datos.sorteo || '',
-        datos.sorteoId || '',
-        datos.nombres || '',
-        datos.apellidos || '',
-        datos.dni || '',
-        celular,
-        correo,
-        distrito,
-        codigo
+        fechaLima,              // 0: FECHA Y HORA
+        datos.sorteo || '',     // 1: SORTEO
+        datos.sorteoId || '',   // 2: SORTEO ID
+        datos.nombres || '',    // 3: NOMBRES
+        datos.apellidos || '',  // 4: APELLIDOS
+        datos.dni || '',        // 5: DNI
+        celular,                // 6: CELULAR
+        correo,                 // 7: CORREO
+        distrito,               // 8: DISTRITO
+        codigo                  // 9: CODIGO
       ]);
 
       // Marcar como ganador en la hoja de registros (columna K = "GANADOR")
@@ -301,31 +316,55 @@ function doGet(e) {
         var ganador = participantes[idx];
 
         // 4) Guardar ganador en hoja Ganadores
+        // Cabeceras esperadas (orden fijo — DEBE coincidir con los índices de lectura):
+        // 0=FECHA Y HORA, 1=SORTEO, 2=SORTEO ID, 3=NOMBRES, 4=APELLIDOS,
+        // 5=DNI, 6=CELULAR, 7=CORREO, 8=DISTRITO, 9=CODIGO
+        var GANADOR_HEADERS = [
+          'FECHA Y HORA', 'SORTEO', 'SORTEO ID', 'NOMBRES', 'APELLIDOS',
+          'DNI', 'CELULAR', 'CORREO', 'DISTRITO', 'CODIGO'
+        ];
+
         if (!ganadorSheet) {
           ganadorSheet = ss.insertSheet('Ganadores');
-          ganadorSheet.appendRow([
-            'FECHA Y HORA', 'SORTEO', 'SORTEO ID', 'NOMBRES', 'APELLIDOS',
-            'DNI', 'CELULAR', 'CORREO', 'DISTRITO', 'CODIGO'
-          ]);
-          var headerRange = ganadorSheet.getRange(1, 1, 1, 10);
+          ganadorSheet.appendRow(GANADOR_HEADERS);
+          var headerRange = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length);
           headerRange.setBackground('#1a0a2a');
           headerRange.setFontColor('#ffd700');
           headerRange.setFontWeight('bold');
+        } else {
+          // ── Validar que las cabeceras existentes coincidan ──
+          var existingHeaders = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length).getValues()[0];
+          var headersOk = true;
+          for (var hi = 0; hi < GANADOR_HEADERS.length; hi++) {
+            if (String(existingHeaders[hi] || '').trim().toUpperCase() !== GANADOR_HEADERS[hi]) {
+              headersOk = false;
+              break;
+            }
+          }
+          if (!headersOk) {
+            // Sobrescribir cabeceras para corregir desalineación
+            ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length).setValues([GANADOR_HEADERS]);
+            var headerRange2 = ganadorSheet.getRange(1, 1, 1, GANADOR_HEADERS.length);
+            headerRange2.setBackground('#1a0a2a');
+            headerRange2.setFontColor('#ffd700');
+            headerRange2.setFontWeight('bold');
+          }
         }
 
         var ahora = new Date();
         var fechaLima = Utilities.formatDate(ahora, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
+        // ── appendRow en MISMO orden que GANADOR_HEADERS ──
         ganadorSheet.appendRow([
-          fechaLima,
-          sorteoFiltro || '',
-          sorteoId || '',
-          ganador.nombres,
-          ganador.apellidos,
-          ganador.dni,
-          ganador.celular || '',
-          ganador.correo || '',
-          ganador.distrito || '',
-          ganador.codigo || ''
+          fechaLima,              // 0: FECHA Y HORA
+          sorteoFiltro || '',     // 1: SORTEO
+          sorteoId || '',         // 2: SORTEO ID
+          ganador.nombres,        // 3: NOMBRES
+          ganador.apellidos,      // 4: APELLIDOS
+          ganador.dni,            // 5: DNI
+          ganador.celular || '',  // 6: CELULAR
+          ganador.correo || '',   // 7: CORREO
+          ganador.distrito || '', // 8: DISTRITO
+          ganador.codigo || ''    // 9: CODIGO
         ]);
         // Forzar escritura inmediata antes de liberar el lock
         SpreadsheetApp.flush();

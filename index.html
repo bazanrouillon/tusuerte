@@ -2124,17 +2124,19 @@
     // ── Variable de control: qué sorteos ya ejecutaron su ruleta ──
     var ruletaSorteoYaEjecutado = {};
 
+    // ── Constante: ventana total del sorteo en vivo (5 min 1 seg) ──
+    var SORTEO_VENTANA_TOTAL = 301000; // 5 min 1 seg en ms
+    var RULETA_ANIMACION_MS  = 6000;   // 6 seg de animación de giro
+
     // ── Determinar estado de un sorteo ──
     function getEstado(sorteoId) {
       // Sorteos marcados como finalizados por prueba admin
       if (_testFinalizados[sorteoId]) return 'finalizado';
-      // Si la ruleta ya se ejecutó y la transición ya ocurrió, es finalizado
-      if (ruletaSorteoYaEjecutado[sorteoId] && !_sorteoEnVivo) return 'finalizado';
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return 'finalizado';
       var ahora = Date.now();
-      // Activo = ya pasó su hora de inicio pero hace menos de 30 min (ventana de sorteo)
-      if (ahora >= cfg.ts && ahora < cfg.ts + 1800000) return 'activo';
+      // Activo = desde la hora del sorteo hasta +5min 1seg
+      if (ahora >= cfg.ts && ahora < cfg.ts + SORTEO_VENTANA_TOTAL) return 'activo';
       if (ahora < cfg.ts) return 'proximo';
       return 'finalizado';
     }
@@ -2937,7 +2939,18 @@
       setTimeout(function() { container.innerHTML = ''; }, 5000);
     }
 
-    // ── Flujo principal: ruleta dentro de la tarjeta ──
+    // ══════════════════════════════════════════════════════════════
+    // FLUJO PRINCIPAL: RULETA CON TIMELINE FIJO
+    // ══════════════════════════════════════════════════════════════
+    // Timeline fijo basado en la hora del sorteo (ej: 4:00pm):
+    //   T+0        → Ruleta empieza a girar (6 seg animación)
+    //   T+6s       → Ganador revelado + confeti
+    //   T+5min 1s  → Tarjeta baja a secundaria con sello CERRADO
+    //
+    // Si un usuario entra después de T+0, ve la secuencia desde
+    // donde corresponde según el reloj real.
+    // ══════════════════════════════════════════════════════════════
+
     function iniciarRuleta(sorteoId) {
       var cfg = SORTEOS_CFG[sorteoId];
       if (!cfg) return;
@@ -2954,6 +2967,11 @@
 
       if (!card) { _sorteoEnVivo = false; return; }
 
+      // ── Calcular en qué punto del timeline estamos ──
+      var elapsed = Date.now() - cfg.ts; // ms desde la hora del sorteo
+      var msRestanteVentana = SORTEO_VENTANA_TOTAL - elapsed; // ms hasta que cierre
+      var faseAnimacion = elapsed < RULETA_ANIMACION_MS; // ¿aún en fase de giro?
+
       // Scroll a la tarjeta
       card.scrollIntoView({ behavior:'smooth', block:'center' });
 
@@ -2962,12 +2980,11 @@
         card.classList.add('flipped');
         estadoEl.textContent = 'Cargando participantes...';
         ganadorDiv.classList.remove('visible');
-        // Mostrar badge EN VIVO (en el card-back, orientación correcta)
         var enVivoEl = card.querySelector('.en-vivo-badge');
         if (enVivoEl) enVivoEl.style.display = 'flex';
       }, 300);
 
-      // Obtener participantes — enviar nombre limpio + sorteoId para búsqueda robusta
+      // Obtener participantes
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
       var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
@@ -2986,6 +3003,8 @@
               estadoEl.style.color = 'var(--neon-rosa)';
               var enVivoEl = card.querySelector('.en-vivo-badge');
               if (enVivoEl) enVivoEl.style.display = 'none';
+              // Programar cierre exacto a T+5min1s
+              var msHastaCierre = Math.max(1000, (cfg.ts + SORTEO_VENTANA_TOTAL) - Date.now());
               setTimeout(function() {
                 card.classList.remove('flipped');
                 setTimeout(function() {
@@ -2993,7 +3012,7 @@
                   _sorteoEnVivo = false;
                   transicionPostSorteo(sorteoId);
                 }, 900);
-              }, 5000);
+              }, msHastaCierre);
               return;
             }
 
@@ -3002,22 +3021,18 @@
             dibujarRuleta(canvasId, participantes, 0);
 
             // ══════════════════════════════════════════════════════
-            // SELECCIÓN DE GANADOR SERVER-SIDE
-            // El servidor elige al ganador y lo guarda. Todos los
-            // dispositivos reciben el MISMO ganador.
+            // SELECCIÓN DE GANADOR SERVER-SIDE (idempotente)
             // ══════════════════════════════════════════════════════
             estadoEl.textContent = 'Seleccionando ganador...';
             var selUrl = GOOGLE_SHEETS_URL + '?action=seleccionarGanador&sorteo=' +
               encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
-            // Función con reintentos para manejar servidor ocupado (lock)
             function fetchGanadorConReintento(intentos) {
               return fetch(selUrl, { redirect: 'follow' })
                 .then(function(rSel) { return rSel.text(); })
                 .then(function(txtSel) {
                   var selData;
                   try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON'); }
-                  // Si el servidor está ocupado (lock), reintentar
                   if (selData.status === 'error' && intentos > 0) {
                     estadoEl.textContent = 'Servidor ocupado, reintentando...';
                     return new Promise(function(resolve) {
@@ -3035,103 +3050,78 @@
               .then(function(selData) {
 
                 var ganadorServer = selData.ganador;
-                // Encontrar el índice del ganador en la lista de participantes
+                // Encontrar el índice del ganador en participantes
                 var ganadorIdx = -1;
                 for (var gi = 0; gi < participantes.length; gi++) {
                   if (participantes[gi].dni === ganadorServer.dni &&
                       participantes[gi].nombres.toLowerCase() === ganadorServer.nombres.toLowerCase()) {
-                    ganadorIdx = gi;
-                    break;
+                    ganadorIdx = gi; break;
                   }
                 }
-                // Si no se encontró por DNI+nombre exacto, buscar solo por DNI
                 if (ganadorIdx === -1) {
                   for (var gi2 = 0; gi2 < participantes.length; gi2++) {
                     if (participantes[gi2].dni === ganadorServer.dni) {
-                      ganadorIdx = gi2;
-                      break;
+                      ganadorIdx = gi2; break;
                     }
                   }
                 }
-                // Fallback: poner al ganador como primer elemento
                 if (ganadorIdx === -1) {
-                  participantes.unshift({
-                    nombres: ganadorServer.nombres,
-                    apellidos: ganadorServer.apellidos,
-                    dni: ganadorServer.dni
-                  });
+                  participantes.unshift({ nombres: ganadorServer.nombres, apellidos: ganadorServer.apellidos, dni: ganadorServer.dni });
                   ganadorIdx = 0;
                   dibujarRuleta(canvasId, participantes, 0);
                 }
 
+                // ── Calcular ángulo objetivo de la ruleta ──
                 var n = participantes.length;
                 var slice = (2 * Math.PI) / n;
                 var targetAngle = (3 * Math.PI / 2) - (ganadorIdx * slice + slice / 2);
                 var vueltas = 8 + Math.floor(Math.random() * 5);
                 var anguloTotal = targetAngle + vueltas * 2 * Math.PI;
-                var duracion = 6000;
 
-                setTimeout(function() {
-                  estadoEl.textContent = '¡Girando la ruleta!';
-                  var inicio = performance.now();
+                // ── Re-calcular elapsed AHORA (después de las llamadas de red) ──
+                var elapsedAhora = Date.now() - cfg.ts;
 
-                  function animarRuleta(timestamp) {
-                    var progreso = Math.min(1, (timestamp - inicio) / duracion);
-                    var eased = 1 - Math.pow(1 - progreso, 3);
-                    var anguloActual = anguloTotal * eased;
-                    dibujarRuleta(canvasId, participantes, anguloActual);
+                // ══════════════════════════════════════════════════
+                // DECISIÓN: ¿mostrar animación o ir directo al ganador?
+                // ══════════════════════════════════════════════════
 
-                    if (progreso < 1) {
-                      requestAnimationFrame(animarRuleta);
-                    } else {
-                      // ¡Ganador! (del servidor — igual para todos)
-                      var ganador = { nombres: ganadorServer.nombres, apellidos: ganadorServer.apellidos, dni: ganadorServer.dni };
-                      var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
-                      var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' + ganador.dni.substring(ganador.dni.length - 2) : '';
+                if (elapsedAhora < RULETA_ANIMACION_MS) {
+                  // ── CASO A: Aún estamos en fase de animación ──
+                  // Calcular cuánto queda de animación
+                  var animRestante = RULETA_ANIMACION_MS - elapsedAhora;
+                  var progresoInicial = elapsedAhora / RULETA_ANIMACION_MS;
 
-                      // Ocultar ruleta, mostrar solo ganador
-                      var ruletaContainer = card.querySelector('.card-ruleta-container');
-                      if (ruletaContainer) ruletaContainer.style.display = 'none';
-                      // Ocultar EN VIVO badge
-                      var enVivoEl = card.querySelector('.en-vivo-badge');
-                      if (enVivoEl) enVivoEl.style.display = 'none';
+                  setTimeout(function() {
+                    estadoEl.textContent = '¡Girando la ruleta!';
+                    var inicio = performance.now();
 
-                      estadoEl.textContent = '🎉 ¡GANADOR!';
-                      estadoEl.style.color = 'var(--neon-amarillo)';
-                      estadoEl.style.fontSize = '1.2rem';
-                      ganadorNombre.textContent = nombreCompleto.toUpperCase();
-                      ganadorDni.textContent = 'DNI: ' + dniMask;
-                      ganadorDiv.classList.add('visible');
-                      lanzarConfeti();
+                    function animarRuleta(timestamp) {
+                      var tLocal = timestamp - inicio;
+                      var progreso = Math.min(1, progresoInicial + (tLocal / RULETA_ANIMACION_MS) * (1 - progresoInicial));
+                      var eased = 1 - Math.pow(1 - progreso, 3);
+                      dibujarRuleta(canvasId, participantes, anguloTotal * eased);
 
-                      // Guardar ganador localmente
-                      var ahora = new Date();
-                      // Guardar en memoria (el servidor ya lo guardó en hoja Ganadores)
-                      guardarGanador({
-                        nombres: ganador.nombres,
-                        apellidos: ganador.apellidos,
-                        dni: ganador.dni,
-                        sorteo: cfg.nombre,
-                        sorteoId: sorteoId,
-                        fecha: ahora.toLocaleDateString('es-PE') + ' ' + ahora.toLocaleTimeString('es-PE')
-                      });
-
-                      // NO registrar ganador en Sheets aquí — el servidor ya lo hizo
-                      // en el endpoint seleccionarGanador
-
-                      // ── 5 MINUTOS mostrando ganador, luego transición ──
-                      _transicionTimer = setTimeout(function() {
-                        card.classList.remove('flipped');
-                        setTimeout(function() {
-                          card.classList.add('cerrado');
-                          transicionPostSorteo(sorteoId);
-                        }, 900);
-                      }, 60000); // 1 minuto mostrando ganador
+                      if (progreso < 1) {
+                        requestAnimationFrame(animarRuleta);
+                      } else {
+                        mostrarGanadorEnCard(card, estadoEl, ganadorDiv, ganadorNombre, ganadorDni, ganadorServer, cfg, sorteoId);
+                      }
                     }
-                  }
-                  inicio = performance.now();
-                  requestAnimationFrame(animarRuleta);
-                }, 1500);
+                    inicio = performance.now();
+                    requestAnimationFrame(animarRuleta);
+                  }, 500);
+
+                } else {
+                  // ── CASO B: Ya pasó la fase de animación → mostrar ganador directo ──
+                  // Dibujar ruleta en posición final (ganador arriba)
+                  var easedFinal = 1 - Math.pow(0, 3); // = 1
+                  dibujarRuleta(canvasId, participantes, anguloTotal);
+
+                  setTimeout(function() {
+                    mostrarGanadorEnCard(card, estadoEl, ganadorDiv, ganadorNombre, ganadorDni, ganadorServer, cfg, sorteoId);
+                  }, 800);
+                }
+
               })
               .catch(function(errSel) {
                 console.error('Error seleccionando ganador:', errSel);
@@ -3157,16 +3147,60 @@
               ruletaSorteoYaEjecutado[sorteoId] = false;
             }, 5000);
           });
-      }, 1200);
+      }, 800);
+    }
+
+    // ── Mostrar ganador en la tarjeta y programar cierre exacto ──
+    function mostrarGanadorEnCard(card, estadoEl, ganadorDiv, ganadorNombre, ganadorDni, ganadorServer, cfg, sorteoId) {
+      var ganador = { nombres: ganadorServer.nombres, apellidos: ganadorServer.apellidos, dni: ganadorServer.dni };
+      var nombreCompleto = ganador.nombres + ' ' + ganador.apellidos;
+      var dniMask = ganador.dni ? ganador.dni.substring(0,2) + '****' + ganador.dni.substring(ganador.dni.length - 2) : '';
+
+      // Ocultar ruleta, mostrar ganador
+      var ruletaContainer = card.querySelector('.card-ruleta-container');
+      if (ruletaContainer) ruletaContainer.style.display = 'none';
+      var enVivoEl = card.querySelector('.en-vivo-badge');
+      if (enVivoEl) enVivoEl.style.display = 'none';
+
+      estadoEl.textContent = '🎉 ¡GANADOR!';
+      estadoEl.style.color = 'var(--neon-amarillo)';
+      estadoEl.style.fontSize = '1.2rem';
+      ganadorNombre.textContent = nombreCompleto.toUpperCase();
+      ganadorDni.textContent = 'DNI: ' + dniMask;
+      ganadorDiv.classList.add('visible');
+      lanzarConfeti();
+
+      // Guardar ganador en memoria
+      guardarGanador({
+        nombres: ganador.nombres,
+        apellidos: ganador.apellidos,
+        dni: ganador.dni,
+        sorteo: cfg.nombre,
+        sorteoId: sorteoId,
+        fecha: new Date().toLocaleDateString('es-PE') + ' ' + new Date().toLocaleTimeString('es-PE')
+      });
+
+      // ── TRANSICIÓN EXACTA: cerrar a T + 5min 1seg desde hora del sorteo ──
+      var msHastaCierre = Math.max(1000, (cfg.ts + SORTEO_VENTANA_TOTAL) - Date.now());
+      _transicionTimer = setTimeout(function() {
+        card.classList.remove('flipped');
+        setTimeout(function() {
+          card.classList.add('cerrado');
+          _sorteoEnVivo = false;
+          transicionPostSorteo(sorteoId);
+        }, 900);
+      }, msHastaCierre);
     }
 
     // ── Verificar si algún sorteo debe activarse ──
+    // Solo dispara en la tarjeta principal dentro de la ventana T+0 a T+5min1s
     function verificarSorteosActivos() {
       var ahora = Date.now();
       Object.keys(SORTEOS_CFG).forEach(function(id) {
         var ts = SORTEOS_CFG[id].ts;
         var diff = ahora - ts;
-        if (diff >= 0 && diff < 30000 && !ruletaSorteoYaEjecutado[id]) {
+        // Ventana completa: desde hora del sorteo hasta +5min 1seg
+        if (diff >= 0 && diff < SORTEO_VENTANA_TOTAL && !ruletaSorteoYaEjecutado[id]) {
           iniciarRuleta(id);
         }
       });
