@@ -70,7 +70,8 @@ function doPost(e) {
 
       // Buscar datos completos del ganador en la hoja de registros
       // Registros: 0=FECHA, 1=SORTEO, 2=NOMBRES, 3=APELLIDOS, 4=DNI,
-      //            5=CELULAR, 6=CORREO, 7=DISTRITO, 8=TIKTOK, 9=CODIGO
+      //            5=CELULAR, 6=CORREO, 7=DISTRITO, 8=TIKTOK, 9=CODIGO,
+      //            10=GANADOR, 11=SORTEO ID
       var regSheet = ss.getSheetByName(HOJA_REGISTROS);
       var regData = regSheet.getDataRange().getValues();
       var celular = '', correo = '', distrito = '', codigo = '';
@@ -156,6 +157,36 @@ function doPost(e) {
         sheet.getRange(1, 11).setBackground('#0d0d1f');
         sheet.getRange(1, 11).setFontColor('#ffd700');
         sheet.getRange(1, 11).setFontWeight('bold');
+      }
+    }
+
+    // ── VALIDACIÓN ANTI-DUPLICADOS EN SERVIDOR ──
+    // Verificar que el mismo DNI no esté registrado para el mismo sorteoId
+    var dniRegistro = (datos.dni || '').trim();
+    var sorteoIdRegistro = (datos.sorteoId || '').trim();
+    if (dniRegistro && sorteoIdRegistro) {
+      var existingData = sheet.getDataRange().getValues();
+      for (var di = 1; di < existingData.length; di++) {
+        var existDni = String(existingData[di][4] || '').trim();
+        var existSorteoId = String(existingData[di][11] || '').trim();
+        if (existDni === dniRegistro && existSorteoId === sorteoIdRegistro) {
+          return ContentService
+            .createTextOutput(JSON.stringify({ status: 'duplicado', mensaje: 'Ya estás registrado en este sorteo' }))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+    } else if (dniRegistro) {
+      // Fallback sin sorteoId: verificar por nombre de sorteo
+      var sorteoRegistro = (datos.sorteo || '').trim().toLowerCase();
+      var existingData2 = sheet.getDataRange().getValues();
+      for (var di2 = 1; di2 < existingData2.length; di2++) {
+        var existDni2 = String(existingData2[di2][4] || '').trim();
+        var existSorteo2 = String(existingData2[di2][1] || '').trim().toLowerCase();
+        if (existDni2 === dniRegistro && sorteoRegistro && existSorteo2.indexOf(sorteoRegistro) !== -1) {
+          return ContentService
+            .createTextOutput(JSON.stringify({ status: 'duplicado', mensaje: 'Ya estás registrado en este sorteo' }))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
       }
     }
 

@@ -2275,7 +2275,8 @@
       'SE VA ESTE YAPE. SE ACABA {DIA}',
       'SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?',
       'SE VA ESTE YAPE. ESTO VUELA',
-      'SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?'
+      'SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?',
+      'SE VA ESTE YAPE. GRAN CIERRE DE SEMANA'
     ];
     function getDescPrincipal(s) {
       var cfg = SORTEOS_CFG[s.id];
@@ -2294,8 +2295,9 @@
                     sorteoDate.getFullYear() === mañana.getFullYear());
       }
       var dia = esHoy ? 'HOY' : (esMañana ? 'MAÑANA' : DIAS_NOMBRE[sorteoDate.getDay()].toUpperCase());
-      var idx = parseInt(s.id) - 1;
-      var frase = _frasesSorteo[idx] || _frasesSorteo[0];
+      // Extraer número del sorteo desde sorteoId "N-YYYYMMDD" → N
+      var numSorteo = parseInt(s.id.split('-')[0]) || 1;
+      var frase = _frasesSorteo[numSorteo - 1] || _frasesSorteo[0];
       return (dia + ' ' + frase.replace('{DIA}', dia)).replace('HOY HOY', 'HOY').replace('MAÑANA MAÑANA', 'MAÑANA');
     }
 
@@ -2707,26 +2709,52 @@
       function completarRegistro() {
         var cod = 'TSP-' + Math.floor(10000 + Math.random() * 90000);
         datos.codigo = cod;
-        // Enviar a Google Sheets usando XMLHttpRequest para evitar doble POST por redirect
+        if (btnRegistro) { btnRegistro.textContent = 'REGISTRANDO...'; }
+
         if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'PEGA_TU_URL_AQUI') {
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', GOOGLE_SHEETS_URL, true);
-          xhr.setRequestHeader('Content-Type', 'text/plain');
-          xhr.send(JSON.stringify(datos));
+          // Enviar con fetch + redirect:follow (XHR no sigue redirects de Google Apps Script)
+          fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(datos)
+          })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            var res;
+            try { res = JSON.parse(txt); } catch(ex) { res = null; }
+
+            if (res && res.status === 'duplicado') {
+              // El servidor detectó que ya estaba registrado
+              mostrarYaRegistrado();
+              return;
+            }
+
+            if (res && res.status === 'ok') {
+              // ── Registro exitoso ──
+              var id = document.getElementById('sorteo-id').value;
+              contadores[id]++;
+              var inscEl = document.getElementById('inscritos-' + id);
+              if (inscEl) inscEl.textContent = contadores[id];
+              var barraEl = document.getElementById('barra-' + id);
+              if (barraEl) barraEl.style.width = Math.max(5, Math.min(contadores[id], 100)) + '%';
+              document.getElementById('codigo-participacion').textContent = cod;
+              cerrarPanel('panel-registro');
+              document.getElementById('modal-exito').classList.add('activo');
+              form.reset();
+            } else {
+              alert('Error al registrar. Intenta de nuevo.');
+            }
+            liberarRegistro();
+          })
+          .catch(function(err) {
+            console.error('Error enviando registro:', err);
+            alert('Error de conexión. Intenta de nuevo.');
+            liberarRegistro();
+          });
+        } else {
+          liberarRegistro();
         }
-        // Actualizar contador visual
-        var id = document.getElementById('sorteo-id').value;
-        contadores[id]++;
-        var inscEl = document.getElementById('inscritos-' + id);
-        if (inscEl) inscEl.textContent = contadores[id];
-        var barraEl = document.getElementById('barra-' + id);
-        if (barraEl) barraEl.style.width = Math.max(5, Math.min(contadores[id], 100)) + '%';
-        // Mostrar éxito
-        document.getElementById('codigo-participacion').textContent = cod;
-        cerrarPanel('panel-registro');
-        document.getElementById('modal-exito').classList.add('activo');
-        form.reset();
-        liberarRegistro();
       }
 
       // Función que muestra "ya registrado"
