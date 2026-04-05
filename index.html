@@ -872,6 +872,15 @@
       font-family:'Bangers',cursive; font-size:1.3rem; letter-spacing:3px; padding:12px 28px;
       text-decoration:none; border-bottom:4px solid #7a3300; transition:transform .15s,box-shadow .15s; }
     .btn-fotos-ganadores:hover { transform:translateY(-2px); box-shadow:0 0 20px var(--neon-naranja); }
+    .btn-semana-pasada {
+      display:inline-block; background:linear-gradient(135deg,#1a3a4a,#0d2233); color:var(--neon-celeste);
+      font-family:'Righteous',cursive; font-size:.85rem; padding:12px 24px; border-radius:12px;
+      border:2px solid var(--neon-celeste); cursor:pointer; transition:all .3s; letter-spacing:1px;
+    }
+    .btn-semana-pasada:hover { background:linear-gradient(135deg,#0d4a5a,#1a3355); box-shadow:0 0 15px rgba(0,229,255,.3); transform:translateY(-2px); }
+    #panel-ganadores-pasados .panel-header { background:#0c2233; border-bottom:3px solid var(--neon-celeste); }
+    #panel-ganadores-pasados .panel-titulo { color:var(--neon-celeste); text-shadow:2px 2px 0 #000, 0 0 10px rgba(0,229,255,.35); }
+    #panel-ganadores-pasados .panel-box { border:3px solid var(--neon-celeste); }
     /* PANEL FAQ */
     #panel-faq .panel-header { background:#0c2e33; border-bottom:3px solid var(--chicha-amarillo); }
     #panel-faq .panel-titulo { color:var(--chicha-amarillo); text-shadow:2px 2px 0 #000, 0 0 16px rgba(255,215,0,.3); }
@@ -1318,10 +1327,15 @@
       .semana-card-nombre { font-size:.7rem; }
       /* ── Paneles: sheet desde abajo ── */
       .panel-overlay { padding:0; align-items:flex-end; }
-      .panel-overlay#panel-ganadores { align-items:center; padding:12px; }
+      .panel-overlay#panel-ganadores, .panel-overlay#panel-ganadores-pasados { align-items:center; padding:12px; }
       .panel-overlay#panel-ganadores .panel-box {
         border-radius:14px !important;
         border:3px solid var(--chicha-naranja) !important;
+        max-height:80vh;
+      }
+      .panel-overlay#panel-ganadores-pasados .panel-box {
+        border-radius:14px !important;
+        border:3px solid var(--neon-celeste) !important;
         max-height:80vh;
       }
       .panel-box {
@@ -1879,11 +1893,11 @@
       </div>
     </div>
   </div>
-  <!-- PANEL GANADORES -->
+  <!-- PANEL GANADORES (último ganador) -->
   <div class="panel-overlay" id="panel-ganadores" onclick="cerrarPanelFuera(event,'panel-ganadores')">
     <div class="panel-box">
       <div class="panel-header">
-        <span class="panel-titulo">🏆 GANADORES DE LA SEMANA</span>
+        <span class="panel-titulo">🏆 ÚLTIMO GANADOR</span>
         <button class="panel-cerrar" onclick="cerrarPanel('panel-ganadores')">✕</button>
       </div>
       <div class="panel-body">
@@ -1897,6 +1911,36 @@
           <a class="btn-fotos-ganadores" href="https://github.com/tusuerte-pe/ganadores" target="_blank" rel="noopener">
             📸 VER FOTOS DE GANADORES
           </a>
+        </div>
+        <!-- Botón para ver ganadores pasados -->
+        <div id="btn-ganadores-pasados-wrap" style="text-align:center;margin-top:18px;display:none;">
+          <button class="btn-semana-pasada" onclick="cerrarPanel('panel-ganadores');setTimeout(function(){abrirPanel('panel-ganadores-pasados')},200);">
+            📋 GANADORES PASADOS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL GANADORES PASADOS -->
+  <div class="panel-overlay" id="panel-ganadores-pasados" onclick="cerrarPanelFuera(event,'panel-ganadores-pasados')">
+    <div class="panel-box">
+      <div class="panel-header">
+        <span class="panel-titulo">📋 GANADORES PASADOS</span>
+        <button class="panel-cerrar" onclick="cerrarPanel('panel-ganadores-pasados')">✕</button>
+      </div>
+      <div class="panel-body">
+        <div id="ganadores-pasados-lista"></div>
+        <div class="ganadores-empty" id="ganadores-pasados-empty">
+          <div class="ganadores-empty-icono">📋</div>
+          <p class="ganadores-empty-txt">
+            Aún no hay ganadores pasados.
+          </p>
+        </div>
+        <div style="text-align:center;margin-top:18px;">
+          <button class="btn-semana-pasada" onclick="cerrarPanel('panel-ganadores-pasados');setTimeout(function(){abrirPanelGanadores()},200);">
+            🔙 VOLVER AL ÚLTIMO GANADOR
+          </button>
         </div>
       </div>
     </div>
@@ -2676,7 +2720,7 @@
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxi0Evg6Ppp7FEDykbQ8JVpPKWAEVd3nQ230brxaAGwwO4x3PhutE3CIHY5BEhYH2cF/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby6phdIFP8Uyz3VWnJIx2wbRBXeV5grs8Q3DphtbZ6JGJM6aKVWv5x1vVaqjGDZExI9/exec';
     var _registroEnProceso = false; // Guardia global contra doble submit
     function enviarRegistro(e) {
       e.preventDefault();
@@ -2870,11 +2914,23 @@
       _ganadoresServerCache = null;
     }
 
-    // ── Renderizar lista de ganadores en el panel ──
-    function renderGanadores(lista) {
+    // ── Buscar monto del sorteo a partir del nombre ──
+    function buscarMontoSorteo(nombreSorteo) {
+      if (!nombreSorteo) return '';
+      var nombre = nombreSorteo.toLowerCase();
+      for (var i = 0; i < SORTEOS_BASE.length; i++) {
+        if (nombre.indexOf(SORTEOS_BASE[i].nombre.toLowerCase()) !== -1) {
+          return SORTEOS_BASE[i].monto;
+        }
+      }
+      return '';
+    }
+
+    // ── Renderizar lista de ganadores en un contenedor dado ──
+    function renderGanadoresEn(containerId, emptyId, lista) {
       lista = lista || [];
-      var container = document.getElementById('ganadores-lista');
-      var empty = document.getElementById('ganadores-empty');
+      var container = document.getElementById(containerId);
+      var empty = document.getElementById(emptyId);
       if (!container) return;
       container.innerHTML = '';
       if (lista.length === 0) {
@@ -2886,11 +2942,14 @@
         var div = document.createElement('div');
         div.className = 'ganador-entry';
         var dniMask = g.dni ? g.dni.substring(0,2) + '****' + g.dni.substring(g.dni.length - 2) : '---';
+        var monto = buscarMontoSorteo(g.sorteo);
+        var sorteoTexto = (g.sorteo || '');
+        if (monto) sorteoTexto += ' – ' + monto;
         div.innerHTML =
           '<div class="ganador-entry-icon">🏆</div>' +
           '<div class="ganador-entry-info">' +
             '<div class="ganador-entry-nombre">' + (g.nombres + ' ' + g.apellidos).toUpperCase() + '</div>' +
-            '<div class="ganador-entry-sorteo">' + (g.sorteo || '') + '</div>' +
+            '<div class="ganador-entry-sorteo">' + sorteoTexto + '</div>' +
             '<div class="ganador-entry-fecha">' + (g.fecha || '') + '</div>' +
           '</div>' +
           '<div class="ganador-entry-dni">DNI: ' + dniMask + '</div>';
@@ -2898,8 +2957,30 @@
       });
     }
 
+    // ── Separar: último ganador (principal) vs todos los demás (pasados) ──
+    function renderGanadores(lista) {
+      lista = lista || [];
+      if (lista.length === 0) {
+        renderGanadoresEn('ganadores-lista', 'ganadores-empty', []);
+        renderGanadoresEn('ganadores-pasados-lista', 'ganadores-pasados-empty', []);
+        var btnWrap = document.getElementById('btn-ganadores-pasados-wrap');
+        if (btnWrap) btnWrap.style.display = 'none';
+        return;
+      }
+      // El último de la lista (último registrado en la hoja) es el más reciente
+      var ultimo = lista[lista.length - 1];
+      var pasados = lista.slice(0, lista.length - 1).reverse(); // más recientes primero
+
+      // Panel principal: solo el último ganador
+      renderGanadoresEn('ganadores-lista', 'ganadores-empty', [ultimo]);
+      // Panel pasados: todos los demás
+      renderGanadoresEn('ganadores-pasados-lista', 'ganadores-pasados-empty', pasados);
+      // Mostrar/ocultar botón de ganadores pasados
+      var btnWrap = document.getElementById('btn-ganadores-pasados-wrap');
+      if (btnWrap) btnWrap.style.display = pasados.length > 0 ? '' : 'none';
+    }
+
     // ── Abrir panel ganadores con fetch en vivo desde Google Sheets ──
-    // ── Cache de ganadores del servidor (evita fetch repetidos) ──
     var _ganadoresServerCache = null;
 
     function abrirPanelGanadores() {
@@ -2951,7 +3032,6 @@
         })
         .catch(function(err) {
           console.error('Error cargando ganadores:', err);
-          // Si falló el fetch y no hay datos, mostrar mensaje
           if (!_ganadoresServerCache && Object.keys(_ganadoresPreload).length === 0) {
             if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error al cargar ganadores. Intenta de nuevo.</div>';
           }
