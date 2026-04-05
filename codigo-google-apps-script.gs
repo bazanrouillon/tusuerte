@@ -100,7 +100,8 @@ function doPost(e) {
       ]);
 
       // Marcar como ganador en la hoja de registros (columna K = "GANADOR")
-      if (regSheet.getLastColumn() < 11) {
+      var ganadorHeader = String(regSheet.getRange(1, 11).getValue() || '').trim();
+      if (ganadorHeader !== 'GANADOR') {
         regSheet.getRange(1, 11).setValue('GANADOR');
         regSheet.getRange(1, 11).setBackground('#0d0d1f');
         regSheet.getRange(1, 11).setFontColor('#ffd700');
@@ -122,40 +123,57 @@ function doPost(e) {
     }
 
     // ── REGISTRO NORMAL DE PARTICIPANTE ──
+    // Columnas Registros:
+    // 0=FECHA Y HORA(A), 1=SORTEO(B), 2=NOMBRES(C), 3=APELLIDOS(D), 4=DNI(E),
+    // 5=CELULAR(F), 6=CORREO(G), 7=DISTRITO(H), 8=TIKTOK(I), 9=CODIGO(J),
+    // 10=GANADOR(K) [se llena al seleccionar ganador], 11=SORTEO ID(L)
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
 
     // Crear encabezados si la hoja está vacía
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
-        'FECHA Y HORA',
-        'SORTEO',
-        'NOMBRES',
-        'APELLIDOS',
-        'DNI',
-        'CELULAR',
-        'CORREO',
-        'DISTRITO',
-        'TIKTOK',
-        'CODIGO'
+        'FECHA Y HORA', 'SORTEO', 'NOMBRES', 'APELLIDOS', 'DNI',
+        'CELULAR', 'CORREO', 'DISTRITO', 'TIKTOK', 'CODIGO',
+        'GANADOR', 'SORTEO ID'
       ]);
-      var headerRange = sheet.getRange(1, 1, 1, 10);
+      var headerRange = sheet.getRange(1, 1, 1, 12);
       headerRange.setBackground('#0d0d1f');
       headerRange.setFontColor('#ffe600');
       headerRange.setFontWeight('bold');
+    } else {
+      // Asegurar que exista la cabecera SORTEO ID en columna L (12)
+      var colL = String(sheet.getRange(1, 12).getValue() || '').trim();
+      if (colL !== 'SORTEO ID') {
+        sheet.getRange(1, 12).setValue('SORTEO ID');
+        sheet.getRange(1, 12).setBackground('#0d0d1f');
+        sheet.getRange(1, 12).setFontColor('#ffe600');
+        sheet.getRange(1, 12).setFontWeight('bold');
+      }
+      // Asegurar que exista la cabecera GANADOR en columna K (11)
+      var colK = String(sheet.getRange(1, 11).getValue() || '').trim();
+      if (colK !== 'GANADOR') {
+        sheet.getRange(1, 11).setValue('GANADOR');
+        sheet.getRange(1, 11).setBackground('#0d0d1f');
+        sheet.getRange(1, 11).setFontColor('#ffd700');
+        sheet.getRange(1, 11).setFontWeight('bold');
+      }
     }
 
     // Agregar la fila con los datos del registro
+    // Columna K (GANADOR) vacía — se llena al seleccionar ganador
     sheet.appendRow([
-      fechaLima,
-      datos.sorteo || '',
-      datos.nombres || '',
-      datos.apellidos || '',
-      datos.dni || '',
-      datos.celular || '',
-      datos.correo || '',
-      datos.distrito || '',
-      datos.tiktok || '',
-      datos.codigo || ''
+      fechaLima,               // A: FECHA Y HORA
+      datos.sorteo || '',      // B: SORTEO
+      datos.nombres || '',     // C: NOMBRES
+      datos.apellidos || '',   // D: APELLIDOS
+      datos.dni || '',         // E: DNI
+      datos.celular || '',     // F: CELULAR
+      datos.correo || '',      // G: CORREO
+      datos.distrito || '',    // H: DISTRITO
+      datos.tiktok || '',      // I: TIKTOK
+      datos.codigo || '',      // J: CODIGO
+      '',                      // K: GANADOR (vacío)
+      datos.sorteoId || ''     // L: SORTEO ID
     ]);
 
     return ContentService
@@ -186,26 +204,28 @@ function doGet(e) {
       var participantes = [];
 
       // Extraer palabra clave principal del sorteo (ej: "chicle", "quinua", "pollito")
-      // para búsqueda flexible que tolere variaciones como "pal" vs "pa el"
       var palabraClave = '';
       if (sorteoFiltro) {
         var palabras = sorteoFiltro.toLowerCase().replace(/yape|pa|pal|la|el|de|los|las/gi, '').trim().split(/\s+/);
-        palabraClave = palabras[palabras.length - 1] || ''; // última palabra significativa
+        palabraClave = palabras[palabras.length - 1] || '';
       }
 
-      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ...
+      // Columnas: 0=Fecha, 1=Sorteo, 2=Nombres, 3=Apellidos, 4=DNI, ..., 11=SorteoId(L)
       for (var i = 1; i < data.length; i++) {
         var sorteoCell = String(data[i][1] || '').trim().toLowerCase();
-        if (!sorteoFiltro && !sorteoIdParam) {
-          // Sin filtro: devolver todos
-        } else {
+        var sorteoIdCell = String(data[i][11] || '').trim(); // columna L: SORTEO ID
+
+        // ── Filtrar por sorteoId (prioritario, diferencia ciclos semanales) ──
+        if (sorteoIdParam) {
+          if (sorteoIdCell !== sorteoIdParam) continue;
+        } else if (sorteoFiltro) {
+          // Fallback: coincidencia por nombre (compatibilidad con datos antiguos)
           var match = false;
-          // 1) Coincidencia directa parcial por nombre
-          if (sorteoFiltro && sorteoCell.indexOf(sorteoFiltro.toLowerCase()) !== -1) match = true;
-          // 2) Coincidencia por palabra clave (ej: "pollito", "chicle", "recarga")
+          if (sorteoCell.indexOf(sorteoFiltro.toLowerCase()) !== -1) match = true;
           if (!match && palabraClave && sorteoCell.indexOf(palabraClave) !== -1) match = true;
           if (!match) continue;
         }
+
         participantes.push({
           nombres: String(data[i][2] || '').trim(),
           apellidos: String(data[i][3] || '').trim(),
@@ -281,14 +301,21 @@ function doGet(e) {
         }
 
         // 2) No hay ganador aún — obtener participantes y elegir uno al azar
+        // Columnas Registros: ..., 9=CODIGO(J), 10=GANADOR(K), 11=SORTEO ID(L)
         var regSheet = ss.getSheetByName(HOJA_REGISTROS);
         var regData = regSheet.getDataRange().getValues();
         var participantes = [];
         for (var pi = 1; pi < regData.length; pi++) {
-          var sorteoCell = String(regData[pi][1] || '').trim();
-          if (sorteoFiltro && sorteoCell.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) === -1) {
-            continue;
+          var sorteoIdCell = String(regData[pi][11] || '').trim(); // columna L: SORTEO ID
+
+          // Filtrar por sorteoId (prioritario) o por nombre (fallback)
+          if (sorteoId) {
+            if (sorteoIdCell !== sorteoId) continue;
+          } else if (sorteoFiltro) {
+            var sorteoCell = String(regData[pi][1] || '').trim();
+            if (sorteoCell.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) === -1) continue;
           }
+
           participantes.push({
             nombres: String(regData[pi][2] || '').trim(),
             apellidos: String(regData[pi][3] || '').trim(),
@@ -369,8 +396,9 @@ function doGet(e) {
         // Forzar escritura inmediata antes de liberar el lock
         SpreadsheetApp.flush();
 
-        // 5) Marcar como ganador en hoja de registros (columna K)
-        if (regSheet.getLastColumn() < 11) {
+        // 5) Marcar como ganador en hoja de registros (columna K = GANADOR)
+        var ganadorHeader = String(regSheet.getRange(1, 11).getValue() || '').trim();
+        if (ganadorHeader !== 'GANADOR') {
           regSheet.getRange(1, 11).setValue('GANADOR');
           regSheet.getRange(1, 11).setBackground('#0d0d1f');
           regSheet.getRange(1, 11).setFontColor('#ffd700');
@@ -378,7 +406,10 @@ function doGet(e) {
         }
         var dniGanador = ganador.dni;
         for (var mj = 1; mj < regData.length; mj++) {
+          var mjSorteoId = String(regData[mj][11] || '').trim();
+          // Marcar solo el registro del mismo sorteoId (o por DNI si es dato antiguo)
           if (String(regData[mj][4] || '').trim() === dniGanador) {
+            if (sorteoId && mjSorteoId && mjSorteoId !== sorteoId) continue;
             regSheet.getRange(mj + 1, 11).setValue('SI');
             regSheet.getRange(mj + 1, 11).setBackground('#1a4a1a');
             regSheet.getRange(mj + 1, 11).setFontColor('#ffd700');
@@ -477,19 +508,27 @@ function doGet(e) {
     }
 
     // ── Verificar si un DNI ya está registrado en un sorteo ──
+    // Acepta sorteoId para diferenciar ciclos semanales
     if (action === 'verificardni') {
       var dni = (e.parameter.dni || '').trim();
       var sorteoCheck = (e.parameter.sorteo || '').trim();
+      var sorteoIdCheck = (e.parameter.sorteoId || '').trim();
       var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
       var data = sheet.getDataRange().getValues();
       var yaRegistrado = false;
 
       for (var i = 1; i < data.length; i++) {
         var dniCell = String(data[i][4] || '').trim();
-        var sorteoCell = String(data[i][1] || '').trim();
-        if (dni && dniCell === dni && sorteoCheck && sorteoCell.toLowerCase().indexOf(sorteoCheck.toLowerCase()) !== -1) {
-          yaRegistrado = true;
-          break;
+        if (dni && dniCell === dni) {
+          if (sorteoIdCheck) {
+            // Nuevo sistema: verificar por sorteoId (columna L, índice 11)
+            var sorteoIdCell = String(data[i][11] || '').trim();
+            if (sorteoIdCell === sorteoIdCheck) { yaRegistrado = true; break; }
+          } else if (sorteoCheck) {
+            // Fallback: verificar por nombre (compatibilidad datos antiguos)
+            var sorteoCell = String(data[i][1] || '').trim();
+            if (sorteoCell.toLowerCase().indexOf(sorteoCheck.toLowerCase()) !== -1) { yaRegistrado = true; break; }
+          }
         }
       }
 

@@ -2053,21 +2053,100 @@
   </div>
   <script>
     // ═══════════════════════════════════════════════════════════════
-    // CONFIGURACIÓN DE SORTEOS — edita las fechas aquí cuando cambien
-    // Formato ISO 8601 con zona Lima (UTC-5): 'YYYY-MM-DDTHH:MM:00-05:00'
+    // CONFIGURACIÓN DE SORTEOS — CICLO SEMANAL AUTOMÁTICO
+    // 7 sorteos por semana (Lun–Dom) a las 4pm Lima.
+    // Al terminar el #7 (Domingo), se reinicia con la siguiente semana.
+    // sorteoId incluye fecha para diferenciar ciclos: "{num}-{YYYYMMDD}"
     // ═══════════════════════════════════════════════════════════════
-    var SORTEOS_CFG = {
-      '1': { fechaISO: '2026-03-30T16:00:00-05:00', nombre: 'Yape pal Chicle – S/1' },
-      '2': { fechaISO: '2026-03-31T16:00:00-05:00', nombre: 'Yape pa la Quinua – S/2' },
-      '3': { fechaISO: '2026-04-01T16:00:00-05:00', nombre: 'Yape pa la Gaseosa – S/5' },
-      '4': { fechaISO: '2026-04-02T16:00:00-05:00', nombre: 'Yape pa la Chelita – S/6' },
-      '5': { fechaISO: '2026-04-03T16:00:00-05:00', nombre: 'Yape pa la Recarga – 7' },
-      '6': { fechaISO: '2026-04-04T16:00:00-05:00', nombre: 'Yape pal Pollito – S/20' }
-    };
-    // Pre-calcular timestamps en ms para cada sorteo
-    Object.keys(SORTEOS_CFG).forEach(function(id) {
-      SORTEOS_CFG[id].ts = new Date(SORTEOS_CFG[id].fechaISO).getTime();
-    });
+
+    // ── Constantes de timing (necesarias antes de generarFechasSemana) ──
+    var SORTEO_VENTANA_TOTAL = 301000; // 5 min 1 seg en ms
+    var RULETA_ANIMACION_MS  = 6000;   // 6 seg de animación de giro
+
+    // ── Plantillas base (se repiten cada semana) ──
+    var SORTEOS_BASE = [
+      { num:1, nombre:'Yape pal Chicle',     monto:'S/1',  emoji:'🍬', sub:'Pal chicle',     displayNombre:'YAPE PAL CHICLE 🍬',     desc:'SE VA ESTE YAPE. NO LO DEJES PASAR CAUSA',    lukitas:'S/1' },
+      { num:2, nombre:'Yape pa la Quinua',   monto:'S/2',  emoji:'🌾', sub:'Pa la quinua',   displayNombre:'YAPE PA LA QUINUA 🥣',    desc:'HOY SE VA ESTE YAPE. ESTO VUELA',              lukitas:'S/2' },
+      { num:3, nombre:'Yape pa la Gaseosa',  monto:'S/5',  emoji:'🥤', sub:'Pa la gaseosa',  displayNombre:'YAPE PA LA GASEOSA 🥤',   desc:'HOY SE VA ESTE YAPE. SE ACABA HOY',            lukitas:'S/5' },
+      { num:4, nombre:'Yape pa la Chelita',  monto:'S/6',  emoji:'🍺', sub:'Pa la chelita',  displayNombre:'YAPE PA LA CHELITA 🍺',   desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?',   lukitas:'S/6' },
+      { num:5, nombre:'Yape pa la Recarga',  monto:'S/7',  emoji:'📱', sub:'Pa la recarga',  displayNombre:'YAPE PA LA RECARGA 📱',   desc:'HOY SE VA ESTE YAPE. ESTO VUELA',              lukitas:'S/7' },
+      { num:6, nombre:'Yape pal Pollito',    monto:'S/20', emoji:'🍗', sub:'Pal pollito',    displayNombre:'YAPE PAL POLLITO 🍗',     desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?',   lukitas:'S/20' },
+      { num:7, nombre:'Yape pa la Canchita', monto:'S/25', emoji:'🍿', sub:'Pa la canchita', displayNombre:'YAPE PA LA CANCHITA 🍿',  desc:'HOY SE VA ESTE YAPE. GRAN CIERRE DE SEMANA',   lukitas:'S/25' }
+    ];
+
+    // ── Calcular timestamps de la semana actual (Lun–Dom 4pm Lima) ──
+    function generarFechasSemana() {
+      var ahora = Date.now();
+      // Fecha Lima = UTC - 5h
+      var limaMs = ahora - 5 * 3600000;
+      var limaDate = new Date(limaMs);
+      var diaLima = limaDate.getUTCDay(); // 0=Dom,1=Lun...6=Sab
+
+      // Retroceder al Lunes de esta semana
+      var diasAtras = (diaLima === 0) ? 6 : diaLima - 1;
+      var lunesLima = new Date(limaMs);
+      lunesLima.setUTCDate(limaDate.getUTCDate() - diasAtras);
+      lunesLima.setUTCHours(0, 0, 0, 0);
+      // lunesTs = Lunes medianoche Lima = Lunes 5am UTC
+      var lunesTs = lunesLima.getTime() + 5 * 3600000;
+
+      // 7 sorteos: Lun a Dom, cada uno a las 4pm Lima = medianoche Lima + 16h
+      var fechas = [];
+      for (var i = 0; i < 7; i++) {
+        fechas.push(lunesTs + i * 86400000 + 16 * 3600000);
+      }
+
+      // Si TODOS los 7 sorteos (+ventana 5min1s) ya pasaron, avanzar a la siguiente semana
+      if (ahora > fechas[6] + SORTEO_VENTANA_TOTAL) {
+        lunesTs += 7 * 86400000;
+        fechas = [];
+        for (var j = 0; j < 7; j++) {
+          fechas.push(lunesTs + j * 86400000 + 16 * 3600000);
+        }
+      }
+      return fechas;
+    }
+
+    // ── Generar sorteoId con fecha: "{num}-{YYYYMMDD}" ──
+    function generarSorteoId(num, ts) {
+      var lima = new Date(ts - 5 * 3600000);
+      var yyyy = lima.getUTCFullYear();
+      var mm = String(lima.getUTCMonth() + 1).padStart(2, '0');
+      var dd = String(lima.getUTCDate()).padStart(2, '0');
+      return num + '-' + yyyy + mm + dd;
+    }
+
+    function tsToFechaISO(ts) {
+      var lima = new Date(ts - 5 * 3600000);
+      var yyyy = lima.getUTCFullYear();
+      var mm = String(lima.getUTCMonth() + 1).padStart(2, '0');
+      var dd = String(lima.getUTCDate()).padStart(2, '0');
+      return yyyy + '-' + mm + '-' + dd + 'T16:00:00-05:00';
+    }
+
+    // ── Construir SORTEOS_CFG y SORTEO_DATA dinámicamente ──
+    var _fechasSemana = generarFechasSemana();
+    var SORTEOS_CFG = {};
+    var SORTEO_DATA = [];
+    for (var _si = 0; _si < SORTEOS_BASE.length; _si++) {
+      var _base = SORTEOS_BASE[_si];
+      var _ts = _fechasSemana[_si];
+      var _id = generarSorteoId(_base.num, _ts);
+      SORTEOS_CFG[_id] = {
+        fechaISO: tsToFechaISO(_ts),
+        ts: _ts,
+        nombre: _base.nombre + ' – ' + _base.monto
+      };
+      SORTEO_DATA.push({
+        id: _id,
+        emoji: _base.emoji,
+        sub: _base.sub,
+        nombre: _base.displayNombre,
+        desc: _base.desc,
+        monto: _base.monto,
+        lukitas: _base.lukitas
+      });
+    }
     // ── Utilidad: ms restantes hasta un timestamp ──
     function msHasta(ts) { return Math.max(0, ts - Date.now()); }
     // ── Descomponer ms en d/h/m/s ──
@@ -2102,14 +2181,7 @@
     // BLOQUE 3: SISTEMA DE ESTADOS — RENDERIZADO DINÁMICO
     // ══════════════════════════════════════════════════════════════
     var DIAS_NOMBRE = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    var SORTEO_DATA = [
-      { id:'1', emoji:'🍬', sub:'Pal chicle', nombre:'YAPE PAL CHICLE 🍬', desc:'SE VA ESTE YAPE. NO LO DEJES PASAR CAUSA', monto:'S/1', lukitas:'S/1' },
-      { id:'2', emoji:'🌾', sub:'Pa la quinua', nombre:'YAPE PA LA QUINUA 🥣', desc:'HOY SE VA ESTE YAPE. ESTO VUELA', monto:'S/2', lukitas:'S/2' },
-      { id:'3', emoji:'🥤', sub:'Pa la gaseosa', nombre:'YAPE PA LA GASEOSA 🥤', desc:'HOY SE VA ESTE YAPE. SE ACABA HOY', monto:'S/5', lukitas:'S/5' },
-      { id:'4', emoji:'🍺', sub:'Pa la chelita', nombre:'YAPE PA LA CHELITA 🍺', desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?', monto:'S/6', lukitas:'S/6' },
-      { id:'5', emoji:'🚌', sub:'Pa la recarga', nombre:'YAPE PA LA RECARGA 📱', desc:'HOY SE VA ESTE YAPE. ESTO VUELA', monto:'S/7', lukitas:'S/7' },
-      { id:'6', emoji:'🍗', sub:'Pal pollito', nombre:'YAPE PAL POLLITO 🍗', desc:'HOY SE VA ESTE YAPE. VAS A ENTRAR O MIRAR?', monto:'S/20', lukitas:'S/20' }
-    ];
+    // SORTEO_DATA ya generado dinámicamente arriba
 
     // ── SVG Yape logo inline (reutilizable) ──
     function yapeSVG(gradId) {
@@ -2123,10 +2195,6 @@
 
     // ── Variable de control: qué sorteos ya ejecutaron su ruleta ──
     var ruletaSorteoYaEjecutado = {};
-
-    // ── Constante: ventana total del sorteo en vivo (5 min 1 seg) ──
-    var SORTEO_VENTANA_TOTAL = 301000; // 5 min 1 seg en ms
-    var RULETA_ANIMACION_MS  = 6000;   // 6 seg de animación de giro
 
     // ── Determinar estado de un sorteo ──
     function getEstado(sorteoId) {
@@ -2584,7 +2652,9 @@
       }
     });
     // CONTADORES POR SORTEO
-    const contadores = { '1':0, '2':0, '3':0, '4':0, '5':0, '6':0 };
+    // Contadores dinámicos basados en SORTEO_DATA
+    var contadores = {};
+    SORTEO_DATA.forEach(function(s) { contadores[s.id] = 0; });
     function cerrarModalYaReg() {
       document.getElementById('modal-ya-registrado').classList.remove('activo');
       // NO restaurar visibility: la llama solo aparece durante su animación
@@ -2667,7 +2737,7 @@
       }
 
       // ── Verificar DNI con timeout de seguridad ──
-      var verificarUrl = GOOGLE_SHEETS_URL + '?action=verificarDni&dni=' + encodeURIComponent(datos.dni) + '&sorteo=' + encodeURIComponent(datos.sorteo);
+      var verificarUrl = GOOGLE_SHEETS_URL + '?action=verificarDni&dni=' + encodeURIComponent(datos.dni) + '&sorteo=' + encodeURIComponent(datos.sorteo) + '&sorteoId=' + encodeURIComponent(datos.sorteoId);
       var _yaResuelto = false;
 
       // Timeout: si en 10 segundos no hay respuesta, reintentar una vez
