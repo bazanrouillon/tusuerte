@@ -23,6 +23,23 @@
 // hoja estaba viendo el usuario en Google Sheets.
 var HOJA_REGISTROS = 'Registros TuSuerte';
 
+// ── Helper: obtener o crear hoja por nombre ──
+function obtenerOCrearHoja(nombre, headers) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(nombre);
+  if (!sheet) {
+    sheet = ss.insertSheet(nombre);
+    if (headers && headers.length > 0) {
+      sheet.appendRow(headers);
+      var headerRange = sheet.getRange(1, 1, 1, headers.length);
+      headerRange.setBackground('#0d0d1f');
+      headerRange.setFontColor('#ffe600');
+      headerRange.setFontWeight('bold');
+    }
+  }
+  return sheet;
+}
+
 function doPost(e) {
   try {
     var datos = JSON.parse(e.postData.contents);
@@ -35,7 +52,7 @@ function doPost(e) {
     // ── REGISTRAR GANADOR ──
     if (action === 'registrarganador') {
       var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var ganadorSheet = ss.getSheetByName('Ganadores');
+      var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
       // Cabeceras esperadas (orden fijo):
       // 0=FECHA Y HORA, 1=SORTEO, 2=SORTEO ID, 3=NOMBRES, 4=APELLIDOS,
       // 5=DNI, 6=CELULAR, 7=CORREO, 8=DISTRITO, 9=CODIGO
@@ -72,7 +89,7 @@ function doPost(e) {
       // Registros: 0=FECHA, 1=SORTEO, 2=NOMBRES, 3=APELLIDOS, 4=DNI,
       //            5=CELULAR, 6=CORREO, 7=DISTRITO, 8=TIKTOK, 9=CODIGO,
       //            10=GANADOR, 11=SORTEO ID
-      var regSheet = ss.getSheetByName(HOJA_REGISTROS);
+      var regSheet = obtenerOCrearHoja(HOJA_REGISTROS, ['FECHA Y HORA','SORTEO','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','TIKTOK','CODIGO','GANADOR','SORTEO ID']);
       var regData = regSheet.getDataRange().getValues();
       var celular = '', correo = '', distrito = '', codigo = '';
       var dniGanador = (datos.dni || '').trim();
@@ -128,15 +145,16 @@ function doPost(e) {
     // 0=FECHA Y HORA(A), 1=SORTEO(B), 2=NOMBRES(C), 3=APELLIDOS(D), 4=DNI(E),
     // 5=CELULAR(F), 6=CORREO(G), 7=DISTRITO(H), 8=TIKTOK(I), 9=CODIGO(J),
     // 10=GANADOR(K) [se llena al seleccionar ganador], 11=SORTEO ID(L)
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
+    var REG_HEADERS = [
+      'FECHA Y HORA', 'SORTEO', 'NOMBRES', 'APELLIDOS', 'DNI',
+      'CELULAR', 'CORREO', 'DISTRITO', 'TIKTOK', 'CODIGO',
+      'GANADOR', 'SORTEO ID'
+    ];
+    var sheet = obtenerOCrearHoja(HOJA_REGISTROS, REG_HEADERS);
 
     // Crear encabezados si la hoja está vacía
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        'FECHA Y HORA', 'SORTEO', 'NOMBRES', 'APELLIDOS', 'DNI',
-        'CELULAR', 'CORREO', 'DISTRITO', 'TIKTOK', 'CODIGO',
-        'GANADOR', 'SORTEO ID'
-      ]);
+      sheet.appendRow(REG_HEADERS);
       var headerRange = sheet.getRange(1, 1, 1, 12);
       headerRange.setBackground('#0d0d1f');
       headerRange.setFontColor('#ffe600');
@@ -230,7 +248,11 @@ function doGet(e) {
     if (action === 'participantes') {
       var sorteoFiltro = (e.parameter.sorteo || '').trim();
       var sorteoIdParam = (e.parameter.sorteoId || '').trim();
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
+      var sheet = obtenerOCrearHoja(HOJA_REGISTROS, [
+        'FECHA Y HORA', 'SORTEO', 'NOMBRES', 'APELLIDOS', 'DNI',
+        'CELULAR', 'CORREO', 'DISTRITO', 'TIKTOK', 'CODIGO',
+        'GANADOR', 'SORTEO ID'
+      ]);
       var data = sheet.getDataRange().getValues();
       var participantes = [];
 
@@ -304,7 +326,7 @@ function doGet(e) {
         var ss = SpreadsheetApp.getActiveSpreadsheet();
 
         // 1) Verificar si ya hay un ganador registrado para este sorteo
-        var ganadorSheet = ss.getSheetByName('Ganadores');
+        var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
         if (ganadorSheet) {
           var gData = ganadorSheet.getDataRange().getValues();
           for (var gi = gData.length - 1; gi >= 1; gi--) {
@@ -333,7 +355,7 @@ function doGet(e) {
 
         // 2) No hay ganador aún — obtener participantes y elegir uno al azar
         // Columnas Registros: ..., 9=CODIGO(J), 10=GANADOR(K), 11=SORTEO ID(L)
-        var regSheet = ss.getSheetByName(HOJA_REGISTROS);
+        var regSheet = obtenerOCrearHoja(HOJA_REGISTROS, ['FECHA Y HORA','SORTEO','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','TIKTOK','CODIGO','GANADOR','SORTEO ID']);
         var regData = regSheet.getDataRange().getValues();
         var participantes = [];
         for (var pi = 1; pi < regData.length; pi++) {
@@ -481,7 +503,7 @@ function doGet(e) {
     // Columnas Ganadores: 0=Fecha, 1=Sorteo, 2=SorteoId, 3=Nombres, 4=Apellidos, 5=DNI, 6=Celular, 7=Correo, 8=Distrito, 9=Codigo
     if (action === 'obtenertodosganadores') {
       var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var ganadorSheet = ss.getSheetByName('Ganadores');
+      var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
       var ganadores = [];
       if (ganadorSheet) {
         var data = ganadorSheet.getDataRange().getValues();
@@ -510,7 +532,7 @@ function doGet(e) {
       var sorteoFiltro = (e.parameter.sorteo || '').trim();
       var sorteoIdParam = (e.parameter.sorteoId || '').trim();
       var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var ganadorSheet = ss.getSheetByName('Ganadores');
+      var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
       var ganadorEncontrado = null;
       if (ganadorSheet) {
         var data = ganadorSheet.getDataRange().getValues();
@@ -544,7 +566,7 @@ function doGet(e) {
       var dni = (e.parameter.dni || '').trim();
       var sorteoCheck = (e.parameter.sorteo || '').trim();
       var sorteoIdCheck = (e.parameter.sorteoId || '').trim();
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
+      var sheet = obtenerOCrearHoja(HOJA_REGISTROS, ['FECHA Y HORA','SORTEO','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','TIKTOK','CODIGO','GANADOR','SORTEO ID']);
       var data = sheet.getDataRange().getValues();
       var yaRegistrado = false;
 
@@ -617,7 +639,7 @@ function doGet(e) {
 
 // Función de prueba (opcional) — puedes ejecutarla manualmente para verificar
 function probarScript() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_REGISTROS);
+  var sheet = obtenerOCrearHoja(HOJA_REGISTROS, ['FECHA Y HORA','SORTEO','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','TIKTOK','CODIGO','GANADOR','SORTEO ID']);
   Logger.log('Hoja de registros: ' + sheet.getName());
   Logger.log('Total filas: ' + sheet.getLastRow());
   Logger.log('Script funcionando correctamente ✓');
