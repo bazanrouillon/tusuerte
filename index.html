@@ -3226,6 +3226,21 @@
         });
     }
 
+    // Convertir URLs de Google Drive a formato que funcione en todos los navegadores/móvil
+    function fixDriveUrl(url) {
+      if (!url) return '';
+      // Formato: drive.google.com/uc?id=XXX o drive.google.com/uc?export=view&id=XXX
+      var match = url.match(/drive\.google\.com\/uc\?(?:export=\w+&)?id=([a-zA-Z0-9_-]+)/);
+      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      // Formato: drive.google.com/file/d/XXX/view
+      match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      // Formato: drive.google.com/open?id=XXX
+      match = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      // Si ya es lh3 u otra URL, dejar como está
+      return url;
+    }
     function renderFotosPagos(fotos) {
       var grid = document.getElementById('fotos-pagos-grid');
       var loading = document.getElementById('fotos-pagos-loading');
@@ -3241,8 +3256,8 @@
       fotos.forEach(function(f) {
         var item = document.createElement('div');
         item.className = 'foto-pago-item';
-        var imgCompleta = f.url || f.thumb || '';
-        var imgThumb = f.thumb || f.url || '';
+        var imgCompleta = fixDriveUrl(f.url || f.thumb || '');
+        var imgThumb = fixDriveUrl(f.thumb || f.url || '');
         item.onclick = function() { ampliarFoto(imgCompleta); };
         item.innerHTML =
           '<img src="' + imgThumb + '" alt="' + (f.nombre || 'Comprobante') + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
