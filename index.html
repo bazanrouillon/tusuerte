@@ -2006,7 +2006,7 @@
 
   <!-- MODAL IMAGEN AMPLIADA -->
   <div class="modal-overlay" id="modal-foto-ampliada" onclick="this.classList.remove('activo');_unlockScroll();_panelAbierto=false;" style="z-index:10001;background:rgba(0,0,0,.92);">
-    <img id="foto-ampliada-img" src="" alt="Comprobante de pago" style="max-width:92vw;max-height:88vh;border-radius:10px;border:2px solid var(--neon-amarillo);box-shadow:0 0 30px rgba(255,230,0,.3);" onclick="event.stopPropagation();">
+    <img id="foto-ampliada-img" src="" alt="Comprobante de pago" referrerpolicy="no-referrer" crossorigin="anonymous" style="max-width:92vw;max-height:88vh;border-radius:10px;border:2px solid var(--neon-amarillo);box-shadow:0 0 30px rgba(255,230,0,.3);" onclick="event.stopPropagation();">
     <button onclick="document.getElementById('modal-foto-ampliada').classList.remove('activo');_unlockScroll();_panelAbierto=false;" style="position:absolute;top:18px;right:18px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">✕</button>
   </div>
 
@@ -3276,6 +3276,8 @@
         var img = document.createElement('img');
         img.alt = f.nombre || 'Comprobante';
         img.loading = 'lazy';
+        img.referrerPolicy = 'no-referrer';
+        img.crossOrigin = 'anonymous';
         img.dataset.urls = JSON.stringify(urlsThumb);
         img.dataset.idx = '0';
         img.src = urlsThumb[0];
