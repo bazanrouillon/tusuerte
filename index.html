@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TUSUERTE.PE – Sorteos Gratis en Perú | Participa participa todos los dias y gana!</title>
+  <title>TUSUERTE.PE – Sorteos Gratis en Perú | Participa Cada Domingo</title>
   <!-- SEO básico -->
   <meta name="description" content="Participa gratis en los sorteos semanales de tusuerte.pe. Cada domingo en TikTok @tusuerte.pe.oficial. ¡Regístrate, no pierdas nada y gana de una!"/>
   <meta name="keywords" content="sorteos gratis peru, sorteo online peru, ganar premios peru, tusuerte, sorteo tiktok peru, concursos gratis peru"/>
@@ -2767,8 +2767,19 @@
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
-      document.getElementById('sorteo-id').value = sorteoId;
+      // FIX CRITICO: primero reset(), LUEGO setear sorteoId
+      // (reset() borra TODOS los campos del form, incluyendo el hidden sorteo-id)
       document.getElementById('form-registro').reset();
+      document.getElementById('sorteo-id').value = sorteoId;
+      // Capa extra: verificar localStorage para bloquear duplicados desde el mismo navegador
+      try {
+        var clave = 'tsp_reg_' + sorteoId;
+        if (localStorage.getItem(clave)) {
+          cerrarPanel('panel-registro');
+          document.getElementById('modal-ya-registrado').classList.add('activo');
+          return;
+        }
+      } catch(e) { /* localStorage no disponible, continuar normal */ }
       // Mostrar formulario directo (sin paso TikTok)
       var pasoTiktok = document.getElementById('paso-tiktok');
       if (pasoTiktok) pasoTiktok.style.display = 'none';
@@ -2830,7 +2841,9 @@
             try { res = JSON.parse(txt); } catch(ex) { console.error('Error parseando respuesta registro:', ex, 'Texto:', txt); res = null; }
 
             if (res && res.status === 'duplicado') {
-              // El servidor detectó que ya estaba registrado
+              // El servidor detectó que ya estaba registrado — guardar en localStorage también
+              var idDup = document.getElementById('sorteo-id').value;
+              try { localStorage.setItem('tsp_reg_' + idDup, datos.dni); } catch(e) {}
               mostrarYaRegistrado();
               return;
             }
@@ -2843,6 +2856,8 @@
             if (res && res.status === 'ok') {
               // ── Registro exitoso ──
               var id = document.getElementById('sorteo-id').value;
+              // Guardar en localStorage para prevenir duplicados desde este navegador
+              try { localStorage.setItem('tsp_reg_' + id, datos.dni); } catch(e) {}
               contadores[id]++;
               var inscEl = document.getElementById('inscritos-' + id);
               if (inscEl) inscEl.textContent = contadores[id];
@@ -2899,6 +2914,9 @@
             if (res && res.yaRegistrado) {
               _yaResuelto = true;
               clearTimeout(timeout);
+              // Guardar en localStorage para futuras visitas
+              var idVerif = document.getElementById('sorteo-id').value;
+              try { localStorage.setItem('tsp_reg_' + idVerif, datos.dni); } catch(e) {}
               mostrarYaRegistrado();
             } else if (res) {
               _yaResuelto = true;
