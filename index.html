@@ -854,6 +854,11 @@
     #panel-ganadores .panel-header { background:#0c2e33; border-bottom:3px solid var(--chicha-naranja); }
     #panel-ganadores .panel-titulo { color:var(--chicha-naranja); text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,106,0,.35); }
     #panel-ganadores .panel-box { border:3px solid var(--chicha-naranja); }
+    .btn-pagos-drive {
+      text-decoration:none; font-size:1.4rem; margin-left:auto; margin-right:8px;
+      cursor:pointer; transition:transform .2s; filter:drop-shadow(0 0 4px rgba(255,200,0,.4));
+    }
+    .btn-pagos-drive:hover { transform:scale(1.2); filter:drop-shadow(0 0 8px rgba(255,200,0,.7)); }
     .ganador-entry {
       background:linear-gradient(135deg,#0e3338,#0d3840); border:2px solid var(--chicha-amarillo);
       border-radius:8px; padding:14px 18px; margin-bottom:12px;
@@ -881,6 +886,24 @@
     #panel-ganadores-pasados .panel-header { background:#0c2233; border-bottom:3px solid var(--neon-celeste); }
     #panel-ganadores-pasados .panel-titulo { color:var(--neon-celeste); text-shadow:2px 2px 0 #000, 0 0 10px rgba(0,229,255,.35); }
     #panel-ganadores-pasados .panel-box { border:3px solid var(--neon-celeste); }
+    #panel-fotos-pagos .panel-header { background:#1a2a0a; border-bottom:3px solid var(--neon-verde); }
+    #panel-fotos-pagos .panel-titulo { color:var(--neon-verde); text-shadow:2px 2px 0 #000, 0 0 10px rgba(57,255,20,.35); }
+    #panel-fotos-pagos .panel-box { border:3px solid var(--neon-verde); }
+    .fotos-pagos-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:10px; padding:4px;
+    }
+    .foto-pago-item {
+      position:relative; border-radius:10px; overflow:hidden; border:2px solid #333;
+      cursor:pointer; transition:transform .2s, box-shadow .2s; aspect-ratio:1;
+    }
+    .foto-pago-item:hover { transform:scale(1.03); box-shadow:0 0 15px rgba(57,255,20,.3); border-color:var(--neon-verde); }
+    .foto-pago-item img {
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .foto-pago-fecha {
+      position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85));
+      color:#fff; font-family:Poppins,sans-serif; font-size:.65rem; padding:16px 6px 4px; text-align:center;
+    }
     /* PANEL FAQ */
     #panel-faq .panel-header { background:#0c2e33; border-bottom:3px solid var(--chicha-amarillo); }
     #panel-faq .panel-titulo { color:var(--chicha-amarillo); text-shadow:2px 2px 0 #000, 0 0 16px rgba(255,215,0,.3); }
@@ -957,7 +980,7 @@
     /* MODAL EXITO */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
       z-index:1000; align-items:center; justify-content:center; padding:20px; }
-    .modal-overlay.activo { display:flex; }
+    .modal-overlay.activo { display:flex; align-items:center; justify-content:center; }
     .modal-box { background:linear-gradient(135deg,#0c2e33,#0e3338); border:4px solid var(--chicha-verde); border-radius:12px;
       padding:40px 32px; text-align:center; max-width:450px; width:100%;
       box-shadow:0 0 60px rgba(57,255,20,.4); animation:popin .3s cubic-bezier(.34,1.56,.64,1); }
@@ -1337,6 +1360,12 @@
         border-radius:14px !important;
         border:3px solid var(--neon-celeste) !important;
         max-height:80vh;
+      }
+      .panel-overlay#panel-fotos-pagos { align-items:center; padding:12px; }
+      .panel-overlay#panel-fotos-pagos .panel-box {
+        border-radius:14px !important;
+        border:3px solid var(--neon-verde) !important;
+        max-height:85vh;
       }
       .panel-box {
         max-width: 100%;
@@ -1898,6 +1927,7 @@
     <div class="panel-box">
       <div class="panel-header">
         <span class="panel-titulo">🏆 ÚLTIMO GANADOR</span>
+        <span class="btn-pagos-drive" title="Ver comprobantes de pago" onclick="cerrarPanel('panel-ganadores');setTimeout(function(){abrirGaleriaPagos()},200);">📂</span>
         <button class="panel-cerrar" onclick="cerrarPanel('panel-ganadores')">✕</button>
       </div>
       <div class="panel-body">
@@ -1945,6 +1975,36 @@
       </div>
     </div>
   </div>
+
+  <!-- PANEL GALERÍA FOTOS DE PAGOS -->
+  <div class="panel-overlay" id="panel-fotos-pagos" onclick="cerrarPanelFuera(event,'panel-fotos-pagos')">
+    <div class="panel-box">
+      <div class="panel-header">
+        <span class="panel-titulo">📂 COMPROBANTES DE PAGO</span>
+        <button class="panel-cerrar" onclick="cerrarPanel('panel-fotos-pagos')">✕</button>
+      </div>
+      <div class="panel-body">
+        <p style="text-align:center;color:#aaa;font-family:Poppins,sans-serif;font-size:.85rem;margin-bottom:14px;">
+          Aquí mostramos las transferencias realizadas a nuestros ganadores.
+        </p>
+        <div id="fotos-pagos-grid" class="fotos-pagos-grid"></div>
+        <div id="fotos-pagos-loading" style="text-align:center;padding:30px;color:#aaa;font-family:Poppins,sans-serif;">
+          Cargando comprobantes...
+        </div>
+        <div id="fotos-pagos-empty" style="text-align:center;padding:30px;display:none;">
+          <div style="font-size:3rem;margin-bottom:10px;">📂</div>
+          <p style="color:#888;font-family:Righteous,cursive;">Aún no hay comprobantes de pago.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL IMAGEN AMPLIADA -->
+  <div class="modal-overlay" id="modal-foto-ampliada" onclick="this.classList.remove('activo')" style="z-index:10001;background:rgba(0,0,0,.92);">
+    <img id="foto-ampliada-img" src="" alt="Comprobante de pago" style="max-width:92vw;max-height:88vh;border-radius:10px;border:2px solid var(--neon-amarillo);box-shadow:0 0 30px rgba(255,230,0,.3);" onclick="event.stopPropagation();">
+    <button onclick="document.getElementById('modal-foto-ampliada').classList.remove('activo')" style="position:absolute;top:18px;right:18px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">✕</button>
+  </div>
+
   <!-- PANEL FAQ -->
   <div class="panel-overlay" id="panel-faq" onclick="cerrarPanelFuera(event,'panel-faq')">
     <div class="panel-box">
@@ -2720,7 +2780,7 @@
     // GOOGLE SHEETS: Pega aquí la URL de tu Apps Script
     // Sigue las instrucciones del archivo codigo-google-apps-script.gs
     // ══════════════════════════════════════════════════════
-    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby6phdIFP8Uyz3VWnJIx2wbRBXeV5grs8Q3DphtbZ6JGJM6aKVWv5x1vVaqjGDZExI9/exec';
+    var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxvHFo9EZI6m0lGtK2om1S19shnr1PEMjfVobc0vUSfAHge-KAeEbRvJsMzEvEIX5s3/exec';
     var _registroEnProceso = false; // Guardia global contra doble submit
     function enviarRegistro(e) {
       e.preventDefault();
@@ -2914,16 +2974,57 @@
       _ganadoresServerCache = null;
     }
 
-    // ── Buscar monto del sorteo a partir del nombre ──
-    function buscarMontoSorteo(nombreSorteo) {
-      if (!nombreSorteo) return '';
-      var nombre = nombreSorteo.toLowerCase();
-      for (var i = 0; i < SORTEOS_BASE.length; i++) {
-        if (nombre.indexOf(SORTEOS_BASE[i].nombre.toLowerCase()) !== -1) {
-          return SORTEOS_BASE[i].monto;
-        }
+    // ── Buscar monto para ganadores que no lo tienen guardado en la hoja ──
+    // Montos históricos: antes del 2026-04-06, Pollito=S/20 y Canchita=S/25
+    // Desde 2026-04-06: Canchita=S/10 y Pollito=S/15
+    var MONTOS_HISTORICOS = {
+      'Yape pal Chicle': 'S/1',
+      'Yape pa la Quinua': 'S/2',
+      'Yape pa la Gaseosa': 'S/5',
+      'Yape pa la Chelita': 'S/6',
+      'Yape pa la Recarga': 'S/7'
+    };
+    function buscarMontoFallback(sorteo, sorteoId) {
+      if (!sorteo) return '';
+      // Si ya trae monto (contiene "–" o "S/"), no agregar nada
+      if (sorteo.indexOf('–') !== -1 || sorteo.indexOf('S/') !== -1) return '';
+      // Montos fijos (no cambiaron)
+      var nombre = sorteo.trim();
+      if (MONTOS_HISTORICOS[nombre]) return MONTOS_HISTORICOS[nombre];
+      // Pollito y Canchita: depende de la fecha
+      var fechaCorte = 20260406; // fecha desde la cual cambian los montos
+      var fechaNum = 0;
+      if (sorteoId) {
+        var partes = sorteoId.split('-');
+        if (partes.length >= 2) fechaNum = parseInt(partes[1]) || 0;
+      }
+      if (nombre.toLowerCase().indexOf('pollito') !== -1) {
+        return fechaNum >= fechaCorte ? 'S/15' : 'S/20';
+      }
+      if (nombre.toLowerCase().indexOf('canchita') !== -1) {
+        return fechaNum >= fechaCorte ? 'S/10' : 'S/25';
       }
       return '';
+    }
+
+    // ── Formatear fecha a español ──
+    function formatearFechaEsp(fechaStr) {
+      if (!fechaStr) return '';
+      // Si ya está en formato dd/MM/yyyy, devolver tal cual
+      if (/^\d{2}\/\d{2}\/\d{4}/.test(fechaStr)) return fechaStr;
+      // Si viene como Date string en inglés (ej: "Sun Apr 06 2026 ...")
+      var diasEN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var diasES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+      var mesesEN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var mesesES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      var resultado = fechaStr;
+      for (var i = 0; i < diasEN.length; i++) {
+        resultado = resultado.replace(new RegExp('\\b' + diasEN[i] + '\\b', 'g'), diasES[i]);
+      }
+      for (var j = 0; j < mesesEN.length; j++) {
+        resultado = resultado.replace(new RegExp('\\b' + mesesEN[j] + '\\b', 'g'), mesesES[j]);
+      }
+      return resultado;
     }
 
     // ── Renderizar lista de ganadores en un contenedor dado ──
@@ -2942,15 +3043,15 @@
         var div = document.createElement('div');
         div.className = 'ganador-entry';
         var dniMask = g.dni ? g.dni.substring(0,2) + '****' + g.dni.substring(g.dni.length - 2) : '---';
-        var monto = buscarMontoSorteo(g.sorteo);
-        var sorteoTexto = (g.sorteo || '');
-        if (monto) sorteoTexto += ' – ' + monto;
+        var sorteoTexto = g.sorteo || '';
+        var montoFallback = buscarMontoFallback(sorteoTexto, g.sorteoId);
+        if (montoFallback) sorteoTexto += ' – ' + montoFallback;
         div.innerHTML =
           '<div class="ganador-entry-icon">🏆</div>' +
           '<div class="ganador-entry-info">' +
             '<div class="ganador-entry-nombre">' + (g.nombres + ' ' + g.apellidos).toUpperCase() + '</div>' +
             '<div class="ganador-entry-sorteo">' + sorteoTexto + '</div>' +
-            '<div class="ganador-entry-fecha">' + (g.fecha || '') + '</div>' +
+            '<div class="ganador-entry-fecha">' + formatearFechaEsp(g.fecha || '') + '</div>' +
           '</div>' +
           '<div class="ganador-entry-dni">DNI: ' + dniMask + '</div>';
         container.appendChild(div);
@@ -3036,6 +3137,82 @@
             if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error al cargar ganadores. Intenta de nuevo.</div>';
           }
         });
+    }
+
+    // ── Galería de comprobantes de pago ──
+    var _fotosPagosCache = null;
+
+    function abrirGaleriaPagos() {
+      var grid = document.getElementById('fotos-pagos-grid');
+      var loading = document.getElementById('fotos-pagos-loading');
+      var empty = document.getElementById('fotos-pagos-empty');
+
+      // Si ya tenemos cache, mostrar directo
+      if (_fotosPagosCache) {
+        renderFotosPagos(_fotosPagosCache);
+        abrirPanel('panel-fotos-pagos');
+        return;
+      }
+
+      // Mostrar loading
+      if (grid) grid.innerHTML = '';
+      if (loading) loading.style.display = '';
+      if (empty) empty.style.display = 'none';
+      abrirPanel('panel-fotos-pagos');
+
+      // Fetch desde el servidor
+      fetch(GOOGLE_SHEETS_URL + '?action=fotosPagos', { redirect: 'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          var data;
+          try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
+          if (loading) loading.style.display = 'none';
+          if (data.status === 'ok' && data.fotos && data.fotos.length > 0) {
+            _fotosPagosCache = data.fotos;
+            renderFotosPagos(data.fotos);
+          } else {
+            if (empty) empty.style.display = '';
+          }
+        })
+        .catch(function(err) {
+          console.error('Error cargando fotos de pagos:', err);
+          if (loading) loading.style.display = 'none';
+          if (grid) grid.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error al cargar comprobantes.</div>';
+        });
+    }
+
+    function renderFotosPagos(fotos) {
+      var grid = document.getElementById('fotos-pagos-grid');
+      var loading = document.getElementById('fotos-pagos-loading');
+      var empty = document.getElementById('fotos-pagos-empty');
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (loading) loading.style.display = 'none';
+      if (!fotos || fotos.length === 0) {
+        if (empty) empty.style.display = '';
+        return;
+      }
+      if (empty) empty.style.display = 'none';
+      fotos.forEach(function(f) {
+        var item = document.createElement('div');
+        item.className = 'foto-pago-item';
+        var imgCompleta = f.url || f.thumb || '';
+        var imgThumb = f.thumb || f.url || '';
+        item.onclick = function() { ampliarFoto(imgCompleta); };
+        item.innerHTML =
+          '<img src="' + imgThumb + '" alt="' + (f.nombre || 'Comprobante') + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+          '<div class="foto-pago-fecha">' + (f.fecha || '') + '</div>';
+        grid.appendChild(item);
+      });
+    }
+
+    function ampliarFoto(url) {
+      var modal = document.getElementById('modal-foto-ampliada');
+      var img = document.getElementById('foto-ampliada-img');
+      if (modal && img) {
+        img.src = url;
+        modal.classList.add('activo');
+      }
     }
 
     // ── Consultar flag de liberación al cargar la página ──
@@ -3170,6 +3347,7 @@
       }, 300);
 
       // Obtener participantes
+      var nombreSorteoCompleto = cfg.nombre; // "Yape pa la Canchita – S/10" (con monto)
       var nombreSorteo = cfg.nombre.split('–')[0].trim();
       var url = GOOGLE_SHEETS_URL + '?action=participantes&sorteo=' + encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
@@ -3210,7 +3388,7 @@
             // ══════════════════════════════════════════════════════
             estadoEl.textContent = 'Seleccionando ganador...';
             var selUrl = GOOGLE_SHEETS_URL + '?action=seleccionarGanador&sorteo=' +
-              encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId);
+              encodeURIComponent(nombreSorteoCompleto) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
             function fetchGanadorConReintento(intentos) {
               return fetch(selUrl, { redirect: 'follow' })

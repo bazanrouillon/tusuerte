@@ -622,6 +622,43 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ── Listar fotos de pagos desde carpeta de Google Drive ──
+    if (action === 'fotospagos') {
+      var FOLDER_ID = '16mJtFWcIoBVn-Xp78ZNlgnoac9Y8ZP_X';
+      var fotos = [];
+      try {
+        var folder = DriveApp.getFolderById(FOLDER_ID);
+        var files = folder.getFiles();
+        while (files.hasNext()) {
+          var file = files.next();
+          var mimeType = file.getMimeType();
+          if (mimeType.indexOf('image') !== -1) {
+            var fileId = file.getId();
+            // Asegurar que el archivo sea público (ver por enlace)
+            try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch(shareErr) {}
+            fotos.push({
+              id: fileId,
+              nombre: file.getName(),
+              // Thumbnail de Drive (funciona con archivos públicos)
+              thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
+              // Imagen completa para ampliar
+              url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
+              fecha: Utilities.formatDate(file.getDateCreated(), 'America/Lima', 'dd/MM/yyyy')
+            });
+          }
+        }
+        // Ordenar por fecha más reciente primero
+        fotos.sort(function(a, b) { return b.fecha > a.fecha ? 1 : -1; });
+      } catch (err) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'error', mensaje: 'No se pudo acceder a la carpeta: ' + err.toString() }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', fotos: fotos }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Action no reconocida
     return ContentService
       .createTextOutput(JSON.stringify({
