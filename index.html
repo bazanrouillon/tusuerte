@@ -48,6 +48,8 @@
     }
     html { scroll-behavior: smooth; }
     body { background-color: var(--negro); color: var(--blanco); font-family: 'Paytone One', sans-serif; overflow-x: hidden; }
+    /* Scroll lock cross-browser: evita que la página salte al abrir paneles/modales */
+    body.scroll-locked { overflow: hidden; position: fixed; width: 100%; }
     .bg-pattern { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
       background: #0a2a2d; }
     .bg-pattern::before { content:''; position:absolute; inset:0;
@@ -786,11 +788,13 @@
     .yape-logo { display:flex; align-items:center; justify-content:center; height:100%; background:#6C2BD9; }
     .yape-logo svg.yape-svg { width:110px; height:110px; }
     /* PANELES FLOTANTES */
-    .panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82);
-      z-index:900; align-items:center; justify-content:center; padding:20px; }
+    .panel-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.82);
+      z-index:900; align-items:center; justify-content:center; padding:20px;
+      -webkit-tap-highlight-color:transparent; }
     .panel-overlay.activo { display:flex; }
     .panel-box { background:linear-gradient(135deg,#0c2e33,#0e3338); border-radius:10px; width:100%; max-width:820px;
-      max-height:88vh; overflow-y:auto; animation:popin .3s cubic-bezier(.34,1.56,.64,1); position:relative; }
+      max-height:88vh; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+      animation:popin .3s cubic-bezier(.34,1.56,.64,1); position:relative; }
     @keyframes popin { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
     .panel-header { display:flex; justify-content:space-between; align-items:center;
       padding:18px 28px; position:sticky; top:0; z-index:10; }
@@ -978,8 +982,9 @@
     .btn-registro:hover { transform:translateY(-3px); box-shadow:0 0 40px var(--chicha-verde), 0 0 60px rgba(255,215,0,.2); }
     .form-nota { text-align:center; font-family:'Righteous',cursive; font-size:.78rem; color:#666; margin-top:14px; line-height:1.5; }
     /* MODAL EXITO */
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
-      z-index:1000; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.88);
+      z-index:1000; align-items:center; justify-content:center; padding:20px;
+      -webkit-tap-highlight-color:transparent; }
     .modal-overlay.activo { display:flex; align-items:center; justify-content:center; }
     .modal-box { background:linear-gradient(135deg,#0c2e33,#0e3338); border:4px solid var(--chicha-verde); border-radius:12px;
       padding:40px 32px; text-align:center; max-width:450px; width:100%;
@@ -2000,9 +2005,9 @@
   </div>
 
   <!-- MODAL IMAGEN AMPLIADA -->
-  <div class="modal-overlay" id="modal-foto-ampliada" onclick="this.classList.remove('activo')" style="z-index:10001;background:rgba(0,0,0,.92);">
+  <div class="modal-overlay" id="modal-foto-ampliada" onclick="this.classList.remove('activo');_unlockScroll();_panelAbierto=false;" style="z-index:10001;background:rgba(0,0,0,.92);">
     <img id="foto-ampliada-img" src="" alt="Comprobante de pago" style="max-width:92vw;max-height:88vh;border-radius:10px;border:2px solid var(--neon-amarillo);box-shadow:0 0 30px rgba(255,230,0,.3);" onclick="event.stopPropagation();">
-    <button onclick="document.getElementById('modal-foto-ampliada').classList.remove('activo')" style="position:absolute;top:18px;right:18px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">✕</button>
+    <button onclick="document.getElementById('modal-foto-ampliada').classList.remove('activo');_unlockScroll();_panelAbierto=false;" style="position:absolute;top:18px;right:18px;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;">✕</button>
   </div>
 
   <!-- PANEL FAQ -->
@@ -2726,11 +2731,24 @@
     setInterval(renderBloque3, 5000);
     setTimeout(precargarGanadores, 800);
 
-    // PANELES
+    // PANELES — scroll lock cross-browser (iOS Safari, Chrome, Firefox, Samsung Internet)
     var _panelAbierto = false;
+    var _scrollPosGuardada = 0;
+    function _lockScroll() {
+      if (document.body.classList.contains('scroll-locked')) return;
+      _scrollPosGuardada = window.pageYOffset || document.documentElement.scrollTop;
+      document.body.style.top = '-' + _scrollPosGuardada + 'px';
+      document.body.classList.add('scroll-locked');
+    }
+    function _unlockScroll() {
+      if (!document.body.classList.contains('scroll-locked')) return;
+      document.body.classList.remove('scroll-locked');
+      document.body.style.top = '';
+      window.scrollTo(0, _scrollPosGuardada);
+    }
     function abrirPanel(id) {
       document.getElementById(id).classList.add('activo');
-      document.body.style.overflow = 'hidden';
+      _lockScroll();
       _panelAbierto = true;
       // Ocultar llama
       var llama = document.getElementById('llama-saludo');
@@ -2738,15 +2756,20 @@
     }
     function cerrarPanel(id) {
       document.getElementById(id).classList.remove('activo');
-      document.body.style.overflow = '';
-      // Verificar si queda algún panel abierto
-      var paneles = ['panel-como','panel-ganadores','panel-faq','panel-terminos','panel-registro'];
+      // Verificar si queda algún panel o modal abierto
+      var paneles = ['panel-como','panel-ganadores','panel-faq','panel-terminos','panel-registro','panel-ganadores-pasados','panel-fotos-pagos'];
       var alguno = paneles.some(function(p) {
-        return document.getElementById(p) && document.getElementById(p).classList.contains('activo');
+        var el = document.getElementById(p);
+        return el && el.classList.contains('activo');
       });
+      // También verificar modales
       if (!alguno) {
+        var modales = document.querySelectorAll('.modal-overlay.activo');
+        alguno = modales.length > 0;
+      }
+      if (!alguno) {
+        _unlockScroll();
         _panelAbierto = false;
-        // NO restaurar visibility aquí: la llama solo se muestra durante su animación
       }
     }
     function cerrarPanelFuera(e, id) {
@@ -2763,7 +2786,11 @@
     SORTEO_DATA.forEach(function(s) { contadores[s.id] = 0; });
     function cerrarModalYaReg() {
       document.getElementById('modal-ya-registrado').classList.remove('activo');
-      // NO restaurar visibility: la llama solo aparece durante su animación
+      // Liberar scroll si no hay nada más abierto
+      if (!document.querySelector('.panel-overlay.activo, .modal-overlay.activo')) {
+        _unlockScroll();
+        _panelAbierto = false;
+      }
     }
     function abrirRegistro(nombreSorteo, sorteoId) {
       document.getElementById('registro-sorteo-label').textContent = '🍀 ' + nombreSorteo;
@@ -2853,6 +2880,7 @@
               document.getElementById('codigo-participacion').textContent = cod;
               cerrarPanel('panel-registro');
               document.getElementById('modal-exito').classList.add('activo');
+              _lockScroll();
               form.reset();
             } else {
               alert('Error al registrar. Intenta de nuevo.');
@@ -2873,6 +2901,7 @@
       function mostrarYaRegistrado() {
         cerrarPanel('panel-registro');
         document.getElementById('modal-ya-registrado').classList.add('activo');
+        _lockScroll();
         liberarRegistro();
       }
 
@@ -2933,6 +2962,10 @@
     }
     function cerrarModal() {
       document.getElementById('modal-exito').classList.remove('activo');
+      if (!document.querySelector('.panel-overlay.activo, .modal-overlay.activo')) {
+        _unlockScroll();
+        _panelAbierto = false;
+      }
     }
     document.getElementById('modal-exito').addEventListener('click', function(e) {
       if (e.target === this) cerrarModal();
@@ -3224,6 +3257,7 @@
       if (modal && img) {
         img.src = url;
         modal.classList.add('activo');
+        _lockScroll();
       }
     }
 
