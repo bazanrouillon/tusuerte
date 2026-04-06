@@ -622,37 +622,46 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // ── Listar fotos de pagos desde carpeta de Google Drive ──
+    // ── Listar fotos de pagos desde hoja "Comprobantes" ──
+    // Columnas: A=FECHA, B=DESCRIPCION, C=URL_IMAGEN (link público de Google Drive)
+    // Para obtener el link: subir imagen a Drive → clic derecho → Compartir →
+    // "Cualquier persona con el enlace" → copiar enlace
     if (action === 'fotospagos') {
-      var FOLDER_ID = '16mJtFWcIoBVn-Xp78ZNlgnoac9Y8ZP_X';
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var compSheet = ss.getSheetByName('Comprobantes');
       var fotos = [];
-      try {
-        var folder = DriveApp.getFolderById(FOLDER_ID);
-        var files = folder.getFiles();
-        while (files.hasNext()) {
-          var file = files.next();
-          var mimeType = file.getMimeType();
-          if (mimeType.indexOf('image') !== -1) {
-            var fileId = file.getId();
-            // Asegurar que el archivo sea público (ver por enlace)
-            try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch(shareErr) {}
-            fotos.push({
-              id: fileId,
-              nombre: file.getName(),
-              // Thumbnail de Drive (funciona con archivos públicos)
-              thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
-              // Imagen completa para ampliar
-              url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
-              fecha: Utilities.formatDate(file.getDateCreated(), 'America/Lima', 'dd/MM/yyyy')
-            });
-          }
+      if (!compSheet) {
+        // Crear la hoja con cabeceras si no existe
+        compSheet = ss.insertSheet('Comprobantes');
+        compSheet.appendRow(['FECHA', 'DESCRIPCION', 'URL_IMAGEN']);
+        var headerRange = compSheet.getRange(1, 1, 1, 3);
+        headerRange.setBackground('#0d0d1f');
+        headerRange.setFontColor('#39ff14');
+        headerRange.setFontWeight('bold');
+      }
+      var data = compSheet.getDataRange().getValues();
+      for (var i = 1; i < data.length; i++) {
+        var fecha = String(data[i][0] || '').trim();
+        var desc = String(data[i][1] || '').trim();
+        var urlImg = String(data[i][2] || '').trim();
+        if (!urlImg) continue;
+        // Convertir link de Drive a thumbnail directo
+        // Formato: https://drive.google.com/file/d/FILE_ID/view → extraer FILE_ID
+        var fileId = '';
+        var matchId = urlImg.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (matchId) {
+          fileId = matchId[1];
+        } else if (urlImg.match(/id=([a-zA-Z0-9_-]+)/)) {
+          fileId = urlImg.match(/id=([a-zA-Z0-9_-]+)/)[1];
         }
-        // Ordenar por fecha más reciente primero
-        fotos.sort(function(a, b) { return b.fecha > a.fecha ? 1 : -1; });
-      } catch (err) {
-        return ContentService
-          .createTextOutput(JSON.stringify({ status: 'error', mensaje: 'No se pudo acceder a la carpeta: ' + err.toString() }))
-          .setMimeType(ContentService.MimeType.JSON);
+        if (fileId) {
+          fotos.push({
+            nombre: desc || 'Comprobante',
+            thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
+            url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
+            fecha: fecha
+          });
+        }
       }
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'ok', fotos: fotos }))
