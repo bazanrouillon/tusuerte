@@ -3260,34 +3260,41 @@
         var rawUrl = f.url || f.thumb || '';
         var rawThumb = f.thumb || f.url || '';
         var id = extractDriveId(rawThumb);
-        var idFull = extractDriveId(rawUrl);
-        // Intentar 3 formatos: lh3 (no requiere cookies), uc export, thumbnail
-        var urlsThumb = id ? [
-          'https://lh3.googleusercontent.com/d/' + id + '=s400',
-          'https://drive.google.com/uc?export=view&id=' + id,
-          'https://drive.google.com/thumbnail?id=' + id + '&sz=w400'
-        ] : [rawThumb];
-        var urlsFull = idFull ? [
-          'https://lh3.googleusercontent.com/d/' + idFull + '=s1200',
-          'https://drive.google.com/uc?export=view&id=' + idFull,
-          'https://drive.google.com/thumbnail?id=' + idFull + '&sz=w1200'
-        ] : [rawUrl];
-        item.onclick = function() { ampliarFoto(urlsFull); };
+        var idFull = extractDriveId(rawUrl) || id;
+        // URL directa para abrir en nueva pestaña (funciona siempre en móvil)
+        var driveViewUrl = idFull ? 'https://drive.google.com/file/d/' + idFull + '/view' : rawUrl;
+        // Para el thumbnail intentar: thumbnail (funciona en PC), lh3 (a veces en móvil)
+        var thumbSrc = id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w400' : rawThumb;
+        var thumbFallback = id ? 'https://lh3.googleusercontent.com/d/' + id + '=s400' : '';
+        // En móvil: abrir imagen directo en Drive (siempre funciona)
+        item.onclick = function() {
+          // Si la imagen cargó bien, ampliar en modal
+          var imgEl = item.querySelector('img');
+          if (imgEl && imgEl.naturalWidth > 0 && !imgEl.dataset.failed) {
+            var fullSrc = idFull ? 'https://drive.google.com/thumbnail?id=' + idFull + '&sz=w1200' : rawUrl;
+            ampliarFoto(fullSrc);
+          } else {
+            // Si no cargó, abrir directo en Google Drive (siempre funciona)
+            window.open(driveViewUrl, '_blank');
+          }
+        };
         var img = document.createElement('img');
         img.alt = f.nombre || 'Comprobante';
         img.loading = 'lazy';
         img.referrerPolicy = 'no-referrer';
-        img.dataset.urls = JSON.stringify(urlsThumb);
-        img.dataset.idx = '0';
-        img.src = urlsThumb[0];
+        img.src = thumbSrc;
         img.onerror = function() {
-          var urls = JSON.parse(this.dataset.urls);
-          var nextIdx = parseInt(this.dataset.idx) + 1;
-          if (nextIdx < urls.length) {
-            this.dataset.idx = nextIdx;
-            this.src = urls[nextIdx];
+          if (!this.dataset.retry && thumbFallback) {
+            this.dataset.retry = '1';
+            this.src = thumbFallback;
           } else {
-            this.parentElement.style.display = 'none';
+            // No ocultar: mostrar placeholder con icono
+            this.dataset.failed = '1';
+            this.style.display = 'none';
+            var placeholder = document.createElement('div');
+            placeholder.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a2a1a;color:#7dffb3;font-family:Poppins,sans-serif;font-size:.75rem;text-align:center;padding:10px;';
+            placeholder.innerHTML = '<span style="font-size:2rem;margin-bottom:6px;">📸</span>Toca para ver';
+            this.parentElement.insertBefore(placeholder, this);
           }
         };
         item.appendChild(img);
@@ -3299,23 +3306,12 @@
       });
     }
 
-    function ampliarFoto(urls) {
+    function ampliarFoto(url) {
       var modal = document.getElementById('modal-foto-ampliada');
       var img = document.getElementById('foto-ampliada-img');
       if (modal && img) {
-        // urls puede ser un array de fallbacks o un string simple
-        var listaUrls = Array.isArray(urls) ? urls : [urls];
-        img.dataset.urls = JSON.stringify(listaUrls);
-        img.dataset.idx = '0';
-        img.src = listaUrls[0];
-        img.onerror = function() {
-          var u = JSON.parse(this.dataset.urls);
-          var nextIdx = parseInt(this.dataset.idx) + 1;
-          if (nextIdx < u.length) {
-            this.dataset.idx = nextIdx;
-            this.src = u[nextIdx];
-          }
-        };
+        img.referrerPolicy = 'no-referrer';
+        img.src = url;
         modal.classList.add('activo');
         _lockScroll();
       }
