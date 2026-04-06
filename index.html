@@ -3226,20 +3226,38 @@
         });
     }
 
-    // Convertir URLs de Google Drive a formato que funcione en todos los navegadores/móvil
-    function fixDriveUrl(url) {
-      if (!url) return '';
-      // Formato: drive.google.com/uc?id=XXX o drive.google.com/uc?export=view&id=XXX
-      var match = url.match(/drive\.google\.com\/uc\?(?:export=\w+&)?id=([a-zA-Z0-9_-]+)/);
-      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
-      // Formato: drive.google.com/file/d/XXX/view
-      match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
-      // Formato: drive.google.com/open?id=XXX
-      match = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
-      if (match) return 'https://lh3.googleusercontent.com/d/' + match[1];
-      // Si ya es lh3 u otra URL, dejar como está
-      return url;
+    // Extraer el file ID de cualquier URL de Google Drive
+    function extractDriveId(url) {
+      if (!url) return null;
+      var m;
+      // drive.google.com/uc?id=XXX o uc?export=...&id=XXX
+      m = url.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+      if (m) return m[1];
+      // drive.google.com/file/d/XXX/...
+      m = url.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
+      if (m) return m[1];
+      // drive.google.com/open?id=XXX
+      m = url.match(/\/open\?id=([a-zA-Z0-9_-]{10,})/);
+      if (m) return m[1];
+      // lh3.googleusercontent.com/d/XXX
+      m = url.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]{10,})/);
+      if (m) return m[1];
+      // drive.google.com/thumbnail?id=XXX
+      m = url.match(/\/thumbnail\?.*id=([a-zA-Z0-9_-]{10,})/);
+      if (m) return m[1];
+      return null;
+    }
+    // Generar URL de thumbnail de Google Drive que funciona en móvil
+    function driveThumbnail(url) {
+      var id = extractDriveId(url);
+      if (id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w400';
+      return url || '';
+    }
+    // Generar URL de imagen completa que funciona en móvil
+    function driveFullImg(url) {
+      var id = extractDriveId(url);
+      if (id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1200';
+      return url || '';
     }
     function renderFotosPagos(fotos) {
       var grid = document.getElementById('fotos-pagos-grid');
@@ -3256,11 +3274,19 @@
       fotos.forEach(function(f) {
         var item = document.createElement('div');
         item.className = 'foto-pago-item';
-        var imgCompleta = fixDriveUrl(f.url || f.thumb || '');
-        var imgThumb = fixDriveUrl(f.thumb || f.url || '');
+        var rawUrl = f.url || f.thumb || '';
+        var rawThumb = f.thumb || f.url || '';
+        var imgCompleta = driveFullImg(rawUrl);
+        var imgThumb = driveThumbnail(rawThumb);
         item.onclick = function() { ampliarFoto(imgCompleta); };
+        // Si la imagen falla, intentar formato alternativo lh3 antes de ocultar
+        var fallbackUrl = (function() {
+          var id = extractDriveId(rawThumb);
+          return id ? 'https://lh3.googleusercontent.com/d/' + id : '';
+        })();
         item.innerHTML =
-          '<img src="' + imgThumb + '" alt="' + (f.nombre || 'Comprobante') + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+          '<img src="' + imgThumb + '" alt="' + (f.nombre || 'Comprobante') + '" loading="lazy" ' +
+          'onerror="if(this.dataset.retry){this.parentElement.style.display=\'none\'}else{this.dataset.retry=\'1\';this.src=\'' + fallbackUrl + '\'}">' +
           '<div class="foto-pago-fecha">' + (f.fecha || '') + '</div>';
         grid.appendChild(item);
       });
