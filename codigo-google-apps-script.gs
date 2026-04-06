@@ -622,7 +622,7 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // ── Listar fotos de pagos desde carpeta de Google Drive ──
+    // ── Listar fotos de pagos desde carpeta de Google Drive (como base64) ──
     if (action === 'fotospagos') {
       var FOLDER_ID = '16mJtFWcIoBVn-Xp78ZNlgnoac9Y8ZP_X';
       var fotos = [];
@@ -636,19 +636,19 @@ function doGet(e) {
           count++;
           var mimeType = file.getMimeType() || '';
           if (mimeType.indexOf('image') !== -1) {
-            var fileId = file.getId();
-            // Hacer el archivo público para que se pueda ver
             try {
-              file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-            } catch(shareErr) {
-              errores.push('Share error: ' + shareErr.toString());
+              // Obtener la imagen como blob y convertir a base64
+              var blob = file.getBlob();
+              var base64 = Utilities.base64Encode(blob.getBytes());
+              var dataUrl = 'data:' + mimeType + ';base64,' + base64;
+              fotos.push({
+                nombre: file.getName(),
+                thumb: dataUrl,
+                fecha: Utilities.formatDate(file.getDateCreated(), 'America/Lima', 'dd/MM/yyyy')
+              });
+            } catch(imgErr) {
+              errores.push('Error imagen ' + file.getName() + ': ' + imgErr.toString());
             }
-            fotos.push({
-              nombre: file.getName(),
-              thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
-              url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
-              fecha: Utilities.formatDate(file.getDateCreated(), 'America/Lima', 'dd/MM/yyyy')
-            });
           }
         }
         if (count === 0) {
