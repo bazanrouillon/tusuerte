@@ -3164,20 +3164,30 @@
       fetch(GOOGLE_SHEETS_URL + '?action=fotosPagos', { redirect: 'follow' })
         .then(function(r) { return r.text(); })
         .then(function(txt) {
+          console.log('Respuesta fotosPagos:', txt);
           var data;
-          try { data = JSON.parse(txt); } catch(e) { throw new Error('JSON'); }
+          try { data = JSON.parse(txt); } catch(e) {
+            console.error('Error parsing JSON fotosPagos:', txt);
+            throw new Error('JSON inválido');
+          }
           if (loading) loading.style.display = 'none';
+          if (data.status === 'error') {
+            console.error('Error servidor fotosPagos:', data.mensaje, data.tip || '');
+            if (grid) grid.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error: ' + (data.mensaje || 'desconocido') + '<br><small style="color:#aaa;">' + (data.tip || '') + '</small></div>';
+            return;
+          }
           if (data.status === 'ok' && data.fotos && data.fotos.length > 0) {
             _fotosPagosCache = data.fotos;
             renderFotosPagos(data.fotos);
           } else {
+            console.log('fotosPagos: 0 fotos encontradas', data.errores || '');
             if (empty) empty.style.display = '';
           }
         })
         .catch(function(err) {
-          console.error('Error cargando fotos de pagos:', err);
+          console.error('Error fetch fotosPagos:', err);
           if (loading) loading.style.display = 'none';
-          if (grid) grid.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error al cargar comprobantes.</div>';
+          if (grid) grid.innerHTML = '<div style="text-align:center;padding:20px;color:#ff6666;font-family:Poppins,sans-serif;">Error de conexión al cargar comprobantes.</div>';
         });
     }
 

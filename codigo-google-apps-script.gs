@@ -622,49 +622,49 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // ── Listar fotos de pagos desde hoja "Comprobantes" ──
-    // Columnas: A=FECHA, B=DESCRIPCION, C=URL_IMAGEN (link público de Google Drive)
-    // Para obtener el link: subir imagen a Drive → clic derecho → Compartir →
-    // "Cualquier persona con el enlace" → copiar enlace
+    // ── Listar fotos de pagos desde carpeta de Google Drive ──
     if (action === 'fotospagos') {
-      var ss = SpreadsheetApp.getActiveSpreadsheet();
-      var compSheet = ss.getSheetByName('Comprobantes');
+      var FOLDER_ID = '16mJtFWcIoBVn-Xp78ZNlgnoac9Y8ZP_X';
       var fotos = [];
-      if (!compSheet) {
-        // Crear la hoja con cabeceras si no existe
-        compSheet = ss.insertSheet('Comprobantes');
-        compSheet.appendRow(['FECHA', 'DESCRIPCION', 'URL_IMAGEN']);
-        var headerRange = compSheet.getRange(1, 1, 1, 3);
-        headerRange.setBackground('#0d0d1f');
-        headerRange.setFontColor('#39ff14');
-        headerRange.setFontWeight('bold');
-      }
-      var data = compSheet.getDataRange().getValues();
-      for (var i = 1; i < data.length; i++) {
-        var fecha = String(data[i][0] || '').trim();
-        var desc = String(data[i][1] || '').trim();
-        var urlImg = String(data[i][2] || '').trim();
-        if (!urlImg) continue;
-        // Convertir link de Drive a thumbnail directo
-        // Formato: https://drive.google.com/file/d/FILE_ID/view → extraer FILE_ID
-        var fileId = '';
-        var matchId = urlImg.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (matchId) {
-          fileId = matchId[1];
-        } else if (urlImg.match(/id=([a-zA-Z0-9_-]+)/)) {
-          fileId = urlImg.match(/id=([a-zA-Z0-9_-]+)/)[1];
+      var errores = [];
+      try {
+        var folder = DriveApp.getFolderById(FOLDER_ID);
+        var files = folder.getFiles();
+        var count = 0;
+        while (files.hasNext()) {
+          var file = files.next();
+          count++;
+          var mimeType = file.getMimeType() || '';
+          if (mimeType.indexOf('image') !== -1) {
+            var fileId = file.getId();
+            // Hacer el archivo público para que se pueda ver
+            try {
+              file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+            } catch(shareErr) {
+              errores.push('Share error: ' + shareErr.toString());
+            }
+            fotos.push({
+              nombre: file.getName(),
+              thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
+              url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
+              fecha: Utilities.formatDate(file.getDateCreated(), 'America/Lima', 'dd/MM/yyyy')
+            });
+          }
         }
-        if (fileId) {
-          fotos.push({
-            nombre: desc || 'Comprobante',
-            thumb: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400',
-            url: 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200',
-            fecha: fecha
-          });
+        if (count === 0) {
+          errores.push('La carpeta está vacía o no se encontraron archivos');
         }
+      } catch (err) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            status: 'error',
+            mensaje: 'Error accediendo a la carpeta de Drive: ' + err.toString(),
+            tip: 'Asegúrate de que el script tenga permisos de Drive. Ve a Apps Script → Servicios → agrega Google Drive API'
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
       }
       return ContentService
-        .createTextOutput(JSON.stringify({ status: 'ok', fotos: fotos }))
+        .createTextOutput(JSON.stringify({ status: 'ok', fotos: fotos, totalArchivos: fotos.length, errores: errores }))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
