@@ -1896,7 +1896,7 @@
           <div class="paso">
             <div class="paso-top"><span class="paso-num">2</span><span class="paso-icono">🍀</span></div>
             <h3>ELIGE TU SUERTE</h3>
-            <p>Escoge el premio que este activo y dale a <strong>"Entrar al Sorteo"</strong>.</p>
+            <p>Escoge el premio que quieras y dale a <strong>"Me apunto"</strong>.</p>
           </div>
           <div class="paso">
             <div class="paso-top"><span class="paso-num">3</span><span class="paso-icono">📝</span></div>
@@ -2013,23 +2013,23 @@
       <div class="panel-body">
         <div class="faq-item">
           <button class="faq-preg" onclick="toggleFaq(this)">¿Realmente es gratis? ¿No hay trampa?<span class="faq-icon">+</span></button>
-          <div class="faq-resp">Causita, es 100% gratis. No pedimos pago, no pedimos tarjeta, nada. El sorteo se hace en vivo por la misma web.</div>
+          <div class="faq-resp">Sí pe, 100% gratis. No pedimos pago, no pedimos tarjeta, nada. El sorteo se hace en vivo por el TikTok oficial @tusuerte.pe.oficial.</div>
         </div>
         <div class="faq-item">
           <button class="faq-preg" onclick="toggleFaq(this)">¿Cómo sé que el sorteo es justo?<span class="faq-icon">+</span></button>
-          <div class="faq-resp">Todos los sorteos se transmiten en vivo por la misma web tusuerte.pe a la hora indicada en el sorteo. Usamos una ruleta digital aleatoria con todos los participantes. ¡Sin trampa ni cartón!</div>
+          <div class="faq-resp">Todos los sorteos se transmiten en vivo por TikTok Live @tusuerte.pe.oficial. Usamos una ruleta digital aleatoria con todos los participantes. ¡Sin trampa ni cartón!</div>
         </div>
         <div class="faq-item">
           <button class="faq-preg" onclick="toggleFaq(this)">¿Puedo participar en más de un sorteo?<span class="faq-icon">+</span></button>
-          <div class="faq-resp">Solo puedes participar en el sorteo que este activo, hay sorteos son todos los dias!</div>
+          <div class="faq-resp">Solo puedes participar en un sorteo por semana. Escoge bien tu favorito pe.</div>
         </div>
         <div class="faq-item">
           <button class="faq-preg" onclick="toggleFaq(this)">¿Hacen envíos a provincia?<span class="faq-icon">+</span></button>
           <div class="faq-resp">Sí, coordinamos envío a provincia pero el costo del flete lo asume el ganador. Para Lima, el recojo es en un punto céntrico que se indica por correo.</div>
         </div>
         <div class="faq-item">
-          <button class="faq-preg" onclick="toggleFaq(this)">¿Como se que pagan si me gano algo?<span class="faq-icon">+</span></button>
-          <div class="faq-resp">¡dudas! Entra a ganadores y encontraras a todos los afortunados que confiaron, tambien podras revisar nuestro TikTok oficial @tusuerte.pe.oficial y veras los videos.!</div>
+          <button class="faq-preg" onclick="toggleFaq(this)">¿Puedo donar un artículo para sortear?<span class="faq-icon">+</span></button>
+          <div class="faq-resp">¡Sí pues! Si tienes algo que ya no usas y quieres donarlo, contáctanos por nuestro TikTok oficial @tusuerte.pe.oficial. ¡Ayuda a tu prójimo pe!</div>
         </div>
       </div>
     </div>
@@ -2541,8 +2541,24 @@
           } else {
             if (ganadorNombre) ganadorNombre.textContent = 'AÚN SIN GANADOR';
             if (ganadorDni) ganadorDni.textContent = '';
+            // Admin: mostrar botón para registrar ganador manualmente
+            if (_esAdmin) {
+              var existingBtn = card.querySelector('.btn-admin-registrar');
+              if (!existingBtn) {
+                var adminBtn = document.createElement('button');
+                adminBtn.className = 'btn-admin-registrar';
+                adminBtn.textContent = '🔧 Registrar ganador';
+                adminBtn.style.cssText = 'margin-top:10px;padding:8px 16px;background:#ff6a00;color:#fff;border:none;border-radius:6px;font-family:Poppins,sans-serif;font-size:.8rem;cursor:pointer;';
+                adminBtn.onclick = function(evt) {
+                  evt.stopPropagation();
+                  registrarGanadorManual(sorteoId);
+                };
+                var ganadorDiv2 = card.querySelector('.card-ganador-result');
+                if (ganadorDiv2) ganadorDiv2.appendChild(adminBtn);
+              }
+            }
           }
-          setTimeout(function() { card.classList.remove('flipped'); card._busy = false; }, 5000);
+          setTimeout(function() { card.classList.remove('flipped'); card._busy = false; }, 8000);
         }
 
         // Siempre intentar fetch desde Google Sheets primero (fuente de verdad)
@@ -3167,6 +3183,41 @@
         });
     }
 
+    // ── Admin: Registrar ganador manualmente ──
+    function registrarGanadorManual(sorteoId) {
+      if (!_esAdmin) return;
+      var cfg = SORTEOS_CFG[sorteoId];
+      if (!cfg) { alert('Sorteo no encontrado'); return; }
+
+      var dni = prompt('Ingresa el DNI del ganador para:\n' + cfg.nombre + '\nSorteo ID: ' + sorteoId);
+      if (!dni || !dni.trim()) return;
+      dni = dni.trim();
+
+      var nombreSorteo = cfg.nombre;
+      var url = GOOGLE_SHEETS_URL + '?action=registrarGanadorManual&sorteo=' +
+        encodeURIComponent(nombreSorteo) + '&sorteoId=' + encodeURIComponent(sorteoId) +
+        '&dni=' + encodeURIComponent(dni);
+
+      fetch(url, { redirect: 'follow' })
+        .then(function(r) { return r.text(); })
+        .then(function(txt) {
+          var data;
+          try { data = JSON.parse(txt); } catch(e) { alert('Error: respuesta no válida'); return; }
+          if (data.status === 'ok') {
+            alert('✅ Ganador registrado:\n' + data.ganador.nombres + ' ' + data.ganador.apellidos);
+            // Actualizar datos en memoria y refrescar
+            _ganadoresPreload[sorteoId] = data.ganador;
+            _ganadoresServerCache = null;
+            forzarReRender();
+          } else {
+            alert('❌ Error: ' + (data.mensaje || 'No se pudo registrar'));
+          }
+        })
+        .catch(function(err) {
+          alert('❌ Error de red: ' + err.message);
+        });
+    }
+
     // ── Galería de comprobantes de pago ──
     var _fotosPagosCache = null;
 
@@ -3426,13 +3477,22 @@
             var selUrl = GOOGLE_SHEETS_URL + '?action=seleccionarGanador&sorteo=' +
               encodeURIComponent(nombreSorteoCompleto) + '&sorteoId=' + encodeURIComponent(sorteoId);
 
+            console.log('[SORTEO] Llamando seleccionarGanador:', selUrl);
+
             function fetchGanadorConReintento(intentos) {
+              console.log('[SORTEO] Intento de selección, quedan:', intentos, 'reintentos');
               return fetch(selUrl, { redirect: 'follow' })
-                .then(function(rSel) { return rSel.text(); })
+                .then(function(rSel) {
+                  console.log('[SORTEO] Respuesta HTTP:', rSel.status, rSel.statusText);
+                  return rSel.text();
+                })
                 .then(function(txtSel) {
+                  console.log('[SORTEO] Respuesta texto (primeros 200 chars):', txtSel.substring(0, 200));
                   var selData;
-                  try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON'); }
+                  try { selData = JSON.parse(txtSel); } catch(e) { throw new Error('Respuesta no es JSON: ' + txtSel.substring(0, 100)); }
+                  console.log('[SORTEO] Respuesta JSON:', JSON.stringify(selData).substring(0, 300));
                   if (selData.status === 'error' && intentos > 0) {
+                    console.warn('[SORTEO] Error del servidor, reintentando:', selData.mensaje);
                     estadoEl.textContent = 'Servidor ocupado, reintentando...';
                     return new Promise(function(resolve) {
                       setTimeout(function() { resolve(fetchGanadorConReintento(intentos - 1)); }, 2000);
@@ -3441,6 +3501,7 @@
                   if (selData.status !== 'ok' || !selData.ganador) {
                     throw new Error(selData.mensaje || 'No se pudo seleccionar ganador');
                   }
+                  console.log('[SORTEO] ✅ Ganador seleccionado:', selData.ganador.nombres, selData.ganador.apellidos, '| yaExistia:', selData.yaExistia);
                   return selData;
                 });
             }
@@ -3449,6 +3510,36 @@
               .then(function(selData) {
 
                 var ganadorServer = selData.ganador;
+                console.log('[SORTEO] Procesando ganador para ruleta:', ganadorServer.nombres, ganadorServer.apellidos);
+
+                // ── Verificación post-selección: confirmar que el ganador fue guardado ──
+                setTimeout(function() {
+                  var verificarUrl = GOOGLE_SHEETS_URL + '?action=obtenerGanador&sorteoId=' + encodeURIComponent(sorteoId);
+                  fetch(verificarUrl, { redirect: 'follow' })
+                    .then(function(r) { return r.text(); })
+                    .then(function(txt) {
+                      try {
+                        var vData = JSON.parse(txt);
+                        if (vData.status === 'ok' && vData.ganador && vData.ganador.nombres) {
+                          console.log('[SORTEO] ✅ Verificación: Ganador confirmado en BD:', vData.ganador.nombres, vData.ganador.apellidos);
+                        } else {
+                          console.error('[SORTEO] ⚠️ ALERTA: Ganador NO encontrado en BD después de selección. Intentando registro de emergencia...');
+                          // Intento de registro de emergencia
+                          var emergUrl = GOOGLE_SHEETS_URL + '?action=registrarGanadorManual&sorteo=' +
+                            encodeURIComponent(nombreSorteoCompleto) + '&sorteoId=' + encodeURIComponent(sorteoId) +
+                            '&dni=' + encodeURIComponent(ganadorServer.dni);
+                          fetch(emergUrl, { redirect: 'follow' })
+                            .then(function(r2) { return r2.text(); })
+                            .then(function(txt2) {
+                              try {
+                                var eData = JSON.parse(txt2);
+                                console.log('[SORTEO] Resultado registro emergencia:', JSON.stringify(eData));
+                              } catch(e) { console.error('[SORTEO] Error parseando respuesta emergencia'); }
+                            }).catch(function(e) { console.error('[SORTEO] Error en registro emergencia:', e); });
+                        }
+                      } catch(e) { console.error('[SORTEO] Error verificando ganador:', e); }
+                    }).catch(function(e) { console.error('[SORTEO] Error en fetch verificación:', e); });
+                }, 5000); // verificar 5 segundos después
                 // Encontrar el índice del ganador en participantes
                 var ganadorIdx = -1;
                 for (var gi = 0; gi < participantes.length; gi++) {

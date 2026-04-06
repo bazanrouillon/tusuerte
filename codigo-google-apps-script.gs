@@ -326,15 +326,26 @@ function doGet(e) {
         var ss = SpreadsheetApp.getActiveSpreadsheet();
 
         // 1) Verificar si ya hay un ganador registrado para este sorteo
+        // IMPORTANTE: Cuando hay sorteoId (incluye fecha, ej: "1-20260406"),
+        // SOLO buscar por sorteoId exacto. El fallback por nombre se usa
+        // ÚNICAMENTE cuando no hay sorteoId (datos antiguos).
+        // Esto evita confundir sorteos del mismo nombre en semanas distintas.
         var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
         if (ganadorSheet) {
           var gData = ganadorSheet.getDataRange().getValues();
           for (var gi = gData.length - 1; gi >= 1; gi--) {
             var gSorteoId = String(gData[gi][2] || '').trim();
             var gSorteo = String(gData[gi][1] || '').trim();
-            if ((sorteoId && gSorteoId === sorteoId) ||
-                (sorteoFiltro && gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1)) {
-              // Ya existe ganador — devolver el mismo
+            var esMatch = false;
+            if (sorteoId) {
+              // Con sorteoId: SOLO match exacto por sorteoId (incluye fecha)
+              esMatch = (gSorteoId === sorteoId);
+            } else if (sorteoFiltro) {
+              // Sin sorteoId (fallback datos antiguos): match por nombre
+              esMatch = (gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1);
+            }
+            if (esMatch) {
+              // Ya existe ganador para este sorteo+fecha — devolver el mismo
               lock.releaseLock();
               return ContentService
                 .createTextOutput(JSON.stringify({
@@ -540,8 +551,13 @@ function doGet(e) {
           var gSorteoId = String(data[i][2] || '').trim();
           var gSorteo = String(data[i][1] || '').trim();
           var match = false;
-          if (sorteoIdParam && gSorteoId === sorteoIdParam) match = true;
-          if (!match && sorteoFiltro && gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1) match = true;
+          if (sorteoIdParam) {
+            // Con sorteoId: SOLO match exacto (evita confundir semanas)
+            match = (gSorteoId === sorteoIdParam);
+          } else if (sorteoFiltro) {
+            // Sin sorteoId (fallback datos antiguos): match por nombre
+            match = (gSorteo.toLowerCase().indexOf(sorteoFiltro.toLowerCase()) !== -1);
+          }
           if (match) {
             ganadorEncontrado = {
               nombres: String(data[i][3] || '').trim(),
@@ -665,6 +681,109 @@ function doGet(e) {
       }
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'ok', fotos: fotos, totalArchivos: fotos.length, errores: errores }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ── Registrar ganador manualmente (admin) ──
+    // Uso: GET ?action=registrarganadormanual&sorteo=NOMBRE&sorteoId=ID&dni=DNI
+    // Busca al participante por DNI en la hoja de registros y lo registra como ganador
+    if (action === 'registrarganadormanual') {
+      var sorteoFiltro = (e.parameter.sorteo || '').trim();
+      var sorteoId = (e.parameter.sorteoId || '').trim();
+      var dniManual = (e.parameter.dni || '').trim();
+
+      if (!dniManual) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'error', mensaje: 'Falta el parámetro dni' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+      // Verificar si ya hay un ganador para este sorteo
+      var ganadorSheet = obtenerOCrearHoja('Ganadores', ['FECHA Y HORA','SORTEO','SORTEO ID','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','CODIGO']);
+      if (ganadorSheet) {
+        var gData = ganadorSheet.getDataRange().getValues();
+        for (var gi = gData.length - 1; gi >= 1; gi--) {
+          var gSorteoId = String(gData[gi][2] || '').trim();
+          if (sorteoId && gSorteoId === sorteoId) {
+            return ContentService
+              .createTextOutput(JSON.stringify({
+                status: 'error',
+                mensaje: 'Ya existe un ganador para este sorteo: ' + String(gData[gi][3] || '') + ' ' + String(gData[gi][4] || '')
+              }))
+              .setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+      }
+
+      // Buscar participante por DNI en registros
+      var regSheet = obtenerOCrearHoja(HOJA_REGISTROS, ['FECHA Y HORA','SORTEO','NOMBRES','APELLIDOS','DNI','CELULAR','CORREO','DISTRITO','TIKTOK','CODIGO','GANADOR','SORTEO ID']);
+      var regData = regSheet.getDataRange().getValues();
+      var ganador = null;
+      var filaGanador = -1;
+      for (var pi = 1; pi < regData.length; pi++) {
+        var dniCell = String(regData[pi][4] || '').trim();
+        var sorteoIdCell = String(regData[pi][11] || '').trim();
+        if (dniCell === dniManual && (!sorteoId || sorteoIdCell === sorteoId)) {
+          ganador = {
+            nombres: String(regData[pi][2] || '').trim(),
+            apellidos: String(regData[pi][3] || '').trim(),
+            dni: dniCell,
+            celular: String(regData[pi][5] || ''),
+            correo: String(regData[pi][6] || ''),
+            distrito: String(regData[pi][7] || ''),
+            codigo: String(regData[pi][9] || '')
+          };
+          filaGanador = pi;
+          break;
+        }
+      }
+
+      if (!ganador) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ status: 'error', mensaje: 'No se encontró participante con DNI ' + dniManual + ' en el sorteo ' + sorteoId }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      // Guardar en hoja Ganadores
+      var ahora = new Date();
+      var fechaLima = Utilities.formatDate(ahora, 'America/Lima', 'dd/MM/yyyy HH:mm:ss');
+      ganadorSheet.appendRow([
+        fechaLima,
+        sorteoFiltro || '',
+        sorteoId || '',
+        ganador.nombres,
+        ganador.apellidos,
+        ganador.dni,
+        ganador.celular || '',
+        ganador.correo || '',
+        ganador.distrito || '',
+        ganador.codigo || ''
+      ]);
+      SpreadsheetApp.flush();
+
+      // Marcar como ganador en registros
+      if (filaGanador > 0) {
+        regSheet.getRange(filaGanador + 1, 11).setValue('SI');
+        regSheet.getRange(filaGanador + 1, 11).setBackground('#1a4a1a');
+        regSheet.getRange(filaGanador + 1, 11).setFontColor('#ffd700');
+        regSheet.getRange(filaGanador + 1, 11).setFontWeight('bold');
+        SpreadsheetApp.flush();
+      }
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          status: 'ok',
+          mensaje: 'Ganador registrado manualmente',
+          ganador: {
+            nombres: ganador.nombres,
+            apellidos: ganador.apellidos,
+            dni: ganador.dni,
+            sorteoId: sorteoId,
+            sorteo: sorteoFiltro
+          }
+        }))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
