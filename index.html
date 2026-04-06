@@ -621,7 +621,9 @@
     .card-sorteo.cerrado.flipped .sello-cerrado { display:none; }
     .card-sorteo.cerrado:not(.flipped) .card-front { opacity:.35; filter:grayscale(.5) brightness(.5); }
     .card-sorteo.cerrado .btn-participar { pointer-events:none; opacity:.1; }
-    .card-sorteo.cerrado:not(.flipped) { cursor:default; pointer-events:none; }
+    .card-sorteo.cerrado:not(.flipped) { cursor:default; }
+    body:not(.admin-mode) .card-sorteo.cerrado:not(.flipped) { pointer-events:none; }
+    body.admin-mode .card-sorteo.cerrado:not(.flipped) { cursor:pointer; }
     .grid-sorteos .card-sorteo.cerrado:not(.flipped) { border-color:rgba(255,255,255,.08); box-shadow:none; }
     /* Ganador preview en FRONT del card cerrado */
     .card-ganador-preview {
@@ -3317,7 +3319,9 @@
     var _esAdmin = (function() {
       try {
         var params = new URLSearchParams(window.location.search);
-        return params.get('admin') === 'santiagobazan';
+        var isAdmin = params.get('admin') === 'santiagobazan';
+        if (isAdmin) document.body.classList.add('admin-mode');
+        return isAdmin;
       } catch(e) { return false; }
     })();
 
