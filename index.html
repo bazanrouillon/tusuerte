@@ -2232,25 +2232,62 @@
     var _fechasSemana = generarFechasSemana();
     var SORTEOS_CFG = {};
     var SORTEO_DATA = [];
-    for (var _si = 0; _si < SORTEOS_BASE.length; _si++) {
-      var _base = SORTEOS_BASE[_si];
-      var _ts = _fechasSemana[_si];
-      var _id = generarSorteoId(_base.num, _ts);
-      SORTEOS_CFG[_id] = {
-        fechaISO: tsToFechaISO(_ts),
-        ts: _ts,
-        nombre: _base.nombre + ' – ' + _base.monto
-      };
-      SORTEO_DATA.push({
-        id: _id,
-        emoji: _base.emoji,
-        sub: _base.sub,
-        nombre: _base.displayNombre,
-        desc: _base.desc,
-        monto: _base.monto,
-        lukitas: _base.lukitas
-      });
+    function _construirSorteos() {
+      _fechasSemana = generarFechasSemana();
+      SORTEOS_CFG = {};
+      SORTEO_DATA = [];
+      for (var _si = 0; _si < SORTEOS_BASE.length; _si++) {
+        var _base = SORTEOS_BASE[_si];
+        var _ts = _fechasSemana[_si];
+        var _id = generarSorteoId(_base.num, _ts);
+        SORTEOS_CFG[_id] = {
+          fechaISO: tsToFechaISO(_ts),
+          ts: _ts,
+          nombre: _base.nombre + ' – ' + _base.monto
+        };
+        SORTEO_DATA.push({
+          id: _id,
+          emoji: _base.emoji,
+          sub: _base.sub,
+          nombre: _base.displayNombre,
+          desc: _base.desc,
+          monto: _base.monto,
+          lukitas: _base.lukitas
+        });
+      }
     }
+    _construirSorteos(); // Construir la primera vez
+
+    // ── AUTO-RECALCULAR: detectar cambio de semana sin recargar página ──
+    // Cada 30s verifica si todos los sorteos de la semana actual ya pasaron.
+    // Si es así, reconstruye fechas para la nueva semana, limpia caches
+    // y fuerza un re-render completo. Esto evita que la página se quede
+    // "congelada" mostrando la semana anterior si no se recargó.
+    var _ultimaSemanaTs = _fechasSemana[0]; // timestamp del lunes de la semana actual
+    setInterval(function() {
+      var ahora = Date.now();
+      var ultimoSorteoFin = _fechasSemana[6] + SORTEO_VENTANA_TOTAL;
+      if (ahora > ultimoSorteoFin) {
+        // La semana actual ya terminó — recalcular
+        _construirSorteos();
+        if (_fechasSemana[0] !== _ultimaSemanaTs) {
+          console.log('[SEMANA] Cambio de semana detectado. Recalculando sorteos...');
+          _ultimaSemanaTs = _fechasSemana[0];
+          // Limpiar estado de la semana anterior
+          ruletaSorteoYaEjecutado = {};
+          _ganadoresPreload = {};
+          _ganadoresServerCache = null;
+          _ganadoresPreloadDone = false;
+          _principalActualId = null;
+          _sorteoEnVivo = false;
+          _testFinalizados = {};
+          // Re-precargar ganadores y re-renderizar
+          precargarGanadores();
+          forzarReRender();
+        }
+      }
+    }, 30000);
+
     // ── Utilidad: ms restantes hasta un timestamp ──
     function msHasta(ts) { return Math.max(0, ts - Date.now()); }
     // ── Descomponer ms en d/h/m/s ──
