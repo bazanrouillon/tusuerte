@@ -2846,11 +2846,29 @@
       // (reset() borra TODOS los campos del form, incluyendo el hidden sorteo-id)
       document.getElementById('form-registro').reset();
       document.getElementById('sorteo-id').value = sorteoId;
+      // ── Precargar datos guardados del usuario (localStorage) ──
+      var _datosPrecargados = false;
+      try {
+        var saved = localStorage.getItem('tusuerte_user');
+        if (saved) {
+          var u = JSON.parse(saved);
+          if (u.nombres)   document.getElementById('nombres').value = u.nombres;
+          if (u.apellidos)  document.getElementById('apellidos').value = u.apellidos;
+          if (u.dni)        document.getElementById('dni').value = u.dni;
+          if (u.celular)    document.getElementById('celular').value = u.celular;
+          if (u.correo)     document.getElementById('correo').value = u.correo;
+          if (u.distrito)   document.getElementById('distrito').value = u.distrito;
+          // Marcar checkbox de Yape/Plin automáticamente si ya lo confirmó antes
+          var chk = document.getElementById('chk-yapeplin');
+          if (chk) chk.checked = true;
+          _datosPrecargados = true;
+        }
+      } catch(eLS) { /* localStorage no disponible */ }
       // Mostrar formulario directo (sin paso TikTok)
       var pasoTiktok = document.getElementById('paso-tiktok');
       if (pasoTiktok) pasoTiktok.style.display = 'none';
       document.getElementById('paso-formulario').style.display = 'block';
-      document.getElementById('panel-reg-titulo').textContent = 'COMPLETA TUS DATOS';
+      document.getElementById('panel-reg-titulo').textContent = _datosPrecargados ? 'CONFIRMA TUS DATOS' : 'COMPLETA TUS DATOS';
       abrirPanel('panel-registro');
     }
     // ══════════════════════════════════════════════════════
@@ -2926,6 +2944,17 @@
               var barraEl = document.getElementById('barra-' + id);
               if (barraEl) barraEl.style.width = Math.max(5, Math.min(contadores[id], 100)) + '%';
               document.getElementById('codigo-participacion').textContent = cod;
+              // ── Guardar datos del usuario en localStorage para precarga futura ──
+              try {
+                localStorage.setItem('tusuerte_user', JSON.stringify({
+                  nombres: datos.nombres,
+                  apellidos: datos.apellidos,
+                  dni: datos.dni,
+                  celular: datos.celular,
+                  correo: datos.correo,
+                  distrito: datos.distrito
+                }));
+              } catch(eLS) { /* localStorage no disponible */ }
               cerrarPanel('panel-registro');
               document.getElementById('modal-exito').classList.add('activo');
               _lockScroll();
