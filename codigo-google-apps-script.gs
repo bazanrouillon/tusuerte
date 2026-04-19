@@ -809,3 +809,99 @@ function probarScript() {
   Logger.log('Total filas: ' + sheet.getLastRow());
   Logger.log('Script funcionando correctamente ✓');
 }
+
+// =====================================================
+// ── TRIGGER AUTOMÁTICO DIARIO (4pm Lima) ──
+// Elige al ganador aunque NO haya nadie en la web.
+//
+// CONFIGURACIÓN (se hace UNA sola vez):
+// 1. En Apps Script, abre el menú del reloj ⏰ ("Activadores")
+// 2. Clic en "+ Añadir activador" (abajo a la derecha)
+// 3. Configura así:
+//    - Función: seleccionarGanadorDelDia
+//    - Implementación: Head
+//    - Origen: Basado en tiempo
+//    - Tipo de activador: Temporizador por día
+//    - Hora del día: De 16:00 a 17:00  (Lima)
+//      ⚠️ Si tu cuenta de Google usa otra zona horaria, ajusta
+//         la zona en Apps Script → Proyecto (⚙️) → Zona horaria
+//         = "(GMT-05:00) Lima"
+// 4. Guardar y autorizar
+//
+// Google ejecuta el trigger en un momento aleatorio dentro
+// de esa hora, así que lo típico es que elija ganador entre
+// las 4:00 y las 4:10 pm. La ruleta en la web reconoce al
+// ganador ya elegido (via yaExistia:true) y muestra el mismo.
+// =====================================================
+
+// Mapeo Día-de-la-semana → número de sorteo (según SORTEOS_BASE del index.html)
+// Index del array = getDay() de JS (0=Dom, 1=Lun, ..., 6=Sáb)
+var SORTEOS_POR_DIA = [
+  { num: 7, nombre: 'Yape pal Pollito',    monto: 'S/15' }, // 0 Domingo
+  { num: 1, nombre: 'Yape pal Chicle',     monto: 'S/1'  }, // 1 Lunes
+  { num: 2, nombre: 'Yape pa la Quinua',   monto: 'S/2'  }, // 2 Martes
+  { num: 3, nombre: 'Yape pa la Gaseosa',  monto: 'S/5'  }, // 3 Miércoles
+  { num: 4, nombre: 'Yape pa la Chelita',  monto: 'S/6'  }, // 4 Jueves
+  { num: 5, nombre: 'Yape pa la Recarga',  monto: 'S/7'  }, // 5 Viernes
+  { num: 6, nombre: 'Yape pa la Canchita', monto: 'S/10' }  // 6 Sábado
+];
+
+function seleccionarGanadorDelDia() {
+  // ── Calcular fecha/día en hora Lima (GMT-5) ──
+  var ahoraUtc = new Date();
+  var limaMs = ahoraUtc.getTime() - 5 * 3600000;
+  var lima = new Date(limaMs);
+  var diaSemanaLima = lima.getUTCDay(); // 0=Dom, 1=Lun, ..., 6=Sáb
+  var yyyy = lima.getUTCFullYear();
+  var mm = ('0' + (lima.getUTCMonth() + 1)).slice(-2);
+  var dd = ('0' + lima.getUTCDate()).slice(-2);
+
+  var sorteo = SORTEOS_POR_DIA[diaSemanaLima];
+  var sorteoId = sorteo.num + '-' + yyyy + mm + dd;
+  var sorteoNombre = sorteo.nombre + ' – ' + sorteo.monto;
+
+  Logger.log('[TRIGGER 4PM] Día=' + diaSemanaLima + ' → Sorteo: ' + sorteoNombre);
+  Logger.log('[TRIGGER 4PM] SorteoId: ' + sorteoId);
+
+  // ── Reutilizar la lógica de doGet (action=seleccionarganador) ──
+  // doGet ya tiene LockService atómico y chequea si ya existe ganador.
+  var fakeEvent = {
+    parameter: {
+      action: 'seleccionarganador',
+      sorteo: sorteoNombre,
+      sorteoId: sorteoId
+    }
+  };
+
+  try {
+    var respuesta = doGet(fakeEvent);
+    var contenido = respuesta.getContent();
+    Logger.log('[TRIGGER 4PM] Respuesta: ' + contenido);
+
+    // Parsear respuesta para log amigable
+    try {
+      var json = JSON.parse(contenido);
+      if (json.status === 'ok' && json.ganador && json.ganador.nombres) {
+        var prefijo = json.yaExistia ? '♻️ Ganador ya existía' : '🎉 Ganador nuevo elegido';
+        Logger.log('[TRIGGER 4PM] ' + prefijo + ': ' +
+                   json.ganador.nombres + ' ' + json.ganador.apellidos +
+                   ' (DNI ' + json.ganador.dni + ')');
+      } else if (json.ganador === null) {
+        Logger.log('[TRIGGER 4PM] ⚠️ No había participantes registrados para ' + sorteoId);
+      } else if (json.status === 'error') {
+        Logger.log('[TRIGGER 4PM] ❌ Error del servidor: ' + json.mensaje);
+      }
+    } catch (eParse) {
+      Logger.log('[TRIGGER 4PM] Respuesta no-JSON');
+    }
+  } catch (err) {
+    Logger.log('[TRIGGER 4PM] ❌ Excepción: ' + err.toString());
+  }
+}
+
+// ── Atajo manual para probar SIN esperar al trigger ──
+// Ejecutalo desde el editor de Apps Script con el botón ▶ Run.
+// Elige el ganador del día HOY (fecha Lima).
+function probarTriggerHoy() {
+  seleccionarGanadorDelDia();
+}
