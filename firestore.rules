@@ -1,0 +1,95 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REGLAS DE SEGURIDAD FIRESTORE — TuSuerte.pe
+//
+// Principio clave: el usuario PUEDE leer su propio doc, pero NUNCA puede
+// escribir su saldo de monedas desde el frontend. Toda modificación de
+// saldoMonedas se hace desde el backend (Netlify Function con Admin SDK,
+// que omite estas reglas).
+//
+// El usuario SÍ puede crear su propio registro de inscripción y leer
+// sus inscripciones, pero la lógica de descontar 1 moneda y validar
+// se hace con una transacción atómica desde el backend.
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── USERS ────────────────────────────────────────────────────────────
+    // /users/{uid}
+    //   email: string
+    //   nombres: string
+    //   apellidos: string
+    //   dni: string (8 dígitos)
+    //   celular: string (9 dígitos)
+    //   distrito: string
+    //   tiktokUser: string (opcional)
+    //   saldoMonedas: number   ← SOLO el backend lo modifica
+    //   monedasGanadas: number (total acumulado vía bienvenida + compras)
+    //   monedasGastadas: number (total acumulado en inscripciones)
+    //   fechaRegistro: timestamp
+    //   ultimoLogin: timestamp
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // CREATE: permitido solo al registrarse, con datos iniciales seguros
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.saldoMonedas == 10  // welcome bonus
+                    && request.resource.data.monedasGanadas == 10
+                    && request.resource.data.monedasGastadas == 0
+                    && request.resource.data.email == request.auth.token.email;
+
+      // UPDATE: el usuario puede actualizar SUS datos personales,
+      // pero NO puede tocar saldoMonedas, monedasGanadas, monedasGastadas
+      // (esos los modifica solo el backend con Admin SDK)
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.saldoMonedas == resource.data.saldoMonedas
+                    && request.resource.data.monedasGanadas == resource.data.monedasGanadas
+                    && request.resource.data.monedasGastadas == resource.data.monedasGastadas
+                    && request.resource.data.email == resource.data.email;
+
+      allow delete: if false; // jamás
+    }
+
+    // ── INSCRIPCIONES ────────────────────────────────────────────────────
+    // /inscripciones/{auto-id}
+    //   userId: string
+    //   sorteoId: string  (ej: "3-20260524")
+    //   sorteoNombre: string
+    //   monedasGastadas: number (1)
+    //   fechaInscripcion: timestamp
+    //   codigoTicket: string (TSP-12345)
+    //
+    // El frontend puede leer las inscripciones del usuario logueado.
+    // Las CREA el backend (Netlify Function) cuando descuenta la moneda.
+    match /inscripciones/{inscripcionId} {
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if false; // solo el backend
+    }
+
+    // ── TRANSACCIONES ────────────────────────────────────────────────────
+    // /transacciones/{auto-id}
+    //   userId: string
+    //   tipo: "compra" | "bienvenida" | "inscripcion" | "ajuste"
+    //   monedas: number (positivo si suma, negativo si resta)
+    //   monto: number (en soles, solo para compras)
+    //   culqiChargeId: string (solo para compras)
+    //   estado: "ok" | "fallido"
+    //   fecha: timestamp
+    match /transacciones/{txId} {
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if false; // solo el backend
+    }
+
+    // ── SORTEOS PÚBLICOS (opcional, si en el futuro guardamos config en DB)
+    match /sorteos/{sorteoId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
